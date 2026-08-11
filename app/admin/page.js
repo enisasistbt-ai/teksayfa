@@ -29,7 +29,7 @@ export default function Admin() {
 
       const { data: profiles } = await supabase
         .from("profiles")
-        .select("id, username, display_name, is_premium, theme, updated_at");
+        .select("id, username, display_name, is_premium, theme, avatar_url, updated_at");
 
       const { data: viewRows } = await supabase.from("page_views").select("username");
       const { data: clickRows } = await supabase.from("link_clicks").select("username");
@@ -195,7 +195,17 @@ export default function Admin() {
                   <tr key={r.id}>
                     <td>
                       <div className="user-cell">
-                        <div className="mini-avatar">{initial}</div>
+                        <div className="mini-avatar">
+                          {r.avatar_url ? (
+                            <img
+                              src={r.avatar_url}
+                              alt=""
+                              style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+                            />
+                          ) : (
+                            initial
+                          )}
+                        </div>
                         <div>
                           <div>{r.display_name || "—"}</div>
                           {r.username && (
