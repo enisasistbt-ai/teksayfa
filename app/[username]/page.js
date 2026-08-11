@@ -6,7 +6,7 @@ export const revalidate = 0;
 async function getProfile(username) {
   const { data } = await supabase
     .from("profiles")
-    .select("username, display_name, links, theme")
+    .select("username, display_name, links, theme, is_premium, avatar_url")
     .eq("username", username)
     .maybeSingle();
   return data;
@@ -55,7 +55,13 @@ export default async function PublicProfile({ params }) {
     <div style={themeVars}>
       <main className="container" style={{ paddingTop: 64 }}>
         <div className="tabela">
-          <div className="avatar">{initial}</div>
+          <div className="avatar">
+            {profile.avatar_url ? (
+              <img src={profile.avatar_url} alt={profile.display_name || profile.username} />
+            ) : (
+              initial
+            )}
+          </div>
           <h1 style={{ textAlign: "center", fontSize: 20 }}>
             {profile.display_name || profile.username}
           </h1>
@@ -80,7 +86,9 @@ export default async function PublicProfile({ params }) {
           ))}
         </div>
 
-        <p className="footer-note">TekSayfa ile oluşturuldu</p>
+        <p className="footer-note">
+          {profile.is_premium ? "" : "TekSayfa ile oluşturuldu"}
+        </p>
       </main>
     </div>
   );
