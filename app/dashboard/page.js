@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
+import { THEMES, DEFAULT_THEME } from "../../lib/themes";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -13,7 +14,9 @@ export default function Dashboard() {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [links, setLinks] = useState([]);
+  const [theme, setTheme] = useState(DEFAULT_THEME);
   const [error, setError] = useState("");
+  const [stats, setStats] = useState({ views: 0, clicksByLabel: {} });
 
   useEffect(() => {
     async function load() {
@@ -35,11 +38,35 @@ export default function Dashboard() {
         setUsername(profile.username || "");
         setDisplayName(profile.display_name || "");
         setLinks(profile.links || []);
+        setTheme(profile.theme || DEFAULT_THEME);
+        await loadStats(profile.username);
       }
       setLoading(false);
     }
     load();
   }, [router]);
+
+  async function loadStats(uname) {
+    if (!uname) return;
+
+    const { count: viewCount } = await supabase
+      .from("page_views")
+      .select("*", { count: "exact", head: true })
+      .eq("username", uname);
+
+    const { data: clickRows } = await supabase
+      .from("link_clicks")
+      .select("link_label")
+      .eq("username", uname);
+
+    const clicksByLabel = {};
+    (clickRows || []).forEach((row) => {
+      const label = row.link_label || "İsimsiz link";
+      clicksByLabel[label] = (clicksByLabel[label] || 0) + 1;
+    });
+
+    setStats({ views: viewCount || 0, clicksByLabel });
+  }
 
   function updateLink(index, field, value) {
     setLinks((prev) =>
@@ -69,6 +96,7 @@ export default function Dashboard() {
       username: cleanUsername,
       display_name: displayName.trim(),
       links: cleanLinks,
+      theme,
       updated_at: new Date().toISOString(),
     });
 
@@ -84,6 +112,7 @@ export default function Dashboard() {
     setUsername(cleanUsername);
     setLinks(cleanLinks);
     setSaved(true);
+    loadStats(cleanUsername);
   }
 
   async function handleLogout() {
@@ -112,6 +141,35 @@ export default function Dashboard() {
         Sayfanı düzenle
       </h1>
 
+      {username && (
+        <div className="tabela" style={{ marginTop: 20, padding: "20px 22px" }}>
+          <div className="eyebrow" style={{ marginBottom: 10 }}>
+            istatistikler
+          </div>
+          <p style={{ fontSize: 14 }}>
+            Toplam sayfa görüntülenme: <strong>{stats.views}</strong>
+          </p>
+          {Object.keys(stats.clicksByLabel).length === 0 ? (
+            <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 8 }}>
+              Henüz link tıklaması yok.
+            </p>
+          ) : (
+            <div style={{ marginTop: 10 }}>
+              {Object.entries(stats.clicksByLabel).map(([label, count]) => (
+                <div
+                  key={label}
+                  className="row"
+                  style={{ justifyContent: "space-between", fontSize: 13, marginTop: 6 }}
+                >
+                  <span>{label}</span>
+                  <span className="mono">{count} tıklama</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       <form onSubmit={handleSave}>
         <label className="label" htmlFor="username">
           Kullanıcı adı (site.com/kullanici-adi)
@@ -135,6 +193,46 @@ export default function Dashboard() {
           onChange={(e) => setDisplayName(e.target.value)}
           placeholder="Ayşe'nin El İşleri"
         />
+
+        <label className="label">Tema</label>
+        <div style={{ display: "flex", gap: 10, marginTop: 8, flexWrap: "wrap" }}>
+          {Object.entries(THEMES).map(([key, t]) => (
+            <button
+              type="button"
+              key={key}
+              onClick={() => setTheme(key)}
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 10,
+                background: t.ink,
+                border:
+                  theme === key
+                    ? `2px solid ${t.accent}`
+                    : "2px solid rgba(255,255,255,0.08)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "center",
+                padding: 6,
+              }}
+              aria-label={t.name}
+              title={t.name}
+            >
+              <span
+                style={{
+                  width: 14,
+                  height: 14,
+                  borderRadius: "50%",
+                  background: t.accent,
+                }}
+              />
+            </button>
+          ))}
+        </div>
+        <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 6 }}>
+          Seçili: {THEMES[theme].name}
+        </p>
 
         <label className="label">Linklerin</label>
         {links.map((link, i) => (
