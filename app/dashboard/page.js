@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
@@ -11,6 +11,21 @@ function emptyPlatformValues() {
   const obj = {};
   PLATFORMS.forEach((p) => (obj[p.id] = ""));
   return obj;
+}
+
+const EDITOR_SIZE = 240;
+const OUTPUT_SIZE = 320;
+const MAX_ZOOM = 3;
+
+function clampPosition(pos, scale, naturalW, naturalH) {
+  const dispW = naturalW * scale;
+  const dispH = naturalH * scale;
+  const minX = EDITOR_SIZE - dispW;
+  const minY = EDITOR_SIZE - dispH;
+  return {
+    x: Math.min(0, Math.max(minX, pos.x)),
+    y: Math.min(0, Math.max(minY, pos.y)),
+  };
 }
 
 export default function Dashboard() {
@@ -29,6 +44,15 @@ export default function Dashboard() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [error, setError] = useState("");
   const [stats, setStats] = useState({ views: 0, clicksByLabel: {} });
+
+  // Fotoğraf konumlandırma editörü
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editorImg, setEditorImg] = useState(null); // HTMLImageElement
+  const [editorFile, setEditorFile] = useState(null);
+  const [baseScale, setBaseScale] = useState(1);
+  const [zoom, setZoom] = useState(1);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const dragState = useRef(null);
 
   useEffect(() => {
     async function load() {
@@ -53,7 +77,6 @@ export default function Dashboard() {
         setIsPremium(!!profile.is_premium);
         setAvatarUrl(profile.avatar_url || "");
 
-        // Kayıtlı linkleri platform alanlarına ve özel linklere ayır
         const savedLinks = profile.links || [];
         const pValues = emptyPlatformValues();
         const custom = [];
@@ -64,7 +87,6 @@ export default function Dashboard() {
         savedLinks.forEach((link) => {
           const match = platformLabels[(link.label || "").toLowerCase()];
           if (match) {
-            // Kullanıcı adını linkten geri çıkar
             if (match.type === "username") {
               const built = match.buildUrl("PLACEHOLDER");
               const [prefix] = built.split("PLACEHOLDER");
@@ -173,48 +195,123 @@ export default function Dashboard() {
     return links;
   }
 
-  async function handleAvatarUpload(e) {
+  // --- Fotoğraf seçme: dosyayı editöre aç ---
+  function handleFileSelect(e) {
     const file = e.target.files?.[0];
-    if (!file || !userId) return;
+    e.target.value = "";
+    if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       setError("Lütfen bir görsel dosyası seç.");
       return;
     }
-    if (file.size > 3 * 1024 * 1024) {
-      setError("Görsel 3MB'den küçük olmalı.");
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Görsel 5MB'den küçük olmalı.");
       return;
     }
-
     setError("");
+
+    const url = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.onload = () => {
+      const scale = Math.max(EDITOR_SIZE / img.width, EDITOR_SIZE / img.height);
+      const centeredX = (EDITOR_SIZE - img.width * scale) / 2;
+      const centeredY = (EDITOR_SIZE - img.height * scale) / 2;
+      setBaseScale(scale);
+      setZoom(1);
+      setPos({ x: centeredX, y: centeredY });
+      setEditorImg(img);
+      setEditorFile(file);
+      setEditorOpen(true);
+    };
+    img.src = url;
+  }
+
+  function handleZoomChange(newZoom) {
+    setZoom(newZoom);
+    setPos((prev) => clampPosition(prev, baseScale * newZoom, editorImg.width, editorImg.height));
+  }
+
+  function onDragStart(clientX, clientY) {
+    dragState.current = { startX: clientX, startY: clientY, origin: pos };
+  }
+
+  function onDragMove(clientX, clientY) {
+    if (!dragState.current || !editorImg) return;
+    const dx = clientX - dragState.current.startX;
+    const dy = clientY - dragState.current.startY;
+    const next = {
+      x: dragState.current.origin.x + dx,
+      y: dragState.current.origin.y + dy,
+    };
+    setPos(clampPosition(next, baseScale * zoom, editorImg.width, editorImg.height));
+  }
+
+  function onDragEnd() {
+    dragState.current = null;
+  }
+
+  function closeEditor() {
+    setEditorOpen(false);
+    setEditorImg(null);
+    setEditorFile(null);
+  }
+
+  async function confirmCrop() {
+    if (!editorImg || !userId) return;
     setUploadingAvatar(true);
+    setError("");
 
-    const ext = file.name.split(".").pop();
-    const path = `${userId}/avatar-${Date.now()}.${ext}`;
+    const scale = baseScale * zoom;
+    const canvas = document.createElement("canvas");
+    canvas.width = OUTPUT_SIZE;
+    canvas.height = OUTPUT_SIZE;
+    const ctx = canvas.getContext("2d");
 
-    const { error: uploadError } = await supabase.storage
-      .from("avatars")
-      .upload(path, file, { upsert: true });
+    const sx = -pos.x / scale;
+    const sy = -pos.y / scale;
+    const sSize = EDITOR_SIZE / scale;
 
-    if (uploadError) {
-      setUploadingAvatar(false);
-      setError("Fotoğraf yüklenemedi, tekrar dene.");
-      return;
-    }
+    ctx.drawImage(editorImg, sx, sy, sSize, sSize, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
 
-    const { data: publicData } = supabase.storage.from("avatars").getPublicUrl(path);
-    const url = publicData.publicUrl;
+    canvas.toBlob(
+      async (blob) => {
+        if (!blob) {
+          setUploadingAvatar(false);
+          setError("Görsel işlenemedi, tekrar dene.");
+          return;
+        }
+        const ext = (editorFile?.name.split(".").pop() || "jpg").toLowerCase();
+        const path = `${userId}/avatar-${Date.now()}.${ext}`;
 
-    const { error: saveError } = await supabase
-      .from("profiles")
-      .upsert({ id: userId, avatar_url: url, updated_at: new Date().toISOString() });
+        const { error: uploadError } = await supabase.storage
+          .from("avatars")
+          .upload(path, blob, { upsert: true, contentType: blob.type || "image/jpeg" });
 
-    setUploadingAvatar(false);
-    if (saveError) {
-      setError("Fotoğraf kaydedilemedi, tekrar dene.");
-      return;
-    }
-    setAvatarUrl(url);
+        if (uploadError) {
+          setUploadingAvatar(false);
+          setError("Fotoğraf yüklenemedi, tekrar dene.");
+          return;
+        }
+
+        const { data: publicData } = supabase.storage.from("avatars").getPublicUrl(path);
+        const url = publicData.publicUrl;
+
+        const { error: saveError } = await supabase
+          .from("profiles")
+          .upsert({ id: userId, avatar_url: url, updated_at: new Date().toISOString() });
+
+        setUploadingAvatar(false);
+        if (saveError) {
+          setError("Fotoğraf kaydedilemedi, tekrar dene.");
+          return;
+        }
+        setAvatarUrl(url);
+        closeEditor();
+      },
+      "image/jpeg",
+      0.9
+    );
   }
 
   async function handleSave(e) {
@@ -331,12 +428,15 @@ export default function Dashboard() {
               (displayName || username || "?").trim().charAt(0).toUpperCase()
             )}
           </div>
-          <label className="btn-ghost" style={{ display: "inline-block", cursor: "pointer", fontSize: 12 }}>
-            {uploadingAvatar ? "Yükleniyor..." : "Fotoğraf yükle"}
+          <label
+            className="btn-ghost"
+            style={{ display: "inline-block", cursor: "pointer", fontSize: 12 }}
+          >
+            {uploadingAvatar ? "İşleniyor..." : avatarUrl ? "Fotoğrafı değiştir" : "Fotoğraf yükle"}
             <input
               type="file"
               accept="image/*"
-              onChange={handleAvatarUpload}
+              onChange={handleFileSelect}
               disabled={uploadingAvatar}
               style={{ display: "none" }}
             />
@@ -504,6 +604,79 @@ export default function Dashboard() {
             /{username}
           </a>
         </p>
+      )}
+
+      {editorOpen && editorImg && (
+        <div className="crop-overlay">
+          <div className="crop-modal">
+            <h3 style={{ fontSize: 16, marginBottom: 14 }}>Fotoğrafını konumlandır</h3>
+            <div
+              className="crop-viewport"
+              onMouseDown={(e) => onDragStart(e.clientX, e.clientY)}
+              onMouseMove={(e) => dragState.current && onDragMove(e.clientX, e.clientY)}
+              onMouseUp={onDragEnd}
+              onMouseLeave={onDragEnd}
+              onTouchStart={(e) => onDragStart(e.touches[0].clientX, e.touches[0].clientY)}
+              onTouchMove={(e) => {
+                if (dragState.current) {
+                  onDragMove(e.touches[0].clientX, e.touches[0].clientY);
+                }
+              }}
+              onTouchEnd={onDragEnd}
+            >
+              <img
+                src={editorImg.src}
+                alt=""
+                draggable={false}
+                style={{
+                  position: "absolute",
+                  left: pos.x,
+                  top: pos.y,
+                  width: editorImg.width * baseScale * zoom,
+                  height: editorImg.height * baseScale * zoom,
+                  maxWidth: "none",
+                  userSelect: "none",
+                  pointerEvents: "none",
+                }}
+              />
+              <div className="crop-mask" />
+            </div>
+
+            <label className="label" style={{ marginTop: 16 }}>
+              Yakınlaştır
+            </label>
+            <input
+              type="range"
+              min={1}
+              max={MAX_ZOOM}
+              step={0.05}
+              value={zoom}
+              onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
+              style={{ width: "100%", marginTop: 6 }}
+            />
+
+            <div className="row" style={{ marginTop: 20, gap: 10 }}>
+              <button
+                type="button"
+                className="btn-ghost"
+                style={{ flex: 1 }}
+                onClick={closeEditor}
+                disabled={uploadingAvatar}
+              >
+                Vazgeç
+              </button>
+              <button
+                type="button"
+                className="btn"
+                style={{ flex: 1 }}
+                onClick={confirmCrop}
+                disabled={uploadingAvatar}
+              >
+                {uploadingAvatar ? "Kaydediliyor..." : "Kırp ve kaydet"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );
