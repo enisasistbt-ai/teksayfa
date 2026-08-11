@@ -30,6 +30,19 @@ export default function Login() {
     setSent(true);
   }
 
+  async function handleGoogleLogin() {
+    setError("");
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo:
+          typeof window !== "undefined"
+            ? `${window.location.origin}/dashboard`
+            : undefined,
+      },
+    });
+  }
+
   return (
     <main className="container" style={{ paddingTop: 90 }}>
       <div className="eyebrow">giriş yap</div>
@@ -39,6 +52,30 @@ export default function Login() {
       <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 10 }}>
         Şifre yok. E-postanı yaz, sana gönderdiğimiz linke tıkla, içeri gir.
       </p>
+
+      {!sent && (
+        <>
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ width: "100%", marginTop: 24 }}
+            onClick={handleGoogleLogin}
+          >
+            Google ile devam et
+          </button>
+          <div
+            className="mono"
+            style={{
+              textAlign: "center",
+              color: "var(--muted)",
+              fontSize: 12,
+              margin: "18px 0",
+            }}
+          >
+            veya
+          </div>
+        </>
+      )}
 
       {sent ? (
         <div className="tabela" style={{ marginTop: 28 }}>
