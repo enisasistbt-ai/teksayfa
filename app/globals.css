@@ -211,6 +211,35 @@ textarea {
   outline: none;
 }
 
+.platform-field {
+  display: flex;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.platform-label {
+  flex: 0 0 128px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.platform-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--paper);
+  font-size: 14px;
+  padding: 12px 14px;
+  outline: none;
+  min-width: 0;
+}
+
 .remove {
   background: none;
   border: none;
