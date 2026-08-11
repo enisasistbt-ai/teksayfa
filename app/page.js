@@ -1,35 +1,113 @@
-import Link from "next/link";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo:
+          typeof window !== "undefined"
+            ? `${window.location.origin}/dashboard`
+            : undefined,
+      },
+    });
+    setLoading(false);
+    if (error) {
+      setError("Bir şeyler ters gitti, tekrar dene.");
+      return;
+    }
+    setSent(true);
+  }
+
+  async function handleGoogleLogin() {
+    setError("");
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo:
+          typeof window !== "undefined"
+            ? `${window.location.origin}/dashboard`
+            : undefined,
+      },
+    });
+  }
+
   return (
-    <main className="container" style={{ paddingTop: 80 }}>
-      <div className="eyebrow">teksayfa.app</div>
-      <h1 className="display" style={{ fontSize: 40, marginTop: 10, lineHeight: 1.1 }}>
-        Tüm linklerin,
-        <br />
-        tek bir vitrinde.
+    <main className="container" style={{ paddingTop: 90 }}>
+      <div className="eyebrow">giriş yap</div>
+      <h1 className="display" style={{ fontSize: 28, marginTop: 8 }}>
+        E-postana bağlantı gönderelim
       </h1>
-      <p style={{ color: "var(--muted)", marginTop: 16, fontSize: 15, lineHeight: 1.6 }}>
-        Instagram bio'na, WhatsApp'ına, ürün sayfana tek bir link koy.
-        Ziyaretçilerin hepsini tek yerde bulsun.
+      <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 10 }}>
+        Şifre yok. E-postanı yaz, sana gönderdiğimiz linke tıkla, içeri gir.
       </p>
 
-      <div style={{ marginTop: 32 }}>
-        <Link href="/login">
-          <button className="btn">Ücretsiz başla</button>
-        </Link>
-      </div>
+      {!sent && (
+        <>
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ width: "100%", marginTop: 24 }}
+            onClick={handleGoogleLogin}
+          >
+            Google ile devam et
+          </button>
+          <div
+            className="mono"
+            style={{
+              textAlign: "center",
+              color: "var(--muted)",
+              fontSize: 12,
+              margin: "18px 0",
+            }}
+          >
+            veya
+          </div>
+        </>
+      )}
 
-      <div className="tabela" style={{ marginTop: 56 }}>
-        <div className="avatar">A</div>
-        <h3 style={{ textAlign: "center", fontSize: 18 }}>Ayşe'nin El İşleri</h3>
-        <div className="handle mono">teksayfa.app/aysenin-el-isleri</div>
-        <a className="link-btn">Instagram'da takip et</a>
-        <a className="link-btn">WhatsApp'tan sipariş ver</a>
-        <a className="link-btn">Trendyol mağazam</a>
-      </div>
-
-      <p className="footer-note">Örnek sayfa — kendi sayfan 2 dakikada hazır.</p>
+      {sent ? (
+        <div className="tabela" style={{ marginTop: 28 }}>
+          <p style={{ textAlign: "center" }}>
+            <strong>{email}</strong> adresine bir bağlantı gönderdik. Gelen
+            kutunu (ve spam klasörünü) kontrol et.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleLogin} style={{ marginTop: 24 }}>
+          <label className="label" htmlFor="email">
+            E-posta adresin
+          </label>
+          <input
+            id="email"
+            className="field"
+            type="email"
+            required
+            placeholder="ornek@eposta.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {error && (
+            <p style={{ color: "var(--danger)", fontSize: 13, marginTop: 8 }}>
+              {error}
+            </p>
+          )}
+          <button className="btn" style={{ marginTop: 18, width: "100%" }} disabled={loading}>
+            {loading ? "Gönderiliyor..." : "Bağlantı gönder"}
+          </button>
+        </form>
+      )}
     </main>
   );
 }
