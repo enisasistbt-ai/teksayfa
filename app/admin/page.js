@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -13,6 +13,9 @@ export default function Admin() {
   const [rows, setRows] = useState([]);
   const [busyId, setBusyId] = useState(null);
   const [totals, setTotals] = useState({ users: 0, premium: 0, views: 0, clicks: 0 });
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState("views");
+  const [sortDir, setSortDir] = useState("desc");
 
   useEffect(() => {
     async function load() {
@@ -26,8 +29,7 @@ export default function Admin() {
 
       const { data: profiles } = await supabase
         .from("profiles")
-        .select("id, username, display_name, is_premium, theme, updated_at")
-        .order("updated_at", { ascending: false });
+        .select("id, username, display_name, is_premium, theme, updated_at");
 
       const { data: viewRows } = await supabase.from("page_views").select("username");
       const { data: clickRows } = await supabase.from("link_clicks").select("username");
@@ -73,9 +75,43 @@ export default function Admin() {
     }
   }
 
+  function handleSort(key) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("desc");
+    }
+  }
+
+  const visibleRows = useMemo(() => {
+    let list = rows.filter((r) => {
+      const q = search.trim().toLowerCase();
+      if (!q) return true;
+      return (
+        (r.username || "").toLowerCase().includes(q) ||
+        (r.display_name || "").toLowerCase().includes(q)
+      );
+    });
+
+    list = [...list].sort((a, b) => {
+      let av = a[sortKey];
+      let bv = b[sortKey];
+      if (typeof av === "string") av = av.toLowerCase();
+      if (typeof bv === "string") bv = bv.toLowerCase();
+      if (av === undefined || av === null) av = "";
+      if (bv === undefined || bv === null) bv = "";
+      if (av < bv) return sortDir === "asc" ? -1 : 1;
+      if (av > bv) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    return list;
+  }, [rows, search, sortKey, sortDir]);
+
   if (loading) {
     return (
-      <main className="wide-container" style={{ paddingTop: 90 }}>
+      <main style={{ paddingTop: 90 }}>
         <p className="empty">Yükleniyor...</p>
       </main>
     );
@@ -83,94 +119,135 @@ export default function Admin() {
 
   if (!allowed) return null;
 
+  const sortArrow = (key) => (sortKey === key ? (sortDir === "asc" ? " ↑" : " ↓") : "");
+
   return (
-    <main className="wide-container" style={{ paddingTop: 48 }}>
-      <div className="eyebrow">yönetim paneli</div>
-      <h1 className="display" style={{ fontSize: 26, marginTop: 8 }}>
-        Kullanıcılar
-      </h1>
+    <div>
+      <div className="admin-topbar">
+        <div className="admin-brand">
+          <div className="admin-brand-mark" />
+          <span className="display" style={{ fontSize: 16 }}>
+            TekSayfa <span style={{ color: "var(--muted)", fontWeight: 400 }}>· Yönetim</span>
+          </span>
+        </div>
+        <a href="/dashboard" className="mono" style={{ fontSize: 12, color: "var(--muted)" }}>
+          Kendi paneline dön →
+        </a>
+      </div>
 
-      <div style={{ display: "flex", gap: 10, marginTop: 20, flexWrap: "wrap" }}>
-        {[
-          ["Toplam kullanıcı", totals.users],
-          ["Premium", totals.premium],
-          ["Toplam görüntülenme", totals.views],
-          ["Toplam tıklama", totals.clicks],
-        ].map(([label, value]) => (
-          <div
-            key={label}
-            className="tabela"
-            style={{ padding: "16px 18px", flex: "1 1 140px", textAlign: "left" }}
-          >
-            <div className="eyebrow" style={{ marginBottom: 6 }}>
-              {label}
-            </div>
-            <div className="display" style={{ fontSize: 24 }}>
-              {value}
-            </div>
+      <div className="admin-body">
+        <div className="eyebrow">genel bakış</div>
+        <h1 className="display" style={{ fontSize: 28, marginTop: 6, marginBottom: 22 }}>
+          Kullanıcılar
+        </h1>
+
+        <div className="stat-grid">
+          <div className="stat-card">
+            <div className="eyebrow">Toplam kullanıcı</div>
+            <div className="stat-value">{totals.users}</div>
           </div>
-        ))}
-      </div>
+          <div className="stat-card">
+            <div className="eyebrow">Premium</div>
+            <div className="stat-value">{totals.premium}</div>
+          </div>
+          <div className="stat-card">
+            <div className="eyebrow">Toplam görüntülenme</div>
+            <div className="stat-value">{totals.views}</div>
+          </div>
+          <div className="stat-card">
+            <div className="eyebrow">Toplam tıklama</div>
+            <div className="stat-value">{totals.clicks}</div>
+          </div>
+        </div>
 
-      <div style={{ marginTop: 28, overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-          <thead>
-            <tr style={{ textAlign: "left", color: "var(--muted)" }}>
-              <th style={{ padding: "8px 10px" }}>Kullanıcı</th>
-              <th style={{ padding: "8px 10px" }}>İsim</th>
-              <th style={{ padding: "8px 10px" }}>Tema</th>
-              <th style={{ padding: "8px 10px" }}>Görüntülenme</th>
-              <th style={{ padding: "8px 10px" }}>Tıklama</th>
-              <th style={{ padding: "8px 10px" }}>Plan</th>
-              <th style={{ padding: "8px 10px" }}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.id} style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                <td style={{ padding: "10px" }} className="mono">
-                  {r.username ? (
-                    <a href={`/${r.username}`} target="_blank" style={{ color: "var(--amber)" }}>
-                      /{r.username}
-                    </a>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td style={{ padding: "10px" }}>{r.display_name || "—"}</td>
-                <td style={{ padding: "10px" }}>{r.theme || "vitrin"}</td>
-                <td style={{ padding: "10px" }}>{r.views}</td>
-                <td style={{ padding: "10px" }}>{r.clicks}</td>
-                <td style={{ padding: "10px" }}>
-                  {r.is_premium ? (
-                    <span style={{ color: "var(--amber)" }}>✨ Premium</span>
-                  ) : (
-                    "Ücretsiz"
-                  )}
-                </td>
-                <td style={{ padding: "10px" }}>
-                  <button
-                    type="button"
-                    className="btn-ghost"
-                    disabled={busyId === r.id}
-                    onClick={() => togglePremium(r)}
-                    style={{ fontSize: 12, padding: "6px 12px" }}
-                  >
-                    {r.is_premium ? "Premium'u kaldır" : "Premium yap"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {rows.length === 0 && (
+        <div className="admin-toolbar">
+          <input
+            className="search-field"
+            placeholder="Kullanıcı adı veya isim ara..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <span style={{ fontSize: 12, color: "var(--muted)" }}>
+            {visibleRows.length} / {rows.length} kullanıcı
+          </span>
+        </div>
+
+        <div className="data-table-wrap">
+          <table className="data-table">
+            <thead>
               <tr>
-                <td colSpan={7} className="empty">
-                  Henüz kullanıcı yok.
-                </td>
+                <th onClick={() => handleSort("username")}>Kullanıcı{sortArrow("username")}</th>
+                <th onClick={() => handleSort("theme")}>Tema{sortArrow("theme")}</th>
+                <th onClick={() => handleSort("views")} style={{ textAlign: "right" }}>
+                  Görüntülenme{sortArrow("views")}
+                </th>
+                <th onClick={() => handleSort("clicks")} style={{ textAlign: "right" }}>
+                  Tıklama{sortArrow("clicks")}
+                </th>
+                <th onClick={() => handleSort("is_premium")}>Plan{sortArrow("is_premium")}</th>
+                <th></th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {visibleRows.map((r) => {
+                const initial = (r.display_name || r.username || "?").trim().charAt(0).toUpperCase();
+                return (
+                  <tr key={r.id}>
+                    <td>
+                      <div className="user-cell">
+                        <div className="mini-avatar">{initial}</div>
+                        <div>
+                          <div>{r.display_name || "—"}</div>
+                          {r.username && (
+                            <a
+                              href={`/${r.username}`}
+                              target="_blank"
+                              className="mono"
+                              style={{ fontSize: 11, color: "var(--muted)" }}
+                            >
+                              /{r.username}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td style={{ textTransform: "capitalize" }}>{r.theme || "vitrin"}</td>
+                    <td className="num-cell" style={{ textAlign: "right" }}>
+                      {r.views}
+                    </td>
+                    <td className="num-cell" style={{ textAlign: "right" }}>
+                      {r.clicks}
+                    </td>
+                    <td>
+                      <span className={`badge ${r.is_premium ? "badge-premium" : "badge-free"}`}>
+                        {r.is_premium ? "✨ Premium" : "Ücretsiz"}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <button
+                        type="button"
+                        className="btn-ghost"
+                        disabled={busyId === r.id}
+                        onClick={() => togglePremium(r)}
+                        style={{ fontSize: 12, padding: "6px 12px" }}
+                      >
+                        {r.is_premium ? "Premium'u kaldır" : "Premium yap"}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {visibleRows.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="empty">
+                    {rows.length === 0 ? "Henüz kullanıcı yok." : "Eşleşen kullanıcı yok."}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
