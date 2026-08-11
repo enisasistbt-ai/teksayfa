@@ -25,6 +25,8 @@ export default function Dashboard() {
   const [customLinks, setCustomLinks] = useState([]);
   const [theme, setTheme] = useState(DEFAULT_THEME);
   const [isPremium, setIsPremium] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [error, setError] = useState("");
   const [stats, setStats] = useState({ views: 0, clicksByLabel: {} });
 
@@ -49,6 +51,7 @@ export default function Dashboard() {
         setDisplayName(profile.display_name || "");
         setTheme(profile.theme || DEFAULT_THEME);
         setIsPremium(!!profile.is_premium);
+        setAvatarUrl(profile.avatar_url || "");
 
         // Kayıtlı linkleri platform alanlarına ve özel linklere ayır
         const savedLinks = profile.links || [];
@@ -170,6 +173,50 @@ export default function Dashboard() {
     return links;
   }
 
+  async function handleAvatarUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file || !userId) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Lütfen bir görsel dosyası seç.");
+      return;
+    }
+    if (file.size > 3 * 1024 * 1024) {
+      setError("Görsel 3MB'den küçük olmalı.");
+      return;
+    }
+
+    setError("");
+    setUploadingAvatar(true);
+
+    const ext = file.name.split(".").pop();
+    const path = `${userId}/avatar-${Date.now()}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
+
+    if (uploadError) {
+      setUploadingAvatar(false);
+      setError("Fotoğraf yüklenemedi, tekrar dene.");
+      return;
+    }
+
+    const { data: publicData } = supabase.storage.from("avatars").getPublicUrl(path);
+    const url = publicData.publicUrl;
+
+    const { error: saveError } = await supabase
+      .from("profiles")
+      .upsert({ id: userId, avatar_url: url, updated_at: new Date().toISOString() });
+
+    setUploadingAvatar(false);
+    if (saveError) {
+      setError("Fotoğraf kaydedilemedi, tekrar dene.");
+      return;
+    }
+    setAvatarUrl(url);
+  }
+
   async function handleSave(e) {
     e.preventDefault();
     setError("");
@@ -276,6 +323,26 @@ export default function Dashboard() {
       )}
 
       <form onSubmit={handleSave}>
+        <div style={{ textAlign: "center", marginTop: 8 }}>
+          <div className="avatar" style={{ position: "relative" }}>
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Profil fotoğrafı" />
+            ) : (
+              (displayName || username || "?").trim().charAt(0).toUpperCase()
+            )}
+          </div>
+          <label className="btn-ghost" style={{ display: "inline-block", cursor: "pointer", fontSize: 12 }}>
+            {uploadingAvatar ? "Yükleniyor..." : "Fotoğraf yükle"}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarUpload}
+              disabled={uploadingAvatar}
+              style={{ display: "none" }}
+            />
+          </label>
+        </div>
+
         <label className="label" htmlFor="username">
           Kullanıcı adı (site.com/kullanici-adi)
         </label>
