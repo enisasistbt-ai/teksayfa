@@ -365,45 +365,47 @@ export default function Dashboard() {
         </p>
 
         {PLATFORMS.map((p) => (
-          <div key={p.id} style={{ marginTop: 12 }}>
-            <div className="platform-field">
-              <span className="platform-label">{p.label}</span>
-              <input
-                className="platform-input"
-                value={platformValues[p.id]}
-                onChange={(e) => updatePlatformValue(p.id, e.target.value)}
-                placeholder={p.placeholder}
-              />
-            </div>
+          <div key={p.id} style={{ marginTop: 22 }}>
+            <label className="label" style={{ marginTop: 0 }} htmlFor={`platform-${p.id}`}>
+              {p.label}
+            </label>
+            <input
+              id={`platform-${p.id}`}
+              className="field"
+              value={platformValues[p.id]}
+              onChange={(e) => updatePlatformValue(p.id, e.target.value)}
+              placeholder={p.placeholder}
+            />
             {p.hint && (
-              <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{p.hint}</p>
+              <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 6 }}>{p.hint}</p>
             )}
           </div>
         ))}
 
-        <label className="label" style={{ marginTop: 26 }}>
+        <label className="label" style={{ marginTop: 30 }}>
           Diğer linklerin
         </label>
         {customLinks.map((link, i) => (
-          <div key={i} style={{ marginTop: 12 }}>
-            <div className="platform-field">
-              <span className="platform-label">{link.label}</span>
-              <input
-                className="platform-input"
-                value={link.url}
-                onChange={(e) => updateCustomLink(i, "url", e.target.value)}
-                placeholder="https://..."
-              />
+          <div key={i} style={{ marginTop: 22 }}>
+            <div className="row" style={{ justifyContent: "space-between" }}>
+              <label className="label" style={{ marginTop: 0 }}>
+                {link.label}
+              </label>
               <button
                 type="button"
                 className="remove"
                 onClick={() => removeCustomLink(i)}
                 aria-label="Linki kaldır"
-                style={{ marginLeft: 6 }}
               >
                 Sil
               </button>
             </div>
+            <input
+              className="field"
+              value={link.url}
+              onChange={(e) => updateCustomLink(i, "url", e.target.value)}
+              placeholder="https://..."
+            />
           </div>
         ))}
 
