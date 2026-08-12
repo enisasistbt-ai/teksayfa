@@ -1,7 +1,16 @@
 import { supabase } from "../../lib/supabaseClient";
 import { THEMES, DEFAULT_THEME } from "../../lib/themes";
+import SaveContactButton from "./SaveContactButton";
+import { headers } from "next/headers";
 
 export const revalidate = 0;
+
+function extractWhatsappPhone(links) {
+  const wa = (links || []).find((l) => l.label === "WhatsApp");
+  if (!wa) return "";
+  const match = wa.url.match(/wa\.me\/(\d+)/);
+  return match ? `+${match[1]}` : "";
+}
 
 async function getProfile(username) {
   const { data } = await supabase
@@ -32,6 +41,9 @@ export default async function PublicProfile({ params }) {
   }
 
   logPageView(profile.username);
+
+  const host = headers().get("host");
+  const pageUrl = host ? `https://${host}/${profile.username}` : `/${profile.username}`;
 
   const theme = THEMES[profile.theme] || THEMES[DEFAULT_THEME];
   const themeVars = {
@@ -89,6 +101,13 @@ export default async function PublicProfile({ params }) {
               {link.label}
             </a>
           ))}
+
+          <SaveContactButton
+            displayName={profile.display_name || profile.username}
+            phone={extractWhatsappPhone(profile.links)}
+            url={pageUrl}
+            bio={profile.bio || ""}
+          />
         </div>
 
         <p className="footer-note">
