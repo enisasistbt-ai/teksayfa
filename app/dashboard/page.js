@@ -554,9 +554,14 @@ export default function Dashboard() {
     <main className="container" style={{ paddingTop: 48 }}>
       <div className="row" style={{ justifyContent: "space-between" }}>
         <div className="eyebrow">panelin</div>
-        <button className="btn-ghost" onClick={handleLogout}>
-          Çıkış yap
-        </button>
+        <div className="row" style={{ gap: 8 }}>
+          <Link href="/kisiler" className="btn-ghost" style={{ fontSize: 12 }}>
+            👥 Kişilerim
+          </Link>
+          <button className="btn-ghost" onClick={handleLogout}>
+            Çıkış yap
+          </button>
+        </div>
       </div>
 
       <div className="row" style={{ justifyContent: "space-between", marginTop: 10 }}>
