@@ -6,6 +6,7 @@ import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
 import { THEMES, DEFAULT_THEME, FREE_LINK_LIMIT } from "../../lib/themes";
 import { PLATFORMS, normalizeUrl } from "../../lib/platforms";
+import QRCode from "qrcode";
 
 function emptyPlatformValues() {
   const obj = {};
@@ -31,6 +32,7 @@ function clampPosition(pos, scale, naturalW, naturalH) {
 
 export default function Dashboard() {
   const router = useRouter();
+  const qrCanvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -353,6 +355,118 @@ export default function Dashboard() {
     loadStats(cleanUsername);
   }
 
+  function loadImageEl(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  async function drawQrCode() {
+    const canvas = qrCanvasRef.current;
+    if (!canvas || !username) return;
+
+    const QR_SIZE = 640;
+    const CAPTION_H = 150;
+    const PAPER = "#f2ecd9";
+    const INK = "#10231f";
+    const MUTED = "#6d8078";
+
+    canvas.width = QR_SIZE;
+    canvas.height = QR_SIZE + CAPTION_H;
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = PAPER;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const qrDrawSize = QR_SIZE - 80;
+    const qrOffset = 40;
+    const tempCanvas = document.createElement("canvas");
+    await QRCode.toCanvas(tempCanvas, `${window.location.origin}/${username}`, {
+      errorCorrectionLevel: "H",
+      margin: 1,
+      width: qrDrawSize,
+      color: { dark: INK, light: PAPER },
+    });
+    ctx.drawImage(tempCanvas, qrOffset, qrOffset, qrDrawSize, qrDrawSize);
+
+    const centerX = QR_SIZE / 2;
+    const centerY = qrOffset + qrDrawSize / 2;
+    const badgeR = 62;
+    const innerR = badgeR - 8;
+
+    let avatarImg = null;
+    if (avatarUrl) {
+      try {
+        avatarImg = await loadImageEl(avatarUrl);
+      } catch (e) {
+        avatarImg = null;
+      }
+    }
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, badgeR, 0, Math.PI * 2);
+    ctx.fillStyle = PAPER;
+    ctx.fill();
+
+    if (avatarImg) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, innerR, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(avatarImg, centerX - innerR, centerY - innerR, innerR * 2, innerR * 2);
+      ctx.restore();
+    } else {
+      const accent = THEMES[theme]?.accent || THEMES[DEFAULT_THEME].accent;
+      const accentDim = THEMES[theme]?.accentDim || THEMES[DEFAULT_THEME].accentDim;
+      const grad = ctx.createLinearGradient(
+        centerX - innerR,
+        centerY - innerR,
+        centerX + innerR,
+        centerY + innerR
+      );
+      grad.addColorStop(0, accent);
+      grad.addColorStop(1, accentDim);
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, innerR, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.fillStyle = INK;
+      ctx.font = `700 ${innerR}px Georgia, serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText((displayName || username || "?").trim().charAt(0).toUpperCase(), centerX, centerY + 2);
+    }
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = INK;
+    ctx.font = "700 32px Georgia, serif";
+    ctx.fillText(displayName || username, centerX, QR_SIZE + 55);
+    ctx.fillStyle = MUTED;
+    ctx.font = "400 20px monospace";
+    ctx.fillText(`teksayfa.app/${username}`, centerX, QR_SIZE + 88);
+  }
+
+  useEffect(() => {
+    if (!loading && username) {
+      drawQrCode();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, username, displayName, avatarUrl, theme]);
+
+  function downloadQrCode() {
+    const canvas = qrCanvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = `${username || "teksayfa"}-qr.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }
+
   async function handleLogout() {
     await supabase.auth.signOut();
     router.replace("/login");
@@ -420,6 +534,32 @@ export default function Dashboard() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+        </div>
+      )}
+
+      {username && (
+        <div className="tabela" style={{ marginTop: 16, padding: "20px 22px", textAlign: "center" }}>
+          <div className="eyebrow" style={{ marginBottom: 12 }}>
+            QR kodun
+          </div>
+          <canvas
+            ref={qrCanvasRef}
+            style={{ width: "100%", maxWidth: 220, height: "auto", borderRadius: 10 }}
+          />
+          <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 10 }}>
+            Vitrinde, kartvizitte ya da paket üzerinde basılı paylaşmak için.
+          </p>
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ marginTop: 10 }}
+            onClick={downloadQrCode}
+          >
+            PNG olarak indir
+          </button>
         </div>
       )}
 
