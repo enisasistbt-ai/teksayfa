@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { translateLinkLabel, extractWhatsappPhone } from "../../lib/platforms";
+import { shareOrCopy } from "../../lib/share";
 import SaveContactButton from "./SaveContactButton";
 import ContactForm from "./ContactForm";
 
@@ -13,6 +14,8 @@ const STRINGS = {
     defaultAway: "Şu anda müsait değiliz.",
     returns: "Dönüş",
     saveContact: "📇 Rehbere kaydet",
+    share: "📤 Sayfayı paylaş",
+    copied: "Link kopyalandı.",
   },
   en: {
     empty: "No links added yet.",
@@ -21,12 +24,29 @@ const STRINGS = {
     defaultAway: "We're currently unavailable.",
     returns: "Back on",
     saveContact: "📇 Save contact",
+    share: "📤 Share this page",
+    copied: "Link copied.",
   },
 };
 
 export default function ProfileView({ profile, pageUrl }) {
   const [lang, setLang] = useState("tr");
+  const [shareCopied, setShareCopied] = useState(false);
   const t = STRINGS[lang];
+
+  async function handleShare() {
+    await shareOrCopy(
+      {
+        title: profile.display_name || profile.username,
+        text: lang === "en" ? "Check out this page" : "Şu sayfaya bir bak",
+        url: pageUrl,
+      },
+      () => {
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 3000);
+      }
+    );
+  }
 
   const initial = (profile.display_name || profile.username || "?")
     .trim()
@@ -132,6 +152,20 @@ export default function ProfileView({ profile, pageUrl }) {
           bio={bioText}
           label={t.saveContact}
         />
+
+        <button
+          type="button"
+          className="btn-ghost"
+          style={{ width: "100%", marginTop: 10 }}
+          onClick={handleShare}
+        >
+          {t.share}
+        </button>
+        {shareCopied && (
+          <p style={{ textAlign: "center", fontSize: 11.5, color: "var(--amber)", marginTop: 6 }}>
+            {t.copied}
+          </p>
+        )}
       </div>
 
       <ContactForm ownerId={profile.id} lang={lang} />
