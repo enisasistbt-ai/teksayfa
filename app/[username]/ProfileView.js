@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { translateLinkLabel, extractWhatsappPhone } from "../../lib/platforms";
 import SaveContactButton from "./SaveContactButton";
+import ContactForm from "./ContactForm";
 
 const STRINGS = {
   tr: {
@@ -132,6 +133,8 @@ export default function ProfileView({ profile, pageUrl }) {
           label={t.saveContact}
         />
       </div>
+
+      <ContactForm ownerId={profile.id} lang={lang} />
 
       <p className="footer-note">{profile.is_premium ? "" : t.madeWith}</p>
     </>
