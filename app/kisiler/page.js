@@ -45,6 +45,27 @@ export default function Kisiler() {
     load();
   }, [router]);
 
+  function downloadContactVcf(contact) {
+    const lines = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      `FN:${contact.name}`,
+      contact.company ? `ORG:${contact.company}` : null,
+      `TEL;TYPE=CELL:${contact.phone}`,
+      "END:VCARD",
+    ]
+      .filter(Boolean)
+      .join("\r\n");
+
+    const blob = new Blob([lines], { type: "text/vcard;charset=utf-8" });
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = `${contact.name || "kisi"}.vcf`;
+    link.click();
+    URL.revokeObjectURL(objectUrl);
+  }
+
   async function handleAdd(e) {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
@@ -69,6 +90,7 @@ export default function Kisiler() {
       return;
     }
     setContacts((prev) => [data, ...prev]);
+    downloadContactVcf(data);
     setName("");
     setPhone("");
     setCompany("");
@@ -150,7 +172,7 @@ export default function Kisiler() {
       <div style={{ marginTop: 30 }}>
         {contacts.length === 0 && <p className="empty">Henüz kişi eklemedin.</p>}
         {contacts.map((c) => (
-          <div key={c.id} className="link-row" style={{ marginTop: 10, alignItems: "center" }}>
+          <div key={c.id} className="link-row" style={{ marginTop: 10, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 14 }}>{c.name}</div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
@@ -172,6 +194,14 @@ export default function Kisiler() {
             >
               WhatsApp'tan gönder
             </a>
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={() => downloadContactVcf(c)}
+              style={{ fontSize: 12, padding: "6px 10px", whiteSpace: "nowrap" }}
+            >
+              📇 Rehbere kaydet
+            </button>
             <button
               type="button"
               className="remove"
