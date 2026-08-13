@@ -11,6 +11,7 @@ const STRINGS = {
     onBreak: "Mola verdik",
     defaultAway: "Şu anda müsait değiliz.",
     returns: "Dönüş",
+    saveContact: "📇 Rehbere kaydet",
   },
   en: {
     empty: "No links added yet.",
@@ -18,6 +19,7 @@ const STRINGS = {
     onBreak: "We're on a break",
     defaultAway: "We're currently unavailable.",
     returns: "Back on",
+    saveContact: "📇 Save contact",
   },
 };
 
@@ -127,6 +129,7 @@ export default function ProfileView({ profile, pageUrl }) {
           phone={extractWhatsappPhone(profile.links)}
           url={pageUrl}
           bio={bioText}
+          label={t.saveContact}
         />
       </div>
 
