@@ -8,32 +8,42 @@ const STRINGS = {
     toggle: "✉️ Mesaj bırak",
     title: "Mesaj bırak",
     name: "Adın",
-    contact: "E-posta ya da telefon",
+    phone: "Telefon numaran",
+    email: "E-posta adresin",
     message: "Mesajın",
     send: "Gönder",
     sending: "Gönderiliyor...",
     sent: "Mesajın iletildi, teşekkürler!",
     error: "Gönderilemedi, tekrar dener misin?",
     close: "Vazgeç",
+    phoneError: "Geçerli bir telefon numarası gir (en az 10 rakam).",
+    emailError: "Geçerli bir e-posta adresi gir.",
   },
   en: {
     toggle: "✉️ Leave a message",
     title: "Leave a message",
     name: "Your name",
-    contact: "Email or phone",
+    phone: "Your phone number",
+    email: "Your email",
     message: "Your message",
     send: "Send",
     sending: "Sending...",
     sent: "Your message was sent, thank you!",
     error: "Couldn't send, please try again.",
     close: "Cancel",
+    phoneError: "Enter a valid phone number (at least 10 digits).",
+    emailError: "Enter a valid email address.",
   },
 };
+
+const PHONE_RE = /^[0-9]{10,15}$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function ContactForm({ ownerId, lang = "tr" }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [contact, setContact] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -45,13 +55,26 @@ export default function ContactForm({ ownerId, lang = "tr" }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!name.trim() || !contact.trim() || !message.trim()) return;
-    setSending(true);
     setError("");
+
+    if (!name.trim() || !message.trim()) return;
+
+    const cleanPhone = phone.replace(/[^0-9]/g, "");
+    if (!PHONE_RE.test(cleanPhone)) {
+      setError(t.phoneError);
+      return;
+    }
+    if (email.trim() && !EMAIL_RE.test(email.trim())) {
+      setError(t.emailError);
+      return;
+    }
+
+    setSending(true);
     const { error } = await supabase.from("messages").insert({
       owner_id: ownerId,
       name: name.trim(),
-      contact: contact.trim(),
+      phone: cleanPhone,
+      email: email.trim(),
       message: message.trim(),
     });
     setSending(false);
@@ -95,10 +118,19 @@ export default function ContactForm({ ownerId, lang = "tr" }) {
           <input
             className="field"
             style={{ marginTop: 8 }}
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            placeholder={t.contact}
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder={t.phone}
             required
+          />
+          <input
+            className="field"
+            style={{ marginTop: 8 }}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={`${t.email} (${lang === "en" ? "optional" : "opsiyonel"})`}
           />
           <textarea
             className="field"
@@ -116,11 +148,7 @@ export default function ContactForm({ ownerId, lang = "tr" }) {
             <button className="btn" style={{ flex: 1 }} disabled={sending}>
               {sending ? t.sending : t.send}
             </button>
-            <button
-              type="button"
-              className="btn-ghost"
-              onClick={() => setOpen(false)}
-            >
+            <button type="button" className="btn-ghost" onClick={() => setOpen(false)}>
               {t.close}
             </button>
           </div>
