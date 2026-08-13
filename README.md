@@ -1,4 +1,4 @@
-# TekSayfa — Kurulum Rehberi
+# MineBio — Kurulum Rehberi
 
 ## 1) Supabase tarafı
 
@@ -35,7 +35,7 @@ create policy "Herkes profilleri görebilir"
 ```
 
 Sonra **Authentication > URL Configuration** kısmında, sitenin Vercel adresini
-(örn. `https://teksayfa.vercel.app`) "Site URL" ve "Redirect URLs" alanına ekle.
+(örn. `https://minebio.vercel.app`) "Site URL" ve "Redirect URLs" alanına ekle.
 
 **Project Settings > API** sayfasından şu ikisini kopyala, sonraki adımda lazım olacak:
 - `Project URL`
