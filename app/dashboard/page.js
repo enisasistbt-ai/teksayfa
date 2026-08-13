@@ -40,6 +40,7 @@ export default function Dashboard() {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [bioEn, setBioEn] = useState("");
   const [platformValues, setPlatformValues] = useState(emptyPlatformValues());
   const [customLinks, setCustomLinks] = useState([]);
   const [linkOrder, setLinkOrder] = useState([]);
@@ -47,6 +48,7 @@ export default function Dashboard() {
   const [isPremium, setIsPremium] = useState(false);
   const [awayMode, setAwayMode] = useState(false);
   const [awayMessage, setAwayMessage] = useState("");
+  const [awayMessageEn, setAwayMessageEn] = useState("");
   const [awayUntil, setAwayUntil] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -83,10 +85,12 @@ export default function Dashboard() {
         setUsername(profile.username || "");
         setDisplayName(profile.display_name || "");
         setBio(profile.bio || "");
+        setBioEn(profile.bio_en || "");
         setTheme(profile.theme || DEFAULT_THEME);
         setIsPremium(!!profile.is_premium);
         setAwayMode(!!profile.away_mode);
         setAwayMessage(profile.away_message || "");
+        setAwayMessageEn(profile.away_message_en || "");
         setAwayUntil(profile.away_until || "");
         setAvatarUrl(profile.avatar_url || "");
 
@@ -413,7 +417,9 @@ export default function Dashboard() {
       display_name: displayName.trim(),
       bio: bio.trim(),
       away_mode: awayMode,
+      bio_en: bioEn.trim(),
       away_message: awayMode ? awayMessage.trim() : null,
+      away_message_en: awayMode ? awayMessageEn.trim() : null,
       away_until: awayMode && awayUntil ? awayUntil : null,
       links: cleanLinks,
       theme,
@@ -633,6 +639,14 @@ export default function Dashboard() {
             <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 4, textAlign: "right" }}>
               {awayMessage.length}/140
             </p>
+            <textarea
+              className="field"
+              style={{ marginTop: 6, resize: "vertical", fontFamily: "inherit" }}
+              rows={2}
+              value={awayMessageEn}
+              onChange={(e) => setAwayMessageEn(e.target.value.slice(0, 140))}
+              placeholder="Optional English version, e.g. We're not taking orders right now, back Aug 20."
+            />
             <label className="label" style={{ marginTop: 4 }} htmlFor="awayUntil">
               Dönüş tarihi (opsiyonel)
             </label>
@@ -764,6 +778,22 @@ export default function Dashboard() {
         />
         <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 4, textAlign: "right" }}>
           {bio.length}/{BIO_LIMIT}
+        </p>
+
+        <label className="label" htmlFor="bioEn">
+          İngilizce tanıtım (opsiyonel)
+        </label>
+        <textarea
+          id="bioEn"
+          className="field"
+          value={bioEn}
+          onChange={(e) => setBioEn(e.target.value.slice(0, BIO_LIMIT))}
+          placeholder="e.g. Handmade knit accessories and gifts. Orders ship in 2-3 days."
+          rows={3}
+          style={{ resize: "vertical", fontFamily: "inherit" }}
+        />
+        <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>
+          Ziyaretçi sayfanda "EN" seçerse bu metin gösterilir. Boş bırakırsan Türkçe metin kalır.
         </p>
 
         <label className="label">Tema</label>
