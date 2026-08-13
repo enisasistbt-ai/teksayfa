@@ -9,7 +9,7 @@ async function getProfile(username) {
   const { data } = await supabase
     .from("profiles")
     .select(
-      "username, display_name, bio, bio_en, links, theme, is_premium, avatar_url, away_mode, away_message, away_message_en, away_until"
+      "id, username, display_name, bio, bio_en, links, theme, is_premium, avatar_url, away_mode, away_message, away_message_en, away_until"
     )
     .eq("username", username)
     .maybeSingle();
