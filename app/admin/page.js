@@ -127,7 +127,7 @@ export default function Admin() {
         <div className="admin-brand">
           <div className="admin-brand-mark" />
           <span className="display" style={{ fontSize: 16 }}>
-            TekSayfa <span style={{ color: "var(--muted)", fontWeight: 400 }}>· Yönetim</span>
+            MineBio <span style={{ color: "var(--muted)", fontWeight: 400 }}>· Yönetim</span>
           </span>
         </div>
         <a href="/dashboard" className="mono" style={{ fontSize: 12, color: "var(--muted)" }}>

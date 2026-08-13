@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Gizlilik Politikası — TekSayfa" };
+export const metadata = { title: "Gizlilik Politikası — MineBio" };
 
 export default function GizlilikPolitikasi() {
   return (
     <div className="corp-landing">
       <div className="legal-prose">
         <Link href="/" className="corp-eyebrow" style={{ textDecoration: "none" }}>
-          ← TekSayfa
+          ← MineBio
         </Link>
         <h1 className="corp-display" style={{ fontSize: 28, marginTop: 16 }}>
           Gizlilik Politikası
@@ -24,9 +24,9 @@ export default function GizlilikPolitikasi() {
 
         <h2>1. Kimiz</h2>
         <p>
-          TekSayfa ("biz", "site"), kullanıcıların sosyal medya, mağaza ve
+          MineBio ("biz", "site"), kullanıcıların sosyal medya, mağaza ve
           iletişim bağlantılarını tek bir sayfada topladığı bir hizmettir. Bu
-          politika, hem TekSayfa'yı kullanan işletme sahiplerinin
+          politika, hem MineBio'yı kullanan işletme sahiplerinin
           ("kullanıcı") hem de onların sayfalarını ziyaret eden kişilerin
           ("ziyaretçi") verilerini nasıl işlediğimizi açıklar.
         </p>

@@ -8,7 +8,7 @@ import ContactForm from "./ContactForm";
 const STRINGS = {
   tr: {
     empty: "Henüz link eklenmemiş.",
-    madeWith: "TekSayfa ile oluşturuldu",
+    madeWith: "MineBio ile oluşturuldu",
     onBreak: "Mola verdik",
     defaultAway: "Şu anda müsait değiliz.",
     returns: "Dönüş",
@@ -16,7 +16,7 @@ const STRINGS = {
   },
   en: {
     empty: "No links added yet.",
-    madeWith: "Made with TekSayfa",
+    madeWith: "Made with MineBio",
     onBreak: "We're on a break",
     defaultAway: "We're currently unavailable.",
     returns: "Back on",
@@ -96,7 +96,7 @@ export default function ProfileView({ profile, pageUrl }) {
         <h1 style={{ textAlign: "center", fontSize: 20 }}>
           {profile.display_name || profile.username}
         </h1>
-        <div className="handle mono">teksayfa.app/{profile.username}</div>
+        <div className="handle mono">minebio.net/{profile.username}</div>
         {bioText && (
           <p
             style={{

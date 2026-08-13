@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Açık Rıza Metni — TekSayfa" };
+export const metadata = { title: "Açık Rıza Metni — MineBio" };
 
 export default function AcikRizaMetni() {
   return (
     <div className="corp-landing">
       <div className="legal-prose">
         <Link href="/" className="corp-eyebrow" style={{ textDecoration: "none" }}>
-          ← TekSayfa
+          ← MineBio
         </Link>
         <h1 className="corp-display" style={{ fontSize: 28, marginTop: 16 }}>
           Açık Rıza Metni

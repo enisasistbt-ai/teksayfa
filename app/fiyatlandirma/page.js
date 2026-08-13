@@ -17,7 +17,7 @@ export default function Fiyatlandirma() {
         <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 14, lineHeight: 1.9 }}>
           <li>{FREE_LINK_LIMIT} linke kadar</li>
           <li>1 tema (Vitrin)</li>
-          <li>"TekSayfa ile oluşturuldu" yazısı görünür</li>
+          <li>"MineBio ile oluşturuldu" yazısı görünür</li>
         </ul>
       </div>
 
@@ -42,7 +42,7 @@ export default function Fiyatlandirma() {
         <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 14, lineHeight: 1.9 }}>
           <li>Sınırsız link</li>
           <li>Tüm temalar</li>
-          <li>"TekSayfa ile oluşturuldu" yazısı kalkar</li>
+          <li>"MineBio ile oluşturuldu" yazısı kalkar</li>
         </ul>
 
         <button className="btn" style={{ width: "100%", marginTop: 16 }} disabled>

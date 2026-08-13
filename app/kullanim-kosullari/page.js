@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Kullanım Koşulları — TekSayfa" };
+export const metadata = { title: "Kullanım Koşulları — MineBio" };
 
 export default function KullanimKosullari() {
   return (
     <div className="corp-landing">
       <div className="legal-prose">
         <Link href="/" className="corp-eyebrow" style={{ textDecoration: "none" }}>
-          ← TekSayfa
+          ← MineBio
         </Link>
         <h1 className="corp-display" style={{ fontSize: 28, marginTop: 16 }}>
           Kullanım Koşulları
@@ -24,7 +24,7 @@ export default function KullanimKosullari() {
 
         <h2>1. Hizmetin tanımı</h2>
         <p>
-          TekSayfa, kullanıcıların bağlantılarını tek bir sayfada
+          MineBio, kullanıcıların bağlantılarını tek bir sayfada
           toplayabildiği bir hizmettir. Ücretsiz ve Premium plan seçenekleri
           sunar.
         </p>
@@ -40,7 +40,7 @@ export default function KullanimKosullari() {
         </ul>
 
         <h2>3. Yasaklı kullanım</h2>
-        <p>TekSayfa'yı şu amaçlarla kullanamazsınız:</p>
+        <p>MineBio'yı şu amaçlarla kullanamazsınız:</p>
         <ul>
           <li>Yasa dışı, aldatıcı veya dolandırıcılık içerikli sayfalar oluşturmak</li>
           <li>Başkalarının fikri mülkiyet haklarını ihlal eden içerik paylaşmak</li>

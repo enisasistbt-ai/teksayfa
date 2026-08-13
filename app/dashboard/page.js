@@ -533,7 +533,7 @@ export default function Dashboard() {
     ctx.fillText(displayName || username, centerX, QR_SIZE + 55);
     ctx.fillStyle = MUTED;
     ctx.font = "400 20px monospace";
-    ctx.fillText(`teksayfa.app/${username}`, centerX, QR_SIZE + 88);
+    ctx.fillText(`minebio.net/${username}`, centerX, QR_SIZE + 88);
   }
 
   useEffect(() => {
@@ -547,7 +547,7 @@ export default function Dashboard() {
     const canvas = qrCanvasRef.current;
     if (!canvas) return;
     const link = document.createElement("a");
-    link.download = `${username || "teksayfa"}-qr.png`;
+    link.download = `${username || "minebio"}-qr.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   }

@@ -81,7 +81,7 @@ export default function Home() {
               }}
             />
             <span className="corp-display" style={{ fontSize: 16 }}>
-              TekSayfa
+              MineBio
             </span>
           </div>
           <div className="corp-nav-links">
@@ -107,7 +107,7 @@ export default function Home() {
               tek bağlantıda anlat.
             </h1>
             <p style={{ color: "var(--c-body)", marginTop: 18, fontSize: 16, lineHeight: 1.7, maxWidth: 460 }}>
-              İster bir şirketi temsil et, ister kendi işini yönet: TekSayfa
+              İster bir şirketi temsil et, ister kendi işini yönet: MineBio
               sosyal medyanı, mağazanı ve iletişim bilgilerini tek, profesyonel
               bir sayfada toplar — kimin baktığını da sana gösterir.
             </p>
@@ -136,7 +136,7 @@ export default function Home() {
                 Merve Aydın
               </div>
               <div style={{ fontSize: 12.5, color: "var(--c-body)", marginTop: 2 }}>
-                teksayfa.app/merve-aydin
+                minebio.net/merve-aydin
               </div>
               <a className="corp-mock-link">LinkedIn profilim</a>
               <a className="corp-mock-link">Portföyüm</a>
@@ -235,7 +235,7 @@ export default function Home() {
                 }}
               />
               <span className="corp-display" style={{ fontSize: 14 }}>
-                TekSayfa
+                MineBio
               </span>
             </div>
             <p style={{ fontSize: 12.5, color: "var(--c-body)", marginTop: 12, lineHeight: 1.6 }}>
@@ -260,7 +260,7 @@ export default function Home() {
             <Link href="/mesafeli-satis-sozlesmesi">Mesafeli Satış Sözleşmesi</Link>
           </div>
         </div>
-        <div className="corp-footer-bottom">© {new Date().getFullYear()} TekSayfa. Tüm hakları saklıdır.</div>
+        <div className="corp-footer-bottom">© {new Date().getFullYear()} MineBio. Tüm hakları saklıdır.</div>
       </footer>
     </div>
   );

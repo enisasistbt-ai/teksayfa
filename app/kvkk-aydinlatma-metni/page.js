@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "KVKK Aydınlatma Metni — TekSayfa" };
+export const metadata = { title: "KVKK Aydınlatma Metni — MineBio" };
 
 export default function KvkkAydinlatmaMetni() {
   return (
     <div className="corp-landing">
       <div className="legal-prose">
         <Link href="/" className="corp-eyebrow" style={{ textDecoration: "none" }}>
-          ← TekSayfa
+          ← MineBio
         </Link>
         <h1 className="corp-display" style={{ fontSize: 28, marginTop: 16 }}>
           KVKK Aydınlatma Metni
@@ -27,7 +27,7 @@ export default function KvkkAydinlatmaMetni() {
         <p>
           İşbu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması
           Kanunu'nun ("Kanun") 10. maddesi uyarınca, veri sorumlusu sıfatıyla{" "}
-          <strong>[şirket unvanınızı buraya ekleyin]</strong> ("TekSayfa")
+          <strong>[şirket unvanınızı buraya ekleyin]</strong> ("MineBio")
           tarafından hazırlanmıştır.
         </p>
 

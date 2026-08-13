@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "TekSayfa — Tüm linklerin tek yerde",
+  title: "MineBio — Tüm linklerin tek yerde",
   description: "Bio linkini saniyeler içinde oluştur ve paylaş.",
 };
 

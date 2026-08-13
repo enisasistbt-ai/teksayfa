@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Mesafeli Satış Sözleşmesi — TekSayfa" };
+export const metadata = { title: "Mesafeli Satış Sözleşmesi — MineBio" };
 
 export default function MesafeliSatisSozlesmesi() {
   return (
     <div className="corp-landing">
       <div className="legal-prose">
         <Link href="/" className="corp-eyebrow" style={{ textDecoration: "none" }}>
-          ← TekSayfa
+          ← MineBio
         </Link>
         <h1 className="corp-display" style={{ fontSize: 28, marginTop: 16 }}>
           Mesafeli Satış Sözleşmesi
@@ -28,13 +28,13 @@ export default function MesafeliSatisSozlesmesi() {
         <p>
           <strong>Satıcı:</strong> [şirket unvanınızı buraya ekleyin]
           <br />
-          <strong>Alıcı:</strong> TekSayfa üzerinden Premium plan satın alan
+          <strong>Alıcı:</strong> MineBio üzerinden Premium plan satın alan
           kullanıcı
         </p>
 
         <h2>2. Konu</h2>
         <p>
-          İşbu sözleşme, Alıcı'nın TekSayfa üzerinden elektronik ortamda
+          İşbu sözleşme, Alıcı'nın MineBio üzerinden elektronik ortamda
           sipariş verdiği Premium abonelik hizmetinin satışı ve ifasına
           ilişkin tarafların hak ve yükümlülüklerini düzenler.
         </p>

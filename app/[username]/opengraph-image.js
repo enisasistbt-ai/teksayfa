@@ -3,7 +3,7 @@ import { supabase } from "../../lib/supabaseClient";
 import { THEMES, DEFAULT_THEME } from "../../lib/themes";
 
 export const dynamic = "force-dynamic";
-export const alt = "TekSayfa profili";
+export const alt = "MineBio profili";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,7 +15,7 @@ export default async function Image({ params }) {
     .maybeSingle();
 
   const theme = THEMES[profile?.theme] || THEMES[DEFAULT_THEME];
-  const name = (profile?.display_name || profile?.username || "TekSayfa").trim();
+  const name = (profile?.display_name || profile?.username || "MineBio").trim();
   const initial = name.charAt(0).toUpperCase();
 
   let avatarData = null;
@@ -75,7 +75,7 @@ export default async function Image({ params }) {
           {name}
         </div>
         <div style={{ display: "flex", fontSize: 26, color: theme.accent, marginTop: 14 }}>
-          teksayfa.app/{profile?.username || ""}
+          minebio.net/{profile?.username || ""}
         </div>
       </div>
     ),
