@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
 
 export default function Login() {
@@ -8,10 +9,15 @@ export default function Login() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [agreed, setAgreed] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
     setError("");
+    if (!agreed) {
+      setError("Devam etmek için sözleşmeleri kabul etmen gerekiyor.");
+      return;
+    }
     setLoading(true);
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -32,6 +38,10 @@ export default function Login() {
 
   async function handleGoogleLogin() {
     setError("");
+    if (!agreed) {
+      setError("Devam etmek için sözleşmeleri kabul etmen gerekiyor.");
+      return;
+    }
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -55,10 +65,48 @@ export default function Login() {
 
       {!sent && (
         <>
+          <label
+            className="row"
+            style={{
+              alignItems: "flex-start",
+              gap: 10,
+              marginTop: 24,
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => {
+                setAgreed(e.target.checked);
+                if (e.target.checked) setError("");
+              }}
+              style={{ marginTop: 3, flexShrink: 0, accentColor: "var(--amber)" }}
+            />
+            <span style={{ fontSize: 12.5, color: "var(--muted)", lineHeight: 1.6 }}>
+              <Link href="/kullanim-kosullari" target="_blank" style={{ color: "var(--amber)" }}>
+                Kullanım Koşulları
+              </Link>
+              ,{" "}
+              <Link href="/gizlilik-politikasi" target="_blank" style={{ color: "var(--amber)" }}>
+                Gizlilik Politikası
+              </Link>
+              ,{" "}
+              <Link href="/kvkk-aydinlatma-metni" target="_blank" style={{ color: "var(--amber)" }}>
+                KVKK Aydınlatma Metni
+              </Link>{" "}
+              ve{" "}
+              <Link href="/acik-riza-metni" target="_blank" style={{ color: "var(--amber)" }}>
+                Açık Rıza Metni
+              </Link>
+              'ni okudum, kabul ediyorum.
+            </span>
+          </label>
+
           <button
             type="button"
             className="btn-ghost"
-            style={{ width: "100%", marginTop: 24 }}
+            style={{ width: "100%", marginTop: 16, opacity: agreed ? 1 : 0.5 }}
             onClick={handleGoogleLogin}
           >
             Google ile devam et
@@ -103,7 +151,11 @@ export default function Login() {
               {error}
             </p>
           )}
-          <button className="btn" style={{ marginTop: 18, width: "100%" }} disabled={loading}>
+          <button
+            className="btn"
+            style={{ marginTop: 18, width: "100%", opacity: agreed ? 1 : 0.6 }}
+            disabled={loading}
+          >
             {loading ? "Gönderiliyor..." : "Bağlantı gönder"}
           </button>
         </form>
