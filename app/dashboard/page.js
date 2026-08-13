@@ -733,6 +733,19 @@ export default function Dashboard() {
           >
             PNG olarak indir
           </button>
+          <button
+            type="button"
+            className="btn"
+            style={{ marginTop: 10, width: "100%" }}
+            onClick={handleShare}
+          >
+            📤 Sayfamı paylaş
+          </button>
+          {shareCopied && (
+            <p style={{ fontSize: 12, color: "var(--amber)", marginTop: 8 }}>
+              Link kopyalandı, yapıştırabilirsin.
+            </p>
+          )}
         </div>
       )}
 
@@ -1006,27 +1019,12 @@ export default function Dashboard() {
       </form>
 
       {username && (
-        <>
-          <button
-            type="button"
-            className="btn"
-            style={{ width: "100%", marginTop: 20 }}
-            onClick={handleShare}
-          >
-            📤 Sayfamı paylaş
-          </button>
-          {shareCopied && (
-            <p style={{ textAlign: "center", fontSize: 12, color: "var(--amber)", marginTop: 6 }}>
-              Link kopyalandı, yapıştırabilirsin.
-            </p>
-          )}
-          <p className="footer-note">
-            Yayındaki sayfan:{" "}
-            <a className="mono" style={{ color: "var(--amber)" }} href={`/${username}`} target="_blank">
-              /{username}
-            </a>
-          </p>
-        </>
+        <p className="footer-note">
+          Yayındaki sayfan:{" "}
+          <a className="mono" style={{ color: "var(--amber)" }} href={`/${username}`} target="_blank">
+            /{username}
+          </a>
+        </p>
       )}
 
       {editorOpen && editorImg && (
