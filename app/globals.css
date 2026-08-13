@@ -892,3 +892,48 @@ textarea {
 .corp-footer-inner a:hover {
   color: var(--c-accent);
 }
+
+.legal-prose {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 60px 24px 100px;
+}
+
+.legal-prose h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-top: 36px;
+  margin-bottom: 10px;
+}
+
+.legal-prose h2:first-of-type {
+  margin-top: 28px;
+}
+
+.legal-prose p,
+.legal-prose li {
+  font-size: 14.5px;
+  color: var(--c-body);
+  line-height: 1.75;
+}
+
+.legal-prose ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.legal-prose li {
+  margin-top: 4px;
+}
+
+.legal-notice {
+  background: var(--c-accent-tint);
+  border: 1px solid #cddcff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--c-ink);
+  margin-top: 24px;
+}

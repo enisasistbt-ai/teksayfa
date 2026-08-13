@@ -224,9 +224,13 @@ export default function Home() {
       <footer className="corp-footer">
         <div className="corp-footer-inner">
           <span>© {new Date().getFullYear()} TekSayfa</span>
-          <div className="row" style={{ gap: 20 }}>
+          <div className="row" style={{ gap: 20, flexWrap: "wrap" }}>
             <Link href="/fiyatlandirma">Fiyatlandırma</Link>
             <Link href="/login">Giriş yap</Link>
+            <Link href="/gizlilik-politikasi">Gizlilik</Link>
+            <Link href="/cerez-politikasi">Çerezler</Link>
+            <Link href="/kullanim-kosullari">Kullanım Koşulları</Link>
+            <Link href="/kvkk-aydinlatma-metni">KVKK</Link>
           </div>
         </div>
       </footer>
