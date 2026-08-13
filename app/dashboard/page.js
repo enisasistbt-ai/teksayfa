@@ -573,6 +573,9 @@ export default function Dashboard() {
           <Link href="/kisiler" className="btn-ghost" style={{ fontSize: 12 }}>
             👥 Kişilerim
           </Link>
+          <Link href="/mesajlar" className="btn-ghost" style={{ fontSize: 12 }}>
+            ✉️ Mesajlarım
+          </Link>
           <button className="btn-ghost" onClick={handleLogout}>
             Çıkış yap
           </button>
