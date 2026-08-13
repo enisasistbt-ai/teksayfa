@@ -1,9 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const INDUSTRIES = ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Serbest çalışanlar", "Ajanslar", "Perakende"];
+
+const MARQUEE_ITEMS = [
+  "E-ticaret satıcıları",
+  "Danışmanlar",
+  "Serbest çalışanlar",
+  "Ajanslar",
+  "Perakende mağazaları",
+  "Hizmet sektörü",
+  "Girişimciler",
+  "Emlak danışmanları",
+];
+
+const EXAMPLES = [
+  {
+    initial: "M",
+    name: "Merve Aydın",
+    handle: "merve-aydin",
+    links: ["LinkedIn profilim", "Portföyüm", "Randevu al"],
+  },
+  {
+    initial: "D",
+    name: "Deniz Kaya",
+    handle: "deniz-kaya",
+    links: ["Instagram mağazam", "WhatsApp'tan sipariş ver", "Trendyol mağazam"],
+  },
+  {
+    initial: "C",
+    name: "Can Yılmaz",
+    handle: "can-yilmaz",
+    links: ["Web sitem", "CV'm", "E-posta gönder"],
+  },
+  {
+    initial: "A",
+    name: "Ada Demir",
+    handle: "ada-demir",
+    links: ["Hizmetlerimi gör", "Randevu al", "Yorumlarımı oku"],
+  },
+];
 
 const FEATURES = [
   {
@@ -65,6 +103,16 @@ const FAQ = [
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState(null);
+  const [exampleIndex, setExampleIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setExampleIndex((i) => (i + 1) % EXAMPLES.length);
+    }, 3200);
+    return () => clearInterval(timer);
+  }, []);
+
+  const example = EXAMPLES[exampleIndex];
 
   return (
     <div className="corp-landing">
@@ -130,21 +178,32 @@ export default function Home() {
           </div>
 
           <div className="corp-hero-visual">
-            <div className="corp-mock">
-              <div className="corp-mock-avatar">M</div>
+            <div className="corp-mock corp-mock-fade" key={example.handle}>
+              <div className="corp-mock-avatar">{example.initial}</div>
               <div className="corp-display" style={{ fontSize: 16 }}>
-                Merve Aydın
+                {example.name}
               </div>
               <div style={{ fontSize: 12.5, color: "var(--c-body)", marginTop: 2 }}>
-                minebio.net/merve-aydin
+                minebio.net/{example.handle}
               </div>
-              <a className="corp-mock-link">LinkedIn profilim</a>
-              <a className="corp-mock-link">Portföyüm</a>
-              <a className="corp-mock-link">Randevu al</a>
+              {example.links.map((l) => (
+                <a className="corp-mock-link" key={l}>
+                  {l}
+                </a>
+              ))}
             </div>
           </div>
         </div>
       </section>
+
+      {/* Kayan şerit */}
+      <div className="corp-marquee" aria-hidden="true">
+        <div className="corp-marquee-track">
+          {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+            <span key={i}>{item}</span>
+          ))}
+        </div>
+      </div>
 
       {/* Özellikler */}
       <section className="corp-section corp-section-alt" id="ozellikler">
