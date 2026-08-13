@@ -1,6 +1,6 @@
 "use client";
 
-export default function SaveContactButton({ displayName, phone, url, bio }) {
+export default function SaveContactButton({ displayName, phone, url, bio, label = "📇 Rehbere kaydet" }) {
   function handleSave() {
     const lines = [
       "BEGIN:VCARD",
@@ -26,7 +26,7 @@ export default function SaveContactButton({ displayName, phone, url, bio }) {
 
   return (
     <button type="button" className="btn-ghost" style={{ width: "100%", marginTop: 14 }} onClick={handleSave}>
-      📇 Rehbere kaydet
+      {label}
     </button>
   );
 }
