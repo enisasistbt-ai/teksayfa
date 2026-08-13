@@ -15,18 +15,9 @@ export default function MesafeliSatisSozlesmesi() {
         <p style={{ marginTop: 6, fontSize: 13, color: "var(--c-body)" }}>
           Son güncelleme: {new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
-
-        <div className="legal-notice">
-          Bu metin, ödeme sistemi (Premium plan) devreye alındığında
-          kullanılmak üzere hazırlanmış genel bir taslaktır. Yürürlüğe
-          almadan önce şirket bilgilerinizle güncellenmeli ve bir hukuk
-          danışmanına onaylatılmalıdır. 6502 sayılı Tüketicinin Korunması
-          Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği'ne tabidir.
-        </div>
-
         <h2>1. Taraflar</h2>
         <p>
-          <strong>Satıcı:</strong> [şirket unvanınızı buraya ekleyin]
+          <strong>Satıcı:</strong> Enis Özbilgir (Şahıs Şirketi)
           <br />
           <strong>Alıcı:</strong> MineBio üzerinden Premium plan satın alan
           kullanıcı
@@ -78,7 +69,7 @@ export default function MesafeliSatisSozlesmesi() {
 
         <h2>8. İletişim</h2>
         <p>
-          Sorularınız için: <strong>[buraya iletişim e-postanızı ekleyin]</strong>
+          Sorularınız için: <strong>bilgi@bibutikshop.com.tr</strong>
         </p>
       </div>
     </div>

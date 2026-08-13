@@ -15,19 +15,11 @@ export default function KvkkAydinlatmaMetni() {
         <p style={{ marginTop: 6, fontSize: 13, color: "var(--c-body)" }}>
           Son güncelleme: {new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
-
-        <div className="legal-notice">
-          Bu metin 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK")
-          kapsamında genel bir taslaktır. Şirket unvanınız, adresiniz ve
-          Veri Sorumlusu bilgileriniz eklenmeden, ve bir hukuk danışmanına
-          onaylatılmadan yayınlanmamalıdır.
-        </div>
-
         <h2>1. Veri Sorumlusu</h2>
         <p>
           İşbu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması
           Kanunu'nun ("Kanun") 10. maddesi uyarınca, veri sorumlusu sıfatıyla{" "}
-          <strong>[şirket unvanınızı buraya ekleyin]</strong> ("MineBio")
+          <strong>Enis Özbilgir (Şahıs Şirketi)</strong> ("MineBio")
           tarafından hazırlanmıştır.
         </p>
 
@@ -80,7 +72,7 @@ export default function KvkkAydinlatmaMetni() {
         <h2>7. Başvuru yöntemi</h2>
         <p>
           Yukarıdaki haklarınızı kullanmak için taleplerinizi{" "}
-          <strong>[buraya iletişim e-postanızı ekleyin]</strong> adresine
+          <strong>bilgi@bibutikshop.com.tr</strong> adresine
           iletebilirsiniz.
         </p>
       </div>

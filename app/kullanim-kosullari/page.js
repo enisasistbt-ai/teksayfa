@@ -15,13 +15,6 @@ export default function KullanimKosullari() {
         <p style={{ marginTop: 6, fontSize: 13, color: "var(--c-body)" }}>
           Son güncelleme: {new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
-
-        <div className="legal-notice">
-          Bu metin genel bilgilendirme amaçlıdır ve hukuki danışmanlık yerine
-          geçmez. Ticari kullanım öncesi bir avukata gözden geçirtmenizi
-          öneririz.
-        </div>
-
         <h2>1. Hizmetin tanımı</h2>
         <p>
           MineBio, kullanıcıların bağlantılarını tek bir sayfada
@@ -72,7 +65,7 @@ export default function KullanimKosullari() {
 
         <h2>7. İletişim</h2>
         <p>
-          Sorularınız için: <strong>[buraya iletişim e-postanızı ekleyin]</strong>
+          Sorularınız için: <strong>bilgi@bibutikshop.com.tr</strong>
         </p>
       </div>
     </div>

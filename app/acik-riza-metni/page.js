@@ -15,12 +15,6 @@ export default function AcikRizaMetni() {
         <p style={{ marginTop: 6, fontSize: 13, color: "var(--c-body)" }}>
           Son güncelleme: {new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
-
-        <div className="legal-notice">
-          Bu metin genel bir taslaktır; şirket bilgileriniz eklenip bir hukuk
-          danışmanına onaylatılmadan yayınlanmamalıdır.
-        </div>
-
         <h2>1. Amaç</h2>
         <p>
           KVKK Aydınlatma Metni'ni okudum, kişisel verilerimin aşağıdaki
@@ -58,7 +52,7 @@ export default function AcikRizaMetni() {
 
         <h2>4. İletişim</h2>
         <p>
-          Sorularınız için: <strong>[buraya iletişim e-postanızı ekleyin]</strong>
+          Sorularınız için: <strong>bilgi@bibutikshop.com.tr</strong>
         </p>
       </div>
     </div>

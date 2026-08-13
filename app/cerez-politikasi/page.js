@@ -15,12 +15,6 @@ export default function CerezPolitikasi() {
         <p style={{ marginTop: 6, fontSize: 13, color: "var(--c-body)" }}>
           Son güncelleme: {new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
-
-        <div className="legal-notice">
-          Bu metin genel bilgilendirme amaçlıdır ve hukuki danışmanlık yerine
-          geçmez.
-        </div>
-
         <h2>1. Çerez nedir</h2>
         <p>
           Çerezler, bir siteyi ziyaret ettiğinizde tarayıcınıza kaydedilen
@@ -63,7 +57,7 @@ export default function CerezPolitikasi() {
 
         <h2>4. İletişim</h2>
         <p>
-          Sorularınız için: <strong>[buraya iletişim e-postanızı ekleyin]</strong>
+          Sorularınız için: <strong>bilgi@bibutikshop.com.tr</strong>
         </p>
       </div>
     </div>

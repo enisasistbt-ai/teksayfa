@@ -15,13 +15,6 @@ export default function GizlilikPolitikasi() {
         <p style={{ marginTop: 6, fontSize: 13, color: "var(--c-body)" }}>
           Son güncelleme: {new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
-
-        <div className="legal-notice">
-          Bu metin genel bilgilendirme amaçlıdır ve hukuki danışmanlık yerine
-          geçmez. Yayınlamadan önce bir avukata / KVKK danışmanına
-          gözden geçirtmenizi öneririz.
-        </div>
-
         <h2>1. Kimiz</h2>
         <p>
           MineBio ("biz", "site"), kullanıcıların sosyal medya, mağaza ve
@@ -81,7 +74,7 @@ export default function GizlilikPolitikasi() {
         <h2>7. İletişim</h2>
         <p>
           Gizlilikle ilgili sorularınız için:{" "}
-          <strong>[buraya iletişim e-postanızı ekleyin]</strong>
+          <strong>bilgi@bibutikshop.com.tr</strong>
         </p>
       </div>
     </div>
