@@ -6,6 +6,7 @@ import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
 import { THEMES, DEFAULT_THEME, FREE_LINK_LIMIT } from "../../lib/themes";
 import { PLATFORMS, normalizeUrl } from "../../lib/platforms";
+import { shareOrCopy } from "../../lib/share";
 import QRCode from "qrcode";
 
 function emptyPlatformValues() {
@@ -53,6 +54,7 @@ export default function Dashboard() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [error, setError] = useState("");
+  const [shareCopied, setShareCopied] = useState(false);
   const [stats, setStats] = useState({ views: 0, clicksByLabel: {} });
 
   // Fotoğraf konumlandırma editörü
@@ -552,6 +554,20 @@ export default function Dashboard() {
     link.click();
   }
 
+  async function handleShare() {
+    const url = `${window.location.origin}/${username}`;
+    const result = await shareOrCopy(
+      { title: displayName || username, text: "Sayfama göz atar mısın?", url },
+      () => {
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 3000);
+      }
+    );
+    if (result === "failed") {
+      setError("Paylaşılamadı, linki elle kopyalayabilirsin.");
+    }
+  }
+
   async function handleLogout() {
     await supabase.auth.signOut();
     router.replace("/login");
@@ -990,12 +1006,27 @@ export default function Dashboard() {
       </form>
 
       {username && (
-        <p className="footer-note">
-          Yayındaki sayfan:{" "}
-          <a className="mono" style={{ color: "var(--amber)" }} href={`/${username}`} target="_blank">
-            /{username}
-          </a>
-        </p>
+        <>
+          <button
+            type="button"
+            className="btn"
+            style={{ width: "100%", marginTop: 20 }}
+            onClick={handleShare}
+          >
+            📤 Sayfamı paylaş
+          </button>
+          {shareCopied && (
+            <p style={{ textAlign: "center", fontSize: 12, color: "var(--amber)", marginTop: 6 }}>
+              Link kopyalandı, yapıştırabilirsin.
+            </p>
+          )}
+          <p className="footer-note">
+            Yayındaki sayfan:{" "}
+            <a className="mono" style={{ color: "var(--amber)" }} href={`/${username}`} target="_blank">
+              /{username}
+            </a>
+          </p>
+        </>
       )}
 
       {editorOpen && editorImg && (
