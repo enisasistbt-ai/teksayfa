@@ -45,7 +45,7 @@ export default function ContactForm({ ownerId, lang = "tr" }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!name.trim() || !message.trim()) return;
+    if (!name.trim() || !contact.trim() || !message.trim()) return;
     setSending(true);
     setError("");
     const { error } = await supabase.from("messages").insert({
@@ -98,6 +98,7 @@ export default function ContactForm({ ownerId, lang = "tr" }) {
             value={contact}
             onChange={(e) => setContact(e.target.value)}
             placeholder={t.contact}
+            required
           />
           <textarea
             className="field"
