@@ -90,11 +90,11 @@ export default function Mesajlar() {
             <div className="row" style={{ justifyContent: "space-between" }}>
               <div>
                 <strong style={{ fontSize: 14 }}>{m.name}</strong>
-                {m.contact && (
-                  <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: 8 }}>
-                    {m.contact}
-                  </span>
-                )}
+                <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
+                  {m.phone && <span>📞 {m.phone}</span>}
+                  {m.phone && m.email && <span> · </span>}
+                  {m.email && <span>✉️ {m.email}</span>}
+                </div>
               </div>
               <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
                 {formatDate(m.created_at)}
