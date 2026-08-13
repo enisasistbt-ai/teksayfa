@@ -117,7 +117,7 @@ export default function Dashboard() {
             order.push(match.id);
           } else {
             const id = crypto.randomUUID();
-            custom.push({ id, label: link.label, url: link.url || "" });
+            custom.push({ id, label: link.label, labelEn: link.labelEn || "", url: link.url || "" });
             order.push(`custom-${id}`);
           }
         });
@@ -194,16 +194,12 @@ export default function Dashboard() {
     setError("");
     setCustomLinks((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), label: `Web sitesi ${prev.length + 1}`, url: "" },
+      { id: crypto.randomUUID(), label: `Web sitesi ${prev.length + 1}`, labelEn: "", url: "" },
     ]);
   }
 
   function removeCustomLink(index) {
-    setCustomLinks((prev) =>
-      prev
-        .filter((_, i) => i !== index)
-        .map((l, i) => ({ ...l, label: `Web sitesi ${i + 1}` }))
-    );
+    setCustomLinks((prev) => prev.filter((_, i) => i !== index));
   }
 
   function getOrderedLinks() {
@@ -266,7 +262,11 @@ export default function Dashboard() {
         const id = key.slice(7);
         const c = customLinks.find((l) => l.id === id);
         if (c && c.url.trim()) {
-          links.push({ label: c.label, url: normalizeUrl(c.url) });
+          links.push({
+            label: c.label,
+            ...(c.labelEn?.trim() ? { labelEn: c.labelEn.trim() } : {}),
+            url: normalizeUrl(c.url),
+          });
         }
         return;
       }
@@ -884,10 +884,14 @@ export default function Dashboard() {
         </label>
         {customLinks.map((link, i) => (
           <div key={i} style={{ marginTop: 22 }}>
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              <label className="label" style={{ marginTop: 0 }}>
-                {link.label}
-              </label>
+            <div className="row" style={{ justifyContent: "space-between", gap: 8 }}>
+              <input
+                className="field mono"
+                style={{ flex: 1 }}
+                value={link.label}
+                onChange={(e) => updateCustomLink(i, "label", e.target.value)}
+                placeholder="Örn. Katalog"
+              />
               <button
                 type="button"
                 className="remove"
@@ -899,9 +903,17 @@ export default function Dashboard() {
             </div>
             <input
               className="field"
+              style={{ marginTop: 8 }}
               value={link.url}
               onChange={(e) => updateCustomLink(i, "url", e.target.value)}
               placeholder="https://..."
+            />
+            <input
+              className="field"
+              style={{ marginTop: 8 }}
+              value={link.labelEn || ""}
+              onChange={(e) => updateCustomLink(i, "labelEn", e.target.value)}
+              placeholder="İngilizce etiket (opsiyonel, örn. Catalog)"
             />
           </div>
         ))}
