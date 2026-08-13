@@ -1,45 +1,23 @@
 import Link from "next/link";
 
-const FEATURES = [
+const PILLARS = [
   {
-    icon: "🎨",
-    title: "Kişiselleştirilebilir temalar",
-    desc: "Vitrin, Kahve, Deniz, Güneş — markana uygun görünümü seç.",
+    eyebrow: "görünüm",
+    title: "Vitrin gibi, ama cepte.",
+    desc: "Ziyaretçi sayfana girdiği ilk saniyede işini ciddiye aldığını anlasın. Kendi renklerinle, kendi fotoğrafınla, markalı bir görünüm.",
+    tags: ["4 tema seçeneği", "Markalı QR kod", "Otomatik paylaşım görseli", "Rehbere kaydet butonu"],
   },
   {
-    icon: "📊",
-    title: "Anlık istatistikler",
-    desc: "Sayfan kaç kez görüntülendi, hangi link kaç tıklama aldı — panelinde canlı.",
+    eyebrow: "takip",
+    title: "Kimin baktığını gör.",
+    desc: "Hangi linkin işe yaradığını, sayfanın kaç kez görüntülendiğini panelinden anlık takip et. Tahmin etmeyi bırak.",
+    tags: ["Görüntülenme sayacı", "Link bazlı tıklama takibi", "Ziyaretçi mesaj formu"],
   },
   {
-    icon: "📱",
-    title: "Markalı QR kod",
-    desc: "Ortasında fotoğrafın ve isminle, vitrinde ya da kartvizitte bastırmaya hazır.",
-  },
-  {
-    icon: "📇",
-    title: "Rehbere kaydet",
-    desc: "Ziyaretçi tek tıkla seni telefonuna gerçek bir kişi olarak kaydedebilir.",
-  },
-  {
-    icon: "💬",
-    title: "İletişim formu",
-    desc: "Ziyaretçiler doğrudan sana mesaj bıraksın, WhatsApp'a gitmelerine gerek kalmasın.",
-  },
-  {
-    icon: "👥",
-    title: "Kişi yönetimi",
-    desc: "Tanıştığın kişileri kaydet, sayfanı tek tıkla WhatsApp'tan paylaş.",
-  },
-  {
-    icon: "🌍",
-    title: "TR / EN",
-    desc: "Yabancı müşterilerin için sayfan İngilizce'ye de geçebiliyor.",
-  },
-  {
-    icon: "🏖️",
-    title: "Mola modu",
-    desc: "Tatildeyken ya da yoğun günlerde ziyaretçileri otomatik bilgilendir.",
+    eyebrow: "ilişki",
+    title: "Bağlantıyı kaybetme.",
+    desc: "Tanıştığın müşteriyi kaydet, sayfanı WhatsApp'tan tek tıkla gönder. Tatildeysen ziyaretçiyi otomatik bilgilendir.",
+    tags: ["WhatsApp'tan tek tık paylaşım", "Kişi defteri", "Mola modu bildirimi", "TR / EN desteği"],
   },
 ];
 
@@ -51,60 +29,79 @@ const STEPS = [
 
 export default function Home() {
   return (
-    <main className="wide-container" style={{ paddingTop: 72 }}>
+    <main className="wide-container" style={{ paddingTop: 8 }}>
+      <nav className="nav-bar">
+        <div className="nav-brand">
+          <span className="nav-mark" />
+          TekSayfa
+        </div>
+        <Link href="/login" className="mono" style={{ fontSize: 13, color: "var(--muted)" }}>
+          Giriş yap
+        </Link>
+      </nav>
+
       {/* Hero */}
-      <div className="eyebrow">teksayfa.app</div>
-      <h1 className="display" style={{ fontSize: 42, marginTop: 10, lineHeight: 1.1, maxWidth: 520 }}>
-        Tüm linklerin,
-        <br />
-        tek bir vitrinde.
-      </h1>
-      <p style={{ color: "var(--muted)", marginTop: 16, fontSize: 15, lineHeight: 1.6, maxWidth: 440 }}>
-        Instagram bio'na, WhatsApp'ına, ürün sayfana tek bir link koy.
-        Ziyaretçilerin hepsini tek yerde bulsun, sen de kimin baktığını gör.
-      </p>
+      <div className="hero-row">
+        <div className="hero-copy">
+          <div className="eyebrow">esnafın dijital vitrini</div>
+          <h1 className="display" style={{ fontSize: 44, marginTop: 12, lineHeight: 1.08 }}>
+            Sat, takip et,
+            <br />
+            unutma.
+          </h1>
+          <p style={{ color: "var(--muted)", marginTop: 18, fontSize: 15, lineHeight: 1.65, maxWidth: 420 }}>
+            Instagram bio'n, WhatsApp'ın, mağazan — hepsi dağınık. TekSayfa bunları
+            tek, profesyonel bir sayfada toplar; sen de kimin baktığını, kimin
+            mesaj bıraktığını görürsün.
+          </p>
+          <div className="row" style={{ marginTop: 28, gap: 12 }}>
+            <Link href="/login">
+              <button className="btn">Ücretsiz başla</button>
+            </Link>
+            <Link href="/fiyatlandirma">
+              <button className="btn-ghost">Fiyatlandırma</button>
+            </Link>
+          </div>
+        </div>
 
-      <div className="row" style={{ marginTop: 28, gap: 12 }}>
-        <Link href="/login">
-          <button className="btn">Ücretsiz başla</button>
-        </Link>
-        <Link href="/fiyatlandirma">
-          <button className="btn-ghost">Fiyatlandırma</button>
-        </Link>
-      </div>
-
-      <div className="tabela" style={{ marginTop: 48, maxWidth: 340 }}>
-        <div className="avatar">A</div>
-        <h3 style={{ textAlign: "center", fontSize: 18 }}>Ayşe'nin El İşleri</h3>
-        <div className="handle mono">teksayfa.app/aysenin-el-isleri</div>
-        <a className="link-btn">Instagram'da takip et</a>
-        <a className="link-btn">WhatsApp'tan sipariş ver</a>
-        <a className="link-btn">Trendyol mağazam</a>
-      </div>
-      <p className="footer-note" style={{ marginBottom: 0 }}>
-        Örnek sayfa — kendi sayfan 2 dakikada hazır.
-      </p>
-
-      {/* Özellikler */}
-      <div style={{ marginTop: 72 }}>
-        <div className="eyebrow">neler yapabilirsin</div>
-        <h2 className="display" style={{ fontSize: 26, marginTop: 8 }}>
-          Küçük işletmenin dijital vitrini
-        </h2>
-        <div style={{ marginTop: 10 }}>
-          {FEATURES.map((f) => (
-            <div className="feature-row" key={f.title}>
-              <span className="feature-icon">{f.icon}</span>
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 600 }}>{f.title}</div>
-                <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 2, lineHeight: 1.5 }}>
-                  {f.desc}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="hero-demo-wrap">
+          <div className="hero-glow" />
+          <div className="tabela">
+            <div className="avatar">A</div>
+            <h3 style={{ textAlign: "center", fontSize: 18 }}>Ayşe'nin El İşleri</h3>
+            <div className="handle mono">teksayfa.app/aysenin-el-isleri</div>
+            <a className="link-btn">Instagram'da takip et</a>
+            <a className="link-btn">WhatsApp'tan sipariş ver</a>
+            <a className="link-btn">Trendyol mağazam</a>
+          </div>
         </div>
       </div>
+
+      <hr className="section-divider" />
+
+      {/* Fayda odaklı bölümler */}
+      <div style={{ marginTop: 8 }}>
+        {PILLARS.map((p) => (
+          <div className="pillar" key={p.title}>
+            <div className="eyebrow">{p.eyebrow}</div>
+            <h2 className="display" style={{ fontSize: 26, marginTop: 8, maxWidth: 480 }}>
+              {p.title}
+            </h2>
+            <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 10, lineHeight: 1.6, maxWidth: 460 }}>
+              {p.desc}
+            </p>
+            <div className="tag-list">
+              {p.tags.map((tag) => (
+                <span className="tag" key={tag}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <hr className="section-divider" />
 
       {/* Nasıl çalışır */}
       <div style={{ marginTop: 56 }}>
@@ -112,9 +109,13 @@ export default function Home() {
         <h2 className="display" style={{ fontSize: 26, marginTop: 8 }}>
           3 adımda yayında
         </h2>
-        <div style={{ marginTop: 16 }}>
+        <div style={{ marginTop: 20 }}>
           {STEPS.map((s, i) => (
-            <div key={s.title} className="row" style={{ alignItems: "flex-start", gap: 14, marginTop: i === 0 ? 0 : 18 }}>
+            <div
+              key={s.title}
+              className="row"
+              style={{ alignItems: "flex-start", gap: 14, marginTop: i === 0 ? 0 : 18 }}
+            >
               <div className="step-num">{i + 1}</div>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 600 }}>{s.title}</div>
@@ -126,7 +127,7 @@ export default function Home() {
       </div>
 
       {/* Kapanış CTA */}
-      <div className="tabela" style={{ marginTop: 56, textAlign: "center", padding: "36px 24px" }}>
+      <div className="tabela" style={{ marginTop: 64, marginBottom: 56, textAlign: "center", padding: "40px 28px", maxWidth: 440, marginLeft: "auto", marginRight: "auto" }}>
         <h2 className="display" style={{ fontSize: 22 }}>
           Sayfan seni bekliyor.
         </h2>
@@ -140,7 +141,14 @@ export default function Home() {
         </Link>
       </div>
 
-      <p className="footer-note">© {new Date().getFullYear()} TekSayfa</p>
+      <div className="row" style={{ justifyContent: "space-between", paddingBottom: 32, borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: 24 }}>
+        <span className="mono" style={{ fontSize: 12, color: "var(--muted)" }}>
+          © {new Date().getFullYear()} TekSayfa
+        </span>
+        <Link href="/fiyatlandirma" className="mono" style={{ fontSize: 12, color: "var(--muted)" }}>
+          Fiyatlandırma
+        </Link>
+      </div>
     </main>
   );
 }

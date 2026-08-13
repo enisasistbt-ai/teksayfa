@@ -286,26 +286,6 @@ textarea {
   font-size: 14px;
 }
 
-.feature-row {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.feature-row:last-child {
-  border-bottom: none;
-}
-
-.feature-icon {
-  font-size: 22px;
-  line-height: 1;
-  flex-shrink: 0;
-  width: 32px;
-  text-align: center;
-}
-
 .step-num {
   width: 26px;
   height: 26px;
@@ -319,6 +299,103 @@ textarea {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+/* --- Landing page --- */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.nav-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(145deg, var(--amber), var(--amber-dim));
+}
+
+.hero-row {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.hero-copy {
+  flex: 1 1 380px;
+  min-width: 280px;
+}
+
+.hero-demo-wrap {
+  position: relative;
+  flex: 1 1 300px;
+  min-width: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 163, 61, 0.28), transparent 70%);
+  filter: blur(10px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero-demo-wrap .tabela {
+  position: relative;
+  transform: rotate(-2deg);
+  max-width: 300px;
+  width: 100%;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 64px 0 0;
+}
+
+.pillar {
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.pillar:last-child {
+  border-bottom: none;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--amber);
+  background: rgba(232, 163, 61, 0.1);
+  border: 1px solid rgba(232, 163, 61, 0.25);
+  border-radius: 999px;
+  padding: 5px 12px;
 }
 
 @media (prefers-reduced-motion: reduce) {
