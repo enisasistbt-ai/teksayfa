@@ -45,6 +45,9 @@ export default function Dashboard() {
   const [linkOrder, setLinkOrder] = useState([]);
   const [theme, setTheme] = useState(DEFAULT_THEME);
   const [isPremium, setIsPremium] = useState(false);
+  const [awayMode, setAwayMode] = useState(false);
+  const [awayMessage, setAwayMessage] = useState("");
+  const [awayUntil, setAwayUntil] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [error, setError] = useState("");
@@ -82,6 +85,9 @@ export default function Dashboard() {
         setBio(profile.bio || "");
         setTheme(profile.theme || DEFAULT_THEME);
         setIsPremium(!!profile.is_premium);
+        setAwayMode(!!profile.away_mode);
+        setAwayMessage(profile.away_message || "");
+        setAwayUntil(profile.away_until || "");
         setAvatarUrl(profile.avatar_url || "");
 
         const savedLinks = profile.links || [];
@@ -406,6 +412,9 @@ export default function Dashboard() {
       username: cleanUsername,
       display_name: displayName.trim(),
       bio: bio.trim(),
+      away_mode: awayMode,
+      away_message: awayMode ? awayMessage.trim() : null,
+      away_until: awayMode && awayUntil ? awayUntil : null,
       links: cleanLinks,
       theme,
       updated_at: new Date().toISOString(),
@@ -581,6 +590,65 @@ export default function Dashboard() {
         >
           {isPremium ? "✨ Premium" : "Ücretsiz plan"}
         </Link>
+      </div>
+
+      <div
+        className="tabela"
+        style={{
+          marginTop: 20,
+          padding: "18px 20px",
+          border: awayMode ? "1px solid var(--amber)" : undefined,
+        }}
+      >
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <div className="eyebrow">mola / tatil modu</div>
+          <button
+            type="button"
+            className="btn-ghost"
+            onClick={() => setAwayMode((v) => !v)}
+            style={{
+              fontSize: 12,
+              padding: "5px 12px",
+              color: awayMode ? "var(--amber)" : "var(--muted)",
+              borderColor: awayMode ? "var(--amber)" : undefined,
+            }}
+          >
+            {awayMode ? "Açık ✓" : "Kapalı"}
+          </button>
+        </div>
+
+        {awayMode ? (
+          <>
+            <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
+              Açık olduğu sürece sayfanın en üstünde ziyaretçilere bu mesaj gösterilir.
+            </p>
+            <textarea
+              className="field"
+              style={{ marginTop: 10, resize: "vertical", fontFamily: "inherit" }}
+              rows={2}
+              value={awayMessage}
+              onChange={(e) => setAwayMessage(e.target.value.slice(0, 140))}
+              placeholder="Örn. Şu an sipariş almıyoruz, 20 Ağustos'ta döneceğiz."
+            />
+            <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 4, textAlign: "right" }}>
+              {awayMessage.length}/140
+            </p>
+            <label className="label" style={{ marginTop: 4 }} htmlFor="awayUntil">
+              Dönüş tarihi (opsiyonel)
+            </label>
+            <input
+              id="awayUntil"
+              type="date"
+              className="field"
+              value={awayUntil}
+              onChange={(e) => setAwayUntil(e.target.value)}
+            />
+          </>
+        ) : (
+          <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
+            Tatilde ya da yoğun günlerde açarak ziyaretçileri bilgilendir.
+          </p>
+        )}
       </div>
 
       {username && (
