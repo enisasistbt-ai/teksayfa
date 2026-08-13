@@ -120,7 +120,7 @@ export default function ProfileView({ profile, pageUrl }) {
               link.url
             )}&u=${encodeURIComponent(profile.username)}&l=${encodeURIComponent(link.label)}`}
           >
-            {translateLinkLabel(link.label, lang)}
+            {translateLinkLabel(link, lang)}
           </a>
         ))}
 
