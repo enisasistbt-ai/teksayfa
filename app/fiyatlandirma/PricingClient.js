@@ -188,32 +188,6 @@ export default function PricingClient({ initialIsTurkey }) {
             {checkoutLoading ? "Açılıyor..." : "Premium'a geç"}
           </button>
         )}
-
-        <p style={{ textAlign: "center", fontSize: 11.5, color: "var(--muted)", marginTop: 12 }}>
-          {isTurkey ? (
-            <>
-              Yurt dışından mı bakıyorsun?{" "}
-              <button
-                type="button"
-                onClick={() => setIsTurkey(false)}
-                style={{ background: "none", border: "none", color: "var(--amber)", cursor: "pointer", fontSize: 11.5, textDecoration: "underline" }}
-              >
-                USD fiyatını gör
-              </button>
-            </>
-          ) : (
-            <>
-              Türkiye'den mi bakıyorsun?{" "}
-              <button
-                type="button"
-                onClick={() => setIsTurkey(true)}
-                style={{ background: "none", border: "none", color: "var(--amber)", cursor: "pointer", fontSize: 11.5, textDecoration: "underline" }}
-              >
-                TL fiyatını gör
-              </button>
-            </>
-          )}
-        </p>
       </div>
 
       <p className="footer-note">
