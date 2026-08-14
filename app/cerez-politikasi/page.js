@@ -30,6 +30,19 @@ export default function CerezPolitikasi() {
             doğrulama). Bunlar olmadan panele giriş yapamazsınız.
           </li>
         </ul>
+        <p><strong>Analitik çerezler</strong></p>
+        <ul>
+          <li>
+            Sitemizi kaç kişinin ziyaret ettiğini, hangi sayfaların ilgi
+            gördüğünü anlamak için Google Analytics kullanıyoruz. Bu
+            çerezler kişisel olarak sizi tanımlamaz, toplu istatistik amaçlı
+            kullanılır. Detaylar için{" "}
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+              Google Gizlilik Politikası
+            </a>
+            'nı inceleyebilirsiniz.
+          </li>
+        </ul>
         <p><strong>Reklam çerezleri (ücretsiz planda, ileride)</strong></p>
         <ul>
           <li>
