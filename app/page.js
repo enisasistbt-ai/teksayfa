@@ -331,9 +331,7 @@ export default function Home() {
           }}
         >
           <span style={{ fontSize: 11.5, color: "#9aa3b2" }}>Güvenli ödeme:</span>
-          <img src="/iyzico-logo.png" alt="iyzico ile Öde" style={{ height: 20 }} />
-          <img src="/visa-logo.png" alt="Visa" style={{ height: 20 }} />
-          <img src="/mastercard-logo.png" alt="Mastercard" style={{ height: 20 }} />
+          <img src="/odeme-logolari.png" alt="iyzico ile Öde, Mastercard, Visa, American Express, Troy" style={{ height: 22 }} />
         </div>
 
         <div className="corp-footer-bottom">© {new Date().getFullYear()} MineBio. Tüm hakları saklıdır.</div>
