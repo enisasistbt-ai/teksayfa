@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
+import { isEffectivelyPremium } from "../../lib/premium";
 
 export default function Mesajlar() {
   const router = useRouter();
@@ -22,12 +23,12 @@ export default function Mesajlar() {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("is_premium")
+        .select("is_premium, trial_ends_at")
         .eq("id", session.user.id)
         .maybeSingle();
-      setIsPremium(!!profile?.is_premium);
+      setIsPremium(isEffectivelyPremium(profile));
 
-      if (profile?.is_premium) {
+      if (isEffectivelyPremium(profile)) {
         const { data: rows } = await supabase
           .from("messages")
           .select("*")
