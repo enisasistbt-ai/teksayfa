@@ -11,6 +11,7 @@ export default function Kisiler() {
   const [userId, setUserId] = useState(null);
   const [username, setUsername] = useState("");
   const [contacts, setContacts] = useState([]);
+  const [isPremium, setIsPremium] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
@@ -29,17 +30,20 @@ export default function Kisiler() {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("username")
+        .select("username, is_premium")
         .eq("id", session.user.id)
         .maybeSingle();
       setUsername(profile?.username || "");
+      setIsPremium(!!profile?.is_premium);
 
-      const { data: rows } = await supabase
-        .from("contacts")
-        .select("*")
-        .eq("owner_id", session.user.id)
-        .order("created_at", { ascending: false });
-      setContacts(rows || []);
+      if (profile?.is_premium) {
+        const { data: rows } = await supabase
+          .from("contacts")
+          .select("*")
+          .eq("owner_id", session.user.id)
+          .order("created_at", { ascending: false });
+        setContacts(rows || []);
+      }
       setLoading(false);
     }
     load();
@@ -118,6 +122,31 @@ export default function Kisiler() {
     return (
       <main className="container" style={{ paddingTop: 90 }}>
         <p className="empty">Yükleniyor...</p>
+      </main>
+    );
+  }
+
+  if (!isPremium) {
+    return (
+      <main className="container" style={{ paddingTop: 48 }}>
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <div className="eyebrow">kişilerim</div>
+          <Link href="/dashboard" className="btn-ghost" style={{ fontSize: 12 }}>
+            Panele dön
+          </Link>
+        </div>
+        <div className="tabela" style={{ marginTop: 24, padding: "28px 24px", textAlign: "center" }}>
+          <div className="eyebrow">🔒 premium özelliği</div>
+          <h1 className="display" style={{ fontSize: 22, marginTop: 10 }}>
+            Kişi defteri Premium'da
+          </h1>
+          <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 8 }}>
+            Tanıştığın kişileri kaydet, sayfanı WhatsApp'tan tek tıkla paylaş.
+          </p>
+          <Link href="/fiyatlandirma" className="btn" style={{ display: "inline-block", marginTop: 16 }}>
+            Premium'a geç
+          </Link>
+        </div>
       </main>
     );
   }
