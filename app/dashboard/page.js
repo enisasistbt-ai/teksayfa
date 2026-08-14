@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
 import { THEMES, DEFAULT_THEME, FREE_LINK_LIMIT } from "../../lib/themes";
-import { PLATFORMS, normalizeUrl } from "../../lib/platforms";
+import { PLATFORMS, PLATFORM_GROUPS, normalizeUrl } from "../../lib/platforms";
 import { TRIAL_DAYS, isEffectivelyPremium, trialDaysLeft, isOnActiveTrial } from "../../lib/premium";
 import { shareOrCopy } from "../../lib/share";
 import QRCode from "qrcode";
@@ -1008,23 +1008,43 @@ export default function Dashboard() {
           Doldurduğun alanlar sayfanda görünür, boş bıraktıkların görünmez.
         </p>
 
-        {PLATFORMS.map((p) => (
-          <div key={p.id} style={{ marginTop: 22 }}>
-            <label className="label" style={{ marginTop: 0 }} htmlFor={`platform-${p.id}`}>
-              {p.label}
-            </label>
-            <input
-              id={`platform-${p.id}`}
-              className="field"
-              value={platformValues[p.id]}
-              onChange={(e) => updatePlatformValue(p.id, e.target.value)}
-              placeholder={p.placeholder}
-            />
-            {p.hint && (
-              <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 6 }}>{p.hint}</p>
-            )}
-          </div>
-        ))}
+        {PLATFORM_GROUPS.map((group) => {
+          const groupPlatforms = PLATFORMS.filter((p) => p.group === group);
+          return (
+            <div key={group} style={{ marginTop: 24 }}>
+              <div
+                className="mono"
+                style={{
+                  fontSize: 11,
+                  color: "var(--amber)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  borderBottom: "1px solid rgba(255,255,255,0.08)",
+                  paddingBottom: 6,
+                }}
+              >
+                {group}
+              </div>
+              {groupPlatforms.map((p) => (
+                <div key={p.id} style={{ marginTop: 18 }}>
+                  <label className="label" style={{ marginTop: 0 }} htmlFor={`platform-${p.id}`}>
+                    {p.label}
+                  </label>
+                  <input
+                    id={`platform-${p.id}`}
+                    className="field"
+                    value={platformValues[p.id]}
+                    onChange={(e) => updatePlatformValue(p.id, e.target.value)}
+                    placeholder={p.placeholder}
+                  />
+                  {p.hint && (
+                    <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 6 }}>{p.hint}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        })}
 
         <label className="label" style={{ marginTop: 30 }}>
           Diğer linklerin
