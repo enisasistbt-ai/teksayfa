@@ -9,6 +9,7 @@ export default function Mesajlar() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
+  const [isPremium, setIsPremium] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -19,12 +20,21 @@ export default function Mesajlar() {
         return;
       }
 
-      const { data: rows } = await supabase
-        .from("messages")
-        .select("*")
-        .eq("owner_id", session.user.id)
-        .order("created_at", { ascending: false });
-      setMessages(rows || []);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_premium")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      setIsPremium(!!profile?.is_premium);
+
+      if (profile?.is_premium) {
+        const { data: rows } = await supabase
+          .from("messages")
+          .select("*")
+          .eq("owner_id", session.user.id)
+          .order("created_at", { ascending: false });
+        setMessages(rows || []);
+      }
       setLoading(false);
     }
     load();
@@ -53,6 +63,31 @@ export default function Mesajlar() {
     return (
       <main className="container" style={{ paddingTop: 90 }}>
         <p className="empty">Yükleniyor...</p>
+      </main>
+    );
+  }
+
+  if (!isPremium) {
+    return (
+      <main className="container" style={{ paddingTop: 48 }}>
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <div className="eyebrow">mesajlarım</div>
+          <Link href="/dashboard" className="btn-ghost" style={{ fontSize: 12 }}>
+            Panele dön
+          </Link>
+        </div>
+        <div className="tabela" style={{ marginTop: 24, padding: "28px 24px", textAlign: "center" }}>
+          <div className="eyebrow">🔒 premium özelliği</div>
+          <h1 className="display" style={{ fontSize: 22, marginTop: 10 }}>
+            İletişim formu Premium'da
+          </h1>
+          <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 8 }}>
+            Ziyaretçiler sayfandan mesaj bıraksın, sen buradan yanıtla.
+          </p>
+          <Link href="/fiyatlandirma" className="btn" style={{ display: "inline-block", marginTop: 16 }}>
+            Premium'a geç
+          </Link>
+        </div>
       </main>
     );
   }
