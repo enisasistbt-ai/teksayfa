@@ -118,7 +118,7 @@ export default function Home() {
     <div className="corp-landing">
       <nav className="corp-nav">
         <div className="corp-nav-inner">
-          <div className="row" style={{ gap: 9 }}>
+          <div className="row" style={{ gap: 9, flexShrink: 0 }}>
             <span
               style={{
                 width: 22,
@@ -132,7 +132,7 @@ export default function Home() {
               MineBio
             </span>
           </div>
-          <div className="corp-nav-links">
+          <div className="corp-nav-secondary">
             <a href="#ozellikler">Özellikler</a>
             <Link href="/fiyatlandirma">Fiyatlandırma</Link>
             <a href="#sss">S.S.S</a>

@@ -650,26 +650,41 @@ textarea {
 .corp-nav-inner {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 18px 24px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
-.corp-nav-links {
+.corp-nav-secondary {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
 }
 
-.corp-nav-links a {
+.corp-nav-secondary a {
   font-size: 14px;
   color: var(--c-body);
   text-decoration: none;
+  white-space: nowrap;
 }
 
-.corp-nav-links a:hover {
+.corp-nav-secondary a:hover {
   color: var(--c-ink);
+}
+
+@media (max-width: 720px) {
+  .corp-nav-secondary > a:not(.corp-btn) {
+    display: none;
+  }
+  .corp-nav-secondary {
+    gap: 12px;
+  }
+  .corp-btn {
+    padding: 9px 14px !important;
+    font-size: 13px !important;
+  }
 }
 
 .corp-section {
