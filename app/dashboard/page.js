@@ -155,6 +155,9 @@ export default function Dashboard() {
           .upsert({ id: session.user.id, trial_ends_at: newTrialEnd });
         setTrialEndsAt(newTrialEnd);
         setIsPremium(true);
+        if (typeof window !== "undefined" && window.fbq) {
+          window.fbq("track", "CompleteRegistration");
+        }
       }
       setLoading(false);
     }
