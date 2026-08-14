@@ -6,6 +6,7 @@ import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
 import { THEMES, DEFAULT_THEME, FREE_LINK_LIMIT } from "../../lib/themes";
 import { PLATFORMS, normalizeUrl } from "../../lib/platforms";
+import { TRIAL_DAYS, isEffectivelyPremium, trialDaysLeft, isOnActiveTrial } from "../../lib/premium";
 import { shareOrCopy } from "../../lib/share";
 import QRCode from "qrcode";
 
@@ -56,6 +57,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [shareCopied, setShareCopied] = useState(false);
   const [stats, setStats] = useState({ views: 0, clicksByLabel: {} });
+  const [trialEndsAt, setTrialEndsAt] = useState(null);
 
   // Fotoğraf konumlandırma editörü
   const [editorOpen, setEditorOpen] = useState(false);
@@ -89,12 +91,26 @@ export default function Dashboard() {
         setBio(profile.bio || "");
         setBioEn(profile.bio_en || "");
         setTheme(profile.theme || DEFAULT_THEME);
-        setIsPremium(!!profile.is_premium);
         setAwayMode(!!profile.away_mode);
         setAwayMessage(profile.away_message || "");
         setAwayMessageEn(profile.away_message_en || "");
         setAwayUntil(profile.away_until || "");
         setAvatarUrl(profile.avatar_url || "");
+
+        let effectiveTrialEnd = profile.trial_ends_at;
+        if (!profile.trial_ends_at && !profile.is_premium) {
+          effectiveTrialEnd = new Date(
+            Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000
+          ).toISOString();
+          await supabase
+            .from("profiles")
+            .update({ trial_ends_at: effectiveTrialEnd })
+            .eq("id", session.user.id);
+        }
+        setTrialEndsAt(effectiveTrialEnd);
+        setIsPremium(
+          isEffectivelyPremium({ ...profile, trial_ends_at: effectiveTrialEnd })
+        );
 
         const savedLinks = profile.links || [];
         const pValues = emptyPlatformValues();
@@ -127,9 +143,18 @@ export default function Dashboard() {
         setPlatformValues(pValues);
         setCustomLinks(custom);
         setLinkOrder(order);
-        if (profile.is_premium) {
+        if (isEffectivelyPremium({ ...profile, trial_ends_at: effectiveTrialEnd })) {
           await loadStats(profile.username);
         }
+      } else {
+        const newTrialEnd = new Date(
+          Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000
+        ).toISOString();
+        await supabase
+          .from("profiles")
+          .upsert({ id: session.user.id, trial_ends_at: newTrialEnd });
+        setTrialEndsAt(newTrialEnd);
+        setIsPremium(true);
       }
       setLoading(false);
     }
@@ -617,9 +642,30 @@ export default function Dashboard() {
             padding: "5px 12px",
           }}
         >
-          {isPremium ? "✨ Premium" : "Ücretsiz plan"}
+          {isOnActiveTrial({ trial_ends_at: trialEndsAt })
+            ? `🎁 Deneme · ${trialDaysLeft({ trial_ends_at: trialEndsAt })} gün kaldı`
+            : isPremium
+            ? "✨ Premium"
+            : "Ücretsiz plan"}
         </Link>
       </div>
+
+      {isOnActiveTrial({ trial_ends_at: trialEndsAt }) && (
+        <div
+          className="tabela"
+          style={{ marginTop: 16, padding: "14px 18px", border: "1px solid var(--amber)" }}
+        >
+          <p style={{ fontSize: 13 }}>
+            🎁 <strong>{trialDaysLeft({ trial_ends_at: trialEndsAt })} gün</strong> boyunca
+            tüm Premium özellikleri ücretsiz deneyebilirsin. Süre bitince sayfan otomatik
+            olarak ücretsiz plana döner — istersen{" "}
+            <Link href="/fiyatlandirma" style={{ color: "var(--amber)" }}>
+              şimdiden Premium'a geç
+            </Link>
+            .
+          </p>
+        </div>
+      )}
 
       <div
         className="tabela"
