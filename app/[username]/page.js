@@ -1,5 +1,6 @@
 import { supabase } from "../../lib/supabaseClient";
 import { THEMES, DEFAULT_THEME } from "../../lib/themes";
+import { isEffectivelyPremium } from "../../lib/premium";
 import { headers } from "next/headers";
 import ProfileView from "./ProfileView";
 
@@ -9,7 +10,7 @@ async function getProfile(username) {
   const { data } = await supabase
     .from("profiles")
     .select(
-      "id, username, display_name, bio, bio_en, links, theme, is_premium, avatar_url, away_mode, away_message, away_message_en, away_until"
+      "id, username, display_name, bio, bio_en, links, theme, is_premium, trial_ends_at, avatar_url, away_mode, away_message, away_message_en, away_until"
     )
     .eq("username", username)
     .maybeSingle();
@@ -53,10 +54,12 @@ export default async function PublicProfile({ params }) {
     minHeight: "100vh",
   };
 
+  const effectiveProfile = { ...profile, is_premium: isEffectivelyPremium(profile) };
+
   return (
     <div style={themeVars}>
       <main className="container" style={{ paddingTop: 64 }}>
-        <ProfileView profile={profile} pageUrl={pageUrl} />
+        <ProfileView profile={effectiveProfile} pageUrl={pageUrl} />
       </main>
     </div>
   );
