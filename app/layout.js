@@ -24,6 +24,17 @@ export default function RootLayout({ children }) {
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5441545128970618"
           crossOrigin="anonymous"
         ></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-CMG90QL7T5"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-CMG90QL7T5');
+            `,
+          }}
+        />
       </head>
       <body>{children}</body>
     </html>
