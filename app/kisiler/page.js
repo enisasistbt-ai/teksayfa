@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
+import { isEffectivelyPremium } from "../../lib/premium";
 
 export default function Kisiler() {
   const router = useRouter();
@@ -30,13 +31,13 @@ export default function Kisiler() {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("username, is_premium")
+        .select("username, is_premium, trial_ends_at")
         .eq("id", session.user.id)
         .maybeSingle();
       setUsername(profile?.username || "");
-      setIsPremium(!!profile?.is_premium);
+      setIsPremium(isEffectivelyPremium(profile));
 
-      if (profile?.is_premium) {
+      if (isEffectivelyPremium(profile)) {
         const { data: rows } = await supabase
           .from("contacts")
           .select("*")
