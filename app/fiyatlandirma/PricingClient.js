@@ -74,6 +74,9 @@ export default function PricingClient({ initialIsTurkey }) {
       items: [{ priceId: yearly ? PADDLE_PRICE_YEARLY : PADDLE_PRICE_MONTHLY, quantity: 1 }],
       customer: email ? { email } : undefined,
       customData: { supabase_user_id: userId },
+      settings: {
+        successUrl: `${window.location.origin}/dashboard?premium=success`,
+      },
     });
     setCheckoutLoading(false);
   }
