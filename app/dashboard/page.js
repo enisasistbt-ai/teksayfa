@@ -127,7 +127,9 @@ export default function Dashboard() {
         setPlatformValues(pValues);
         setCustomLinks(custom);
         setLinkOrder(order);
-        await loadStats(profile.username);
+        if (profile.is_premium) {
+          await loadStats(profile.username);
+        }
       }
       setLoading(false);
     }
@@ -418,7 +420,7 @@ export default function Dashboard() {
       username: cleanUsername,
       display_name: displayName.trim(),
       bio: bio.trim(),
-      away_mode: awayMode,
+      away_mode: isPremium && awayMode,
       bio_en: bioEn.trim(),
       away_message: awayMode ? awayMessage.trim() : null,
       away_message_en: awayMode ? awayMessageEn.trim() : null,
@@ -439,7 +441,9 @@ export default function Dashboard() {
     }
     setUsername(cleanUsername);
     setSaved(true);
-    loadStats(cleanUsername);
+    if (isPremium) {
+      loadStats(cleanUsername);
+    }
   }
 
   function loadImageEl(src) {
@@ -539,11 +543,11 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    if (!loading && username) {
+    if (!loading && username && isPremium) {
       drawQrCode();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, username, displayName, avatarUrl, theme]);
+  }, [loading, username, displayName, avatarUrl, theme, isPremium]);
 
   function downloadQrCode() {
     const canvas = qrCanvasRef.current;
@@ -627,22 +631,41 @@ export default function Dashboard() {
       >
         <div className="row" style={{ justifyContent: "space-between" }}>
           <div className="eyebrow">mola / tatil modu</div>
-          <button
-            type="button"
-            className="btn-ghost"
-            onClick={() => setAwayMode((v) => !v)}
-            style={{
-              fontSize: 12,
-              padding: "5px 12px",
-              color: awayMode ? "var(--amber)" : "var(--muted)",
-              borderColor: awayMode ? "var(--amber)" : undefined,
-            }}
-          >
-            {awayMode ? "Açık ✓" : "Kapalı"}
-          </button>
+          {isPremium ? (
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={() => setAwayMode((v) => !v)}
+              style={{
+                fontSize: 12,
+                padding: "5px 12px",
+                color: awayMode ? "var(--amber)" : "var(--muted)",
+                borderColor: awayMode ? "var(--amber)" : undefined,
+              }}
+            >
+              {awayMode ? "Açık ✓" : "Kapalı"}
+            </button>
+          ) : (
+            <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+              🔒 Premium
+            </span>
+          )}
         </div>
 
-        {awayMode ? (
+        {!isPremium ? (
+          <>
+            <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
+              Tatilde ya da yoğun günlerde ziyaretçileri otomatik bilgilendir.
+            </p>
+            <Link
+              href="/fiyatlandirma"
+              className="btn-ghost"
+              style={{ display: "inline-block", marginTop: 10, fontSize: 12 }}
+            >
+              Premium'a geç
+            </Link>
+          </>
+        ) : awayMode ? (
           <>
             <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
               Açık olduğu sürece sayfanın en üstünde ziyaretçilere bu mesaj gösterilir.
@@ -686,57 +709,103 @@ export default function Dashboard() {
 
       {username && (
         <div className="tabela" style={{ marginTop: 20, padding: "20px 22px" }}>
-          <div className="eyebrow" style={{ marginBottom: 10 }}>
-            istatistikler
+          <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
+            <div className="eyebrow">istatistikler</div>
+            {!isPremium && (
+              <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+                🔒 Premium
+              </span>
+            )}
           </div>
-          <p style={{ fontSize: 14 }}>
-            Toplam sayfa görüntülenme: <strong>{stats.views}</strong>
-          </p>
-          {Object.keys(stats.clicksByLabel).length === 0 ? (
-            <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 8 }}>
-              Henüz link tıklaması yok.
-            </p>
-          ) : (
-            <div style={{ marginTop: 10 }}>
-              {Object.entries(stats.clicksByLabel).map(([label, count]) => (
-                <div
-                  key={label}
-                  className="row"
-                  style={{ justifyContent: "space-between", fontSize: 13, marginTop: 6 }}
-                >
-                  <span>{label}</span>
-                  <span className="mono">{count} tıklama</span>
+          {isPremium ? (
+            <>
+              <p style={{ fontSize: 14 }}>
+                Toplam sayfa görüntülenme: <strong>{stats.views}</strong>
+              </p>
+              {Object.keys(stats.clicksByLabel).length === 0 ? (
+                <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 8 }}>
+                  Henüz link tıklaması yok.
+                </p>
+              ) : (
+                <div style={{ marginTop: 10 }}>
+                  {Object.entries(stats.clicksByLabel).map(([label, count]) => (
+                    <div
+                      key={label}
+                      className="row"
+                      style={{ justifyContent: "space-between", fontSize: 13, marginTop: 6 }}
+                    >
+                      <span>{label}</span>
+                      <span className="mono">{count} tıklama</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
+            </>
+          ) : (
+            <>
+              <p style={{ fontSize: 12, color: "var(--muted)" }}>
+                Sayfanı kaç kişinin görüntülediğini, hangi linkin tıklandığını gör.
+              </p>
+              <Link
+                href="/fiyatlandirma"
+                className="btn-ghost"
+                style={{ display: "inline-block", marginTop: 10, fontSize: 12 }}
+              >
+                Premium'a geç
+              </Link>
+            </>
           )}
         </div>
       )}
 
       {username && (
         <div className="tabela" style={{ marginTop: 16, padding: "20px 22px", textAlign: "center" }}>
-          <div className="eyebrow" style={{ marginBottom: 12 }}>
-            QR kodun
+          <div className="row" style={{ justifyContent: "space-between", marginBottom: 12 }}>
+            <div className="eyebrow">QR kodun</div>
+            {!isPremium && (
+              <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+                🔒 Premium
+              </span>
+            )}
           </div>
-          <canvas
-            ref={qrCanvasRef}
-            style={{ width: "100%", maxWidth: 220, height: "auto", borderRadius: 10 }}
-          />
-          <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 10 }}>
-            Vitrinde, kartvizitte ya da paket üzerinde basılı paylaşmak için.
-          </p>
-          <button
-            type="button"
-            className="btn-ghost"
-            style={{ marginTop: 10 }}
-            onClick={downloadQrCode}
-          >
-            PNG olarak indir
-          </button>
+
+          {isPremium ? (
+            <>
+              <canvas
+                ref={qrCanvasRef}
+                style={{ width: "100%", maxWidth: 220, height: "auto", borderRadius: 10 }}
+              />
+              <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 10 }}>
+                Vitrinde, kartvizitte ya da paket üzerinde basılı paylaşmak için.
+              </p>
+              <button
+                type="button"
+                className="btn-ghost"
+                style={{ marginTop: 10 }}
+                onClick={downloadQrCode}
+              >
+                PNG olarak indir
+              </button>
+            </>
+          ) : (
+            <>
+              <p style={{ fontSize: 12, color: "var(--muted)" }}>
+                Fotoğraflı, markalı QR kodunu kartvizit ya da vitrinde basılı paylaşmak için.
+              </p>
+              <Link
+                href="/fiyatlandirma"
+                className="btn-ghost"
+                style={{ display: "inline-block", marginTop: 10, fontSize: 12 }}
+              >
+                Premium'a geç
+              </Link>
+            </>
+          )}
+
           <button
             type="button"
             className="btn"
-            style={{ marginTop: 10, width: "100%" }}
+            style={{ marginTop: 14, width: "100%" }}
             onClick={handleShare}
           >
             📤 Sayfamı paylaş
