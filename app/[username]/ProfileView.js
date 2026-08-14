@@ -168,7 +168,7 @@ export default function ProfileView({ profile, pageUrl }) {
         )}
       </div>
 
-      <ContactForm ownerId={profile.id} lang={lang} />
+      {profile.is_premium && <ContactForm ownerId={profile.id} lang={lang} />}
 
       <p className="footer-note">{profile.is_premium ? "" : t.madeWith}</p>
     </>
