@@ -3,6 +3,11 @@ import "./globals.css";
 export const metadata = {
   title: "MineBio — Tüm linklerin tek yerde",
   description: "Bio linkini saniyeler içinde oluştur ve paylaş.",
+  verification: {
+    other: {
+      "msvalidate.01": "C7E25D3762724FAB6120DCDB973D7B4A",
+    },
+  },
 };
 
 export default function RootLayout({ children }) {
