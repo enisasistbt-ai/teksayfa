@@ -1,4 +1,4 @@
-import { iyzicoV2 } from "../../../../lib/iyzicoV2";
+import { getIyzipay } from "../../../../lib/iyzico";
 import { getSupabaseAdmin } from "../../../../lib/supabaseAdmin";
 
 export async function POST(request) {
@@ -10,30 +10,36 @@ export async function POST(request) {
     return Response.redirect(`${host}/fiyatlandirma?payment=failed`, 302);
   }
 
-  const result = await iyzicoV2("GET", `/v2/subscription/checkoutform/${token}`);
+  const iyzipay = getIyzipay();
 
-  if (!result || result.status !== "success") {
+  const result = await new Promise((resolve) => {
+    iyzipay.checkoutForm.retrieve({ locale: "tr", token }, (err, res) => {
+      resolve(err ? null : res);
+    });
+  });
+
+  if (!result || result.status !== "success" || result.paymentStatus !== "SUCCESS") {
     return Response.redirect(`${host}/fiyatlandirma?payment=failed`, 302);
   }
 
-  const userId = result.data?.conversationId || result.conversationId;
-  const subscriptionReferenceCode =
-    result.data?.subscriptionReferenceCode || result.subscriptionReferenceCode;
-  const pricingPlanReferenceCode =
-    result.data?.pricingPlanReferenceCode || result.pricingPlanReferenceCode || "";
+  const userId = result.conversationId;
+  const basketId = result.basketId || "";
+  const plan = basketId.includes("yearly") ? "yearly" : "monthly";
+  const days = plan === "yearly" ? 365 : 30;
+  const premiumUntil = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
 
   if (userId) {
-    const { IYZICO_YEARLY_PLAN } = await import("../../../../lib/iyzicoPlans");
-    const plan = pricingPlanReferenceCode === IYZICO_YEARLY_PLAN ? "yearly" : "monthly";
-
     const supabaseAdmin = getSupabaseAdmin();
     await supabaseAdmin
       .from("profiles")
       .update({
         is_premium: true,
         premium_plan: plan,
-        premium_until: null,
-        iyzico_subscription_ref: subscriptionReferenceCode || null,
+        premium_until: premiumUntil,
+        iyzico_subscription_ref: result.paymentId || null,
+        // Kart numarası değil, sadece iyzico'nun güvenli referans kodları
+        card_user_key: result.cardUserKey || null,
+        card_token: result.cardToken || null,
       })
       .eq("id", userId);
   }
