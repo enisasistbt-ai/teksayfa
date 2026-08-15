@@ -35,6 +35,16 @@ export default function PricingClient({ initialIsTurkey }) {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState(null);
+  const [showIyzicoForm, setShowIyzicoForm] = useState(false);
+  const [buyer, setBuyer] = useState({
+    name: "",
+    surname: "",
+    identityNumber: "",
+    phone: "",
+    address: "",
+    city: "",
+  });
+  const [iyzicoError, setIyzicoError] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -79,6 +89,48 @@ export default function PricingClient({ initialIsTurkey }) {
       },
     });
     setCheckoutLoading(false);
+  }
+
+  function openIyzicoForm() {
+    if (!userId) {
+      window.location.href = "/login";
+      return;
+    }
+    setIyzicoError("");
+    setShowIyzicoForm(true);
+  }
+
+  async function handleIyzicoSubmit(e) {
+    e.preventDefault();
+    setIyzicoError("");
+    const { name, surname, identityNumber, phone, address, city } = buyer;
+    if (!name || !surname || !identityNumber || !phone || !address || !city) {
+      setIyzicoError("Lütfen tüm alanları doldur.");
+      return;
+    }
+    setCheckoutLoading(true);
+    try {
+      const res = await fetch("/api/iyzico/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          email,
+          ...buyer,
+          plan: yearly ? "yearly" : "monthly",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.paymentPageUrl) {
+        setIyzicoError(data.error || "Ödeme başlatılamadı, tekrar dene.");
+        setCheckoutLoading(false);
+        return;
+      }
+      window.location.href = data.paymentPageUrl;
+    } catch (err) {
+      setIyzicoError("Bir hata oluştu, tekrar dene.");
+      setCheckoutLoading(false);
+    }
   }
 
   const tryPrice = yearly ? PREMIUM_YEARLY_PRICE : PREMIUM_MONTHLY_PRICE;
@@ -178,9 +230,64 @@ export default function PricingClient({ initialIsTurkey }) {
         </ul>
 
         {isTurkey ? (
-          <button className="btn" style={{ width: "100%", marginTop: 16 }} disabled>
-            Ödeme sistemi çok yakında
-          </button>
+          <>
+            {!showIyzicoForm ? (
+              <button className="btn" style={{ width: "100%", marginTop: 16 }} onClick={openIyzicoForm}>
+                Premium'a geç
+              </button>
+            ) : (
+              <form onSubmit={handleIyzicoSubmit} style={{ marginTop: 16 }}>
+                <div className="row" style={{ gap: 8 }}>
+                  <input
+                    className="field"
+                    placeholder="Ad"
+                    value={buyer.name}
+                    onChange={(e) => setBuyer({ ...buyer, name: e.target.value })}
+                  />
+                  <input
+                    className="field"
+                    placeholder="Soyad"
+                    value={buyer.surname}
+                    onChange={(e) => setBuyer({ ...buyer, surname: e.target.value })}
+                  />
+                </div>
+                <input
+                  className="field"
+                  style={{ marginTop: 8 }}
+                  placeholder="TC Kimlik No"
+                  value={buyer.identityNumber}
+                  onChange={(e) => setBuyer({ ...buyer, identityNumber: e.target.value })}
+                />
+                <input
+                  className="field"
+                  style={{ marginTop: 8 }}
+                  placeholder="Telefon (05xxxxxxxxx)"
+                  value={buyer.phone}
+                  onChange={(e) => setBuyer({ ...buyer, phone: e.target.value })}
+                />
+                <input
+                  className="field"
+                  style={{ marginTop: 8 }}
+                  placeholder="Adres"
+                  value={buyer.address}
+                  onChange={(e) => setBuyer({ ...buyer, address: e.target.value })}
+                />
+                <input
+                  className="field"
+                  style={{ marginTop: 8 }}
+                  placeholder="Şehir"
+                  value={buyer.city}
+                  onChange={(e) => setBuyer({ ...buyer, city: e.target.value })}
+                />
+                {iyzicoError && (
+                  <p style={{ color: "var(--danger)", fontSize: 12, marginTop: 8 }}>{iyzicoError}</p>
+                )}
+                <button className="btn" style={{ width: "100%", marginTop: 12 }} disabled={checkoutLoading}>
+                  {checkoutLoading ? "Yönlendiriliyor..." : "Ödemeye geç"}
+                </button>
+              </form>
+            )}
+          </>
         ) : (
           <button
             className="btn"
