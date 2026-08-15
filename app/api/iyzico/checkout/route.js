@@ -1,31 +1,14 @@
 import { getIyzipay } from "../../../../lib/iyzico";
 
 export async function POST(request) {
-  try {
-    return await handleCheckout(request);
-  } catch (e) {
-    console.error("iyzico checkout crash:", e);
-    return Response.json(
-      { error: "Sunucu tarafında beklenmeyen bir hata oluştu: " + (e?.message || "bilinmiyor") },
-      { status: 500 }
-    );
-  }
-}
-
-async function handleCheckout(request) {
   const body = await request.json();
   const { userId, email, name, surname, identityNumber, phone, address, city, plan } = body;
 
-  if (!userId || !email || !name || !surname || !identityNumber || !phone || !address || !city) {
+  if (!userId || !email || !name || !surname || !phone || !address || !city) {
     return Response.json({ error: "Lütfen tüm alanları doldur." }, { status: 400 });
   }
 
-  if (!process.env.IYZICO_API_KEY || !process.env.IYZICO_SECRET_KEY) {
-    return Response.json(
-      { error: "Ödeme sistemi yapılandırma hatası: API anahtarları eksik (Vercel ortam değişkenlerini kontrol et)." },
-      { status: 500 }
-    );
-  }
+  const buyerIdentityNumber = identityNumber?.trim() || "11111111111";
 
   const isYearly = plan === "yearly";
   const price = isYearly ? "490.00" : "49.00";
@@ -50,7 +33,7 @@ async function handleCheckout(request) {
       surname,
       gsmNumber: phone,
       email,
-      identityNumber,
+      identityNumber: buyerIdentityNumber,
       registrationAddress: address,
       ip,
       city,
@@ -80,26 +63,17 @@ async function handleCheckout(request) {
   };
 
   return new Promise((resolve) => {
-    try {
-      iyzipay.checkoutFormInitialize.create(requestBody, (err, result) => {
-        if (err || result.status !== "success") {
-          resolve(
-            Response.json(
-              { error: err?.message || result?.errorMessage || "iyzico hatası" },
-              { status: 400 }
-            )
-          );
-          return;
-        }
-        resolve(Response.json({ paymentPageUrl: result.paymentPageUrl }));
-      });
-    } catch (e) {
-      resolve(
-        Response.json(
-          { error: "iyzico isteği başlatılamadı: " + (e?.message || "bilinmiyor") },
-          { status: 500 }
-        )
-      );
-    }
+    iyzipay.checkoutFormInitialize.create(requestBody, (err, result) => {
+      if (err || result.status !== "success") {
+        resolve(
+          Response.json(
+            { error: err?.message || result?.errorMessage || "iyzico hatası" },
+            { status: 400 }
+          )
+        );
+        return;
+      }
+      resolve(Response.json({ paymentPageUrl: result.paymentPageUrl }));
+    });
   });
 }
