@@ -1,4 +1,4 @@
-import { getIyzipay } from "../../../../lib/iyzico";
+import { iyzicoV2 } from "../../../../lib/iyzicoV2";
 import { getSupabaseAdmin } from "../../../../lib/supabaseAdmin";
 
 export async function POST(request) {
@@ -10,33 +10,30 @@ export async function POST(request) {
     return Response.redirect(`${host}/fiyatlandirma?payment=failed`, 302);
   }
 
-  const iyzipay = getIyzipay();
+  const result = await iyzicoV2("GET", `/v2/subscription/checkoutform/${token}`);
 
-  const result = await new Promise((resolve) => {
-    iyzipay.checkoutForm.retrieve({ locale: "tr", token }, (err, res) => {
-      resolve(err ? null : res);
-    });
-  });
-
-  if (!result || result.status !== "success" || result.paymentStatus !== "SUCCESS") {
+  if (!result || result.status !== "success") {
     return Response.redirect(`${host}/fiyatlandirma?payment=failed`, 302);
   }
 
-  const userId = result.conversationId;
-  const basketId = result.basketId || "";
-  const plan = basketId.includes("yearly") ? "yearly" : "monthly";
-  const days = plan === "yearly" ? 365 : 30;
-  const premiumUntil = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+  const userId = result.data?.conversationId || result.conversationId;
+  const subscriptionReferenceCode =
+    result.data?.subscriptionReferenceCode || result.subscriptionReferenceCode;
+  const pricingPlanReferenceCode =
+    result.data?.pricingPlanReferenceCode || result.pricingPlanReferenceCode || "";
 
   if (userId) {
+    const { IYZICO_YEARLY_PLAN } = await import("../../../../lib/iyzicoPlans");
+    const plan = pricingPlanReferenceCode === IYZICO_YEARLY_PLAN ? "yearly" : "monthly";
+
     const supabaseAdmin = getSupabaseAdmin();
     await supabaseAdmin
       .from("profiles")
       .update({
         is_premium: true,
         premium_plan: plan,
-        premium_until: premiumUntil,
-        iyzico_subscription_ref: result.paymentId || null,
+        premium_until: null,
+        iyzico_subscription_ref: subscriptionReferenceCode || null,
       })
       .eq("id", userId);
   }
