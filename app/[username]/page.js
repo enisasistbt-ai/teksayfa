@@ -7,13 +7,16 @@ import ProfileView from "./ProfileView";
 export const revalidate = 0;
 
 async function getProfile(username) {
-  const { data } = await supabase
-    .from("profiles")
+  const { data, error } = await supabase
+    .from("public_profiles")
     .select(
       "id, username, display_name, bio, bio_en, links, theme, is_premium, trial_ends_at, avatar_url, away_mode, away_message, away_message_en, away_until"
     )
     .eq("username", username)
     .maybeSingle();
+  if (error) {
+    console.error("getProfile hatası:", username, error);
+  }
   return data;
 }
 
