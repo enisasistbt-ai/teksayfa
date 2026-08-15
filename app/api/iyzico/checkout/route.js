@@ -1,5 +1,4 @@
-import { iyzicoV2 } from "../../../../lib/iyzicoV2";
-import { IYZICO_MONTHLY_PLAN, IYZICO_YEARLY_PLAN } from "../../../../lib/iyzicoPlans";
+import { getIyzipay } from "../../../../lib/iyzico";
 
 export async function POST(request) {
   const body = await request.json();
@@ -10,42 +9,72 @@ export async function POST(request) {
   }
 
   const buyerIdentityNumber = identityNumber?.trim() || "11111111111";
+  const isYearly = plan === "yearly";
+  const price = isYearly ? "490.00" : "49.00";
   const host = request.headers.get("origin") || "https://www.minebio.net";
-  const pricingPlanReferenceCode = plan === "yearly" ? IYZICO_YEARLY_PLAN : IYZICO_MONTHLY_PLAN;
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "85.34.78.112";
 
-  const result = await iyzicoV2("POST", "/v2/subscription/checkoutform/initialize", {
+  const iyzipay = getIyzipay();
+
+  const requestBody = {
     locale: "tr",
     conversationId: userId,
+    price,
+    paidPrice: price,
+    currency: "TRY",
+    basketId: `minebio-${plan}-${Date.now()}`,
+    paymentGroup: "PRODUCT",
     callbackUrl: `${host}/api/iyzico/callback`,
-    pricingPlanReferenceCode,
-    subscriptionInitialStatus: "ACTIVE",
-    customer: {
+    enabledInstallments: [1],
+    // Otomatik yenileme için kartı sakla
+    registerCard: 1,
+    buyer: {
+      id: userId,
       name,
       surname,
-      email,
       gsmNumber: phone,
+      email,
       identityNumber: buyerIdentityNumber,
-      billingAddress: {
-        contactName: `${name} ${surname}`,
-        city,
-        country: "Turkey",
-        address,
-      },
-      shippingAddress: {
-        contactName: `${name} ${surname}`,
-        city,
-        country: "Turkey",
-        address,
-      },
+      registrationAddress: address,
+      ip,
+      city,
+      country: "Turkey",
     },
+    shippingAddress: {
+      contactName: `${name} ${surname}`,
+      city,
+      country: "Turkey",
+      address,
+    },
+    billingAddress: {
+      contactName: `${name} ${surname}`,
+      city,
+      country: "Turkey",
+      address,
+    },
+    basketItems: [
+      {
+        id: `premium-${plan}`,
+        name: isYearly ? "MineBio Premium (Yıllık)" : "MineBio Premium (Aylık)",
+        category1: "SaaS",
+        itemType: "VIRTUAL",
+        price,
+      },
+    ],
+  };
+
+  return new Promise((resolve) => {
+    iyzipay.checkoutFormInitialize.create(requestBody, (err, result) => {
+      if (err || result.status !== "success") {
+        resolve(
+          Response.json(
+            { error: err?.message || result?.errorMessage || "iyzico hatası" },
+            { status: 400 }
+          )
+        );
+        return;
+      }
+      resolve(Response.json({ checkoutFormContent: result.checkoutFormContent }));
+    });
   });
-
-  if (result.status !== "success") {
-    return Response.json(
-      { error: result.errorMessage || "iyzico hatası, tekrar dene." },
-      { status: 400 }
-    );
-  }
-
-  return Response.json({ checkoutFormContent: result.checkoutFormContent });
 }
