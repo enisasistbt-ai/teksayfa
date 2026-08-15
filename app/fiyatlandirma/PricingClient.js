@@ -250,7 +250,10 @@ export default function PricingClient({ initialIsTurkey }) {
         {isTurkey ? (
           <>
             {checkoutFormContent ? (
-              <div ref={formContainerRef} style={{ marginTop: 16 }}>
+              <div
+                ref={formContainerRef}
+                style={{ marginTop: 16, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}
+              >
                 <div id="iyzipay-checkout-form" className="responsive"></div>
               </div>
             ) : !showIyzicoForm ? (
