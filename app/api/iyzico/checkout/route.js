@@ -1,4 +1,5 @@
-import { getIyzipay } from "../../../../lib/iyzico";
+import { iyzicoV2 } from "../../../../lib/iyzicoV2";
+import { IYZICO_MONTHLY_PLAN, IYZICO_YEARLY_PLAN } from "../../../../lib/iyzicoPlans";
 
 export async function POST(request) {
   const body = await request.json();
@@ -9,71 +10,42 @@ export async function POST(request) {
   }
 
   const buyerIdentityNumber = identityNumber?.trim() || "11111111111";
-
-  const isYearly = plan === "yearly";
-  const price = isYearly ? "490.00" : "49.00";
   const host = request.headers.get("origin") || "https://www.minebio.net";
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "85.34.78.112";
+  const pricingPlanReferenceCode = plan === "yearly" ? IYZICO_YEARLY_PLAN : IYZICO_MONTHLY_PLAN;
 
-  const iyzipay = getIyzipay();
-
-  const requestBody = {
+  const result = await iyzicoV2("POST", "/v2/subscription/checkoutform/initialize", {
     locale: "tr",
     conversationId: userId,
-    price,
-    paidPrice: price,
-    currency: "TRY",
-    basketId: `minebio-${plan}-${Date.now()}`,
-    paymentGroup: "PRODUCT",
     callbackUrl: `${host}/api/iyzico/callback`,
-    enabledInstallments: [1],
-    buyer: {
-      id: userId,
+    pricingPlanReferenceCode,
+    subscriptionInitialStatus: "ACTIVE",
+    customer: {
       name,
       surname,
-      gsmNumber: phone,
       email,
+      gsmNumber: phone,
       identityNumber: buyerIdentityNumber,
-      registrationAddress: address,
-      ip,
-      city,
-      country: "Turkey",
-    },
-    shippingAddress: {
-      contactName: `${name} ${surname}`,
-      city,
-      country: "Turkey",
-      address,
-    },
-    billingAddress: {
-      contactName: `${name} ${surname}`,
-      city,
-      country: "Turkey",
-      address,
-    },
-    basketItems: [
-      {
-        id: `premium-${plan}`,
-        name: isYearly ? "MineBio Premium (Yıllık)" : "MineBio Premium (Aylık)",
-        category1: "SaaS",
-        itemType: "VIRTUAL",
-        price,
+      billingAddress: {
+        contactName: `${name} ${surname}`,
+        city,
+        country: "Turkey",
+        address,
       },
-    ],
-  };
-
-  return new Promise((resolve) => {
-    iyzipay.checkoutFormInitialize.create(requestBody, (err, result) => {
-      if (err || result.status !== "success") {
-        resolve(
-          Response.json(
-            { error: err?.message || result?.errorMessage || "iyzico hatası" },
-            { status: 400 }
-          )
-        );
-        return;
-      }
-      resolve(Response.json({ paymentPageUrl: result.paymentPageUrl }));
-    });
+      shippingAddress: {
+        contactName: `${name} ${surname}`,
+        city,
+        country: "Turkey",
+        address,
+      },
+    },
   });
+
+  if (result.status !== "success") {
+    return Response.json(
+      { error: result.errorMessage || "iyzico hatası, tekrar dene." },
+      { status: 400 }
+    );
+  }
+
+  return Response.json({ checkoutFormContent: result.checkoutFormContent });
 }
