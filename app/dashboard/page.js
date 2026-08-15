@@ -645,7 +645,7 @@ export default function Dashboard() {
             padding: "5px 12px",
           }}
         >
-          {isOnActiveTrial({ trial_ends_at: trialEndsAt })
+          {isOnActiveTrial({ trial_ends_at: trialEndsAt, is_premium: isPremium })
             ? `🎁 Deneme · ${trialDaysLeft({ trial_ends_at: trialEndsAt })} gün kaldı`
             : isPremium
             ? "✨ Premium"
@@ -653,7 +653,7 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {isOnActiveTrial({ trial_ends_at: trialEndsAt }) && (
+      {isOnActiveTrial({ trial_ends_at: trialEndsAt, is_premium: isPremium }) && (
         <div
           className="tabela"
           style={{ marginTop: 16, padding: "14px 18px", border: "1px solid var(--amber)" }}
