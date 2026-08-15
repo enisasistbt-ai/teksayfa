@@ -26,6 +26,8 @@ export async function POST(request) {
     paymentGroup: "PRODUCT",
     callbackUrl: `${host}/api/iyzico/callback`,
     enabledInstallments: [1],
+    // Otomatik yenileme için kartı sakla
+    registerCard: 1,
     buyer: {
       id: userId,
       name,
