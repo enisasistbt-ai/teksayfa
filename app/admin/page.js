@@ -19,9 +19,15 @@ export default function Admin() {
 
   useEffect(() => {
     async function load() {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const session = sessionData?.session;
-      if (!session || session.user.email !== ADMIN_EMAIL) {
+      let session = null;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        session = sessionData?.session;
+        if (session) break;
+        await new Promise((r) => setTimeout(r, 300));
+      }
+
+      if (!session || (session.user.email || "").toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
         router.replace("/login");
         return;
       }
