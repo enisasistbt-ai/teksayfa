@@ -104,7 +104,7 @@ export default function PricingClient({ initialIsTurkey }) {
     e.preventDefault();
     setIyzicoError("");
     const { name, surname, identityNumber, phone, address, city } = buyer;
-    if (!name || !surname || !identityNumber || !phone || !address || !city) {
+    if (!name || !surname || !phone || !address || !city) {
       setIyzicoError("Lütfen tüm alanları doldur.");
       return;
     }
@@ -254,7 +254,7 @@ export default function PricingClient({ initialIsTurkey }) {
                 <input
                   className="field"
                   style={{ marginTop: 8 }}
-                  placeholder="TC Kimlik No"
+                  placeholder="TC Kimlik No (fatura için, isteğe bağlı)"
                   value={buyer.identityNumber}
                   onChange={(e) => setBuyer({ ...buyer, identityNumber: e.target.value })}
                 />
