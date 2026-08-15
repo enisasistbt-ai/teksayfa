@@ -30,7 +30,7 @@ export async function POST(request) {
 
   if (userId) {
     const supabaseAdmin = getSupabaseAdmin();
-    await supabaseAdmin
+    const { error: updateError } = await supabaseAdmin
       .from("profiles")
       .update({
         is_premium: true,
@@ -42,6 +42,20 @@ export async function POST(request) {
         card_token: result.cardToken || null,
       })
       .eq("id", userId);
+
+    if (updateError) {
+      console.error("iyzico callback: profil güncellenemedi", updateError);
+    } else {
+      await supabaseAdmin.from("payments").insert({
+        user_id: userId,
+        provider: "iyzico",
+        plan,
+        amount: plan === "yearly" ? 490 : 49,
+        currency: "TRY",
+        status: "success",
+        provider_ref: result.paymentId || null,
+      });
+    }
   }
 
   return Response.redirect(`${host}/dashboard?premium=success`, 302);
