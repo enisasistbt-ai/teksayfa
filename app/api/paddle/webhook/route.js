@@ -64,6 +64,18 @@ export async function POST(request) {
         paddle_subscription_id: data.id || null,
       })
       .eq("id", supabaseUserId);
+
+    if (eventType === "subscription.created" && isPremium) {
+      await supabaseAdmin.from("payments").insert({
+        user_id: supabaseUserId,
+        provider: "paddle",
+        plan,
+        amount: plan === "yearly" ? 59.9 : 5.99,
+        currency: "USD",
+        status: "success",
+        provider_ref: data.id || null,
+      });
+    }
   }
 
   if (["subscription.canceled", "subscription.paused"].includes(eventType)) {
