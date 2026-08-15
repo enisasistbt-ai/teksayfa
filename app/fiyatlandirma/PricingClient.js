@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
 import {
@@ -45,6 +45,23 @@ export default function PricingClient({ initialIsTurkey }) {
     city: "",
   });
   const [iyzicoError, setIyzicoError] = useState("");
+  const [checkoutFormContent, setCheckoutFormContent] = useState(null);
+  const formContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (!checkoutFormContent || !formContainerRef.current) return;
+    const div = document.createElement("div");
+    div.innerHTML = checkoutFormContent;
+    const scripts = div.querySelectorAll("script");
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      Array.from(oldScript.attributes).forEach((attr) =>
+        newScript.setAttribute(attr.name, attr.value)
+      );
+      newScript.textContent = oldScript.textContent;
+      document.body.appendChild(newScript);
+    });
+  }, [checkoutFormContent]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -121,12 +138,13 @@ export default function PricingClient({ initialIsTurkey }) {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.paymentPageUrl) {
+      if (!res.ok || !data.checkoutFormContent) {
         setIyzicoError(data.error || "Ödeme başlatılamadı, tekrar dene.");
         setCheckoutLoading(false);
         return;
       }
-      window.location.href = data.paymentPageUrl;
+      setCheckoutFormContent(data.checkoutFormContent);
+      setCheckoutLoading(false);
     } catch (err) {
       setIyzicoError("Bir hata oluştu, tekrar dene.");
       setCheckoutLoading(false);
@@ -231,7 +249,11 @@ export default function PricingClient({ initialIsTurkey }) {
 
         {isTurkey ? (
           <>
-            {!showIyzicoForm ? (
+            {checkoutFormContent ? (
+              <div ref={formContainerRef} style={{ marginTop: 16 }}>
+                <div id="iyzipay-checkout-form" className="responsive"></div>
+              </div>
+            ) : !showIyzicoForm ? (
               <button className="btn" style={{ width: "100%", marginTop: 16 }} onClick={openIyzicoForm}>
                 Premium'a geç
               </button>
