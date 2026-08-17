@@ -10,6 +10,21 @@ import { TRIAL_DAYS, isEffectivelyPremium, trialDaysLeft, isOnActiveTrial } from
 import { shareOrCopy } from "../../lib/share";
 import QRCode from "qrcode";
 
+function formatDate(iso) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+  } catch (e) {
+    return null;
+  }
+}
+
+function daysUntil(iso) {
+  if (!iso) return null;
+  const ms = new Date(iso).getTime() - Date.now();
+  return Math.ceil(ms / (1000 * 60 * 60 * 24));
+}
+
 function emptyPlatformValues() {
   const obj = {};
   PLATFORMS.forEach((p) => (obj[p.id] = ""));
@@ -58,6 +73,8 @@ export default function Dashboard() {
   const [shareCopied, setShareCopied] = useState(false);
   const [stats, setStats] = useState({ views: 0, clicksByLabel: {} });
   const [trialEndsAt, setTrialEndsAt] = useState(null);
+  const [premiumUntil, setPremiumUntil] = useState(null);
+  const [premiumProvider, setPremiumProvider] = useState(null);
 
   // Fotoğraf konumlandırma editörü
   const [editorOpen, setEditorOpen] = useState(false);
@@ -110,6 +127,10 @@ export default function Dashboard() {
         setTrialEndsAt(effectiveTrialEnd);
         setIsPremium(
           isEffectivelyPremium({ ...profile, trial_ends_at: effectiveTrialEnd })
+        );
+        setPremiumUntil(profile.premium_until || null);
+        setPremiumProvider(
+          profile.paddle_subscription_id ? "paddle" : profile.iyzico_subscription_ref ? "iyzico" : null
         );
 
         const savedLinks = profile.links || [];
@@ -648,10 +669,33 @@ export default function Dashboard() {
           {isOnActiveTrial({ trial_ends_at: trialEndsAt, is_premium: isPremium })
             ? `🎁 Deneme · ${trialDaysLeft({ trial_ends_at: trialEndsAt })} gün kaldı`
             : isPremium
-            ? "✨ Premium"
+            ? premiumProvider === "iyzico" && premiumUntil
+              ? `✨ Premium · ${formatDate(premiumUntil)}'e kadar`
+              : "✨ Premium"
             : "Ücretsiz plan"}
         </Link>
       </div>
+
+      {isPremium && premiumProvider === "iyzico" && daysUntil(premiumUntil) !== null && daysUntil(premiumUntil) <= 7 && (
+        <div
+          className="tabela"
+          style={{ marginTop: 16, padding: "14px 18px", border: "1px solid var(--danger, #e05d44)" }}
+        >
+          <p style={{ fontSize: 13 }}>
+            ⚠️ Premium süren{" "}
+            <strong>
+              {daysUntil(premiumUntil) <= 0
+                ? "bugün doluyor"
+                : `${daysUntil(premiumUntil)} gün içinde doluyor`}
+            </strong>
+            {" "}({formatDate(premiumUntil)}). Kesintisiz devam etmek için{" "}
+            <Link href="/fiyatlandirma" style={{ color: "var(--amber)" }}>
+              şimdi uzat
+            </Link>
+            .
+          </p>
+        </div>
+      )}
 
       {isOnActiveTrial({ trial_ends_at: trialEndsAt, is_premium: isPremium }) && (
         <div
