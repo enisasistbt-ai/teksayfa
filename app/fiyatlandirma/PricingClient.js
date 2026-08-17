@@ -174,7 +174,7 @@ export default function PricingClient({ initialIsTurkey }) {
   const usdLabel = yearly ? PADDLE_YEARLY_LABEL : PADDLE_MONTHLY_LABEL;
 
   const isPaddleSubscriber = !!profile?.paddle_subscription_id && profile?.is_premium;
-  const isIyzicoPremium = !!profile?.iyzico_subscription_ref && profile?.is_premium;
+  const isIyzicoPremium = !!profile?.is_premium && !isPaddleSubscriber;
 
   if (!profileLoading && isPaddleSubscriber) {
     return (
