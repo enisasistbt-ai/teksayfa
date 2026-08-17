@@ -28,6 +28,15 @@ const PREMIUM_FEATURES = [
   "Otomatik yenilenir, istediğin zaman iptal",
 ];
 
+function formatDate(iso) {
+  if (!iso) return "—";
+  try {
+    return new Date(iso).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+  } catch (e) {
+    return "—";
+  }
+}
+
 export default function PricingClient({ initialIsTurkey }) {
   const [isTurkey, setIsTurkey] = useState(initialIsTurkey);
   const [yearly, setYearly] = useState(false);
@@ -47,6 +56,8 @@ export default function PricingClient({ initialIsTurkey }) {
   const [iyzicoError, setIyzicoError] = useState("");
   const [checkoutFormContent, setCheckoutFormContent] = useState(null);
   const formContainerRef = useRef(null);
+  const [profile, setProfile] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     if (!checkoutFormContent || !formContainerRef.current) return;
@@ -64,12 +75,19 @@ export default function PricingClient({ initialIsTurkey }) {
   }, [checkoutFormContent]);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       const session = data?.session;
       if (session) {
         setUserId(session.user.id);
         setEmail(session.user.email || "");
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("is_premium, premium_plan, premium_until, paddle_subscription_id, iyzico_subscription_ref")
+          .eq("id", session.user.id)
+          .maybeSingle();
+        setProfile(profileData);
       }
+      setProfileLoading(false);
     });
   }, []);
 
@@ -154,6 +172,37 @@ export default function PricingClient({ initialIsTurkey }) {
   const tryPrice = yearly ? PREMIUM_YEARLY_PRICE : PREMIUM_MONTHLY_PRICE;
   const tryUnit = yearly ? "yıl" : "ay";
   const usdLabel = yearly ? PADDLE_YEARLY_LABEL : PADDLE_MONTHLY_LABEL;
+
+  const isPaddleSubscriber = !!profile?.paddle_subscription_id && profile?.is_premium;
+  const isIyzicoPremium = !!profile?.iyzico_subscription_ref && profile?.is_premium;
+
+  if (!profileLoading && isPaddleSubscriber) {
+    return (
+      <main className="container" style={{ paddingTop: 60 }}>
+        <div className="eyebrow">fiyatlandırma</div>
+        <h1 className="display" style={{ fontSize: 30, marginTop: 8 }}>
+          Zaten Premium'sun ✨
+        </h1>
+        <div className="tabela" style={{ marginTop: 24, textAlign: "left", padding: "24px 22px" }}>
+          <p style={{ fontSize: 14 }}>
+            Premium aboneliğin <strong>Paddle</strong> üzerinden otomatik olarak yenileniyor.
+            {profile.premium_until && (
+              <> Bir sonraki yenileme tarihi: <strong>{formatDate(profile.premium_until)}</strong>.</>
+            )}
+          </p>
+          <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 10 }}>
+            Aboneliğini iptal etmek ya da ödeme yöntemini değiştirmek istersen, Paddle'dan
+            gelen makbuz e-postasındaki "Abonelik yönetimi" bağlantısını kullanabilirsin.
+          </p>
+        </div>
+        <p className="footer-note">
+          <Link href="/dashboard" style={{ color: "var(--amber)" }}>
+            Panele dön
+          </Link>
+        </p>
+      </main>
+    );
+  }
 
   return (
     <main className="container" style={{ paddingTop: 60 }}>
@@ -241,6 +290,23 @@ export default function PricingClient({ initialIsTurkey }) {
         <p style={{ color: "var(--muted)", fontSize: 13, marginTop: 4 }}>
           Büyüyen işletmen için.
         </p>
+
+        {isIyzicoPremium && (
+          <div
+            style={{
+              marginTop: 14,
+              padding: "10px 14px",
+              borderRadius: 10,
+              background: "var(--panel-hi)",
+              fontSize: 13,
+            }}
+          >
+            ✨ Şu an Premium'sun, bitiş: <strong>{formatDate(profile.premium_until)}</strong>.
+            Aşağıdan tekrar satın alırsan, ödediğin süre <strong>mevcut sürene eklenir</strong>
+            (sıfırdan başlamaz).
+          </div>
+        )}
+
         <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 14, lineHeight: 1.9 }}>
           {PREMIUM_FEATURES.map((f) => (
             <li key={f}>{f}</li>
@@ -258,7 +324,7 @@ export default function PricingClient({ initialIsTurkey }) {
               </div>
             ) : !showIyzicoForm ? (
               <button className="btn" style={{ width: "100%", marginTop: 16 }} onClick={openIyzicoForm}>
-                Premium'a geç
+                {isIyzicoPremium ? "Süreni uzat" : "Premium'a geç"}
               </button>
             ) : (
               <form onSubmit={handleIyzicoSubmit} style={{ marginTop: 16 }}>
