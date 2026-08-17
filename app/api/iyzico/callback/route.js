@@ -26,10 +26,25 @@ export async function POST(request) {
   const basketId = result.basketId || "";
   const plan = basketId.includes("yearly") ? "yearly" : "monthly";
   const days = plan === "yearly" ? 365 : 30;
-  const premiumUntil = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
 
   if (userId) {
     const supabaseAdmin = getSupabaseAdmin();
+
+    // Zaten aktif bir süresi varsa, üstüne ekle — sıfırdan başlatma
+    const { data: existingProfile } = await supabaseAdmin
+      .from("profiles")
+      .select("premium_until")
+      .eq("id", userId)
+      .maybeSingle();
+
+    const existingUntil = existingProfile?.premium_until
+      ? new Date(existingProfile.premium_until)
+      : null;
+    const baseDate = existingUntil && existingUntil > new Date() ? existingUntil : new Date();
+    const premiumUntil = new Date(
+      baseDate.getTime() + days * 24 * 60 * 60 * 1000
+    ).toISOString();
+
     const { error: updateError } = await supabaseAdmin
       .from("profiles")
       .update({
