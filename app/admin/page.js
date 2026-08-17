@@ -75,7 +75,7 @@ export default function Admin() {
         ...p,
         views: viewCounts[p.username] || 0,
         clicks: clickCounts[p.username] || 0,
-        provider: p.paddle_subscription_id ? "Paddle" : p.iyzico_subscription_ref ? "iyzico" : "—",
+        provider: p.paddle_subscription_id ? "Paddle" : p.is_premium ? "iyzico" : "—",
       }));
 
       setRows(merged);
