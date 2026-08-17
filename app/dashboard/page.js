@@ -130,7 +130,7 @@ export default function Dashboard() {
         );
         setPremiumUntil(profile.premium_until || null);
         setPremiumProvider(
-          profile.paddle_subscription_id ? "paddle" : profile.iyzico_subscription_ref ? "iyzico" : null
+          profile.paddle_subscription_id ? "paddle" : profile.is_premium ? "iyzico" : null
         );
 
         const savedLinks = profile.links || [];
