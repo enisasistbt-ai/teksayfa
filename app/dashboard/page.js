@@ -661,7 +661,10 @@ export default function Dashboard() {
   return (
     <main className="container" style={{ paddingTop: 48 }}>
       <div className="row" style={{ justifyContent: "space-between" }}>
-        <div className="eyebrow">panelin</div>
+        <div className="row" style={{ gap: 8 }}>
+          <img src="/logo-mark.png" alt="MineBio" style={{ width: 20, height: 20 }} />
+          <div className="eyebrow">panelin</div>
+        </div>
         <div className="row" style={{ gap: 8 }}>
           <Link href="/kisiler" className="btn-ghost" style={{ fontSize: 12 }}>
             👥 Kişilerim
