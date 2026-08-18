@@ -3,11 +3,22 @@ import Link from "next/link";
 export const metadata = {
   title: "Hakkımızda — MineBio",
   description:
-    "MineBio'nun hikayesi — bir e-ticaret esnafının kendi ihtiyacından doğan, dağınık linkleri tek sayfada toplayan araç.",
+    "MineBio, işletmenizin tüm dijital varlığını tek bir profesyonel sayfada buluşturmak için var. Hikayemizi ve neye önem verdiğimizi öğrenin.",
   alternates: {
     canonical: "https://www.minebio.net/hakkimizda",
+    languages: {
+      tr: "https://www.minebio.net/hakkimizda",
+      en: "https://www.minebio.net/en/about",
+    },
   },
 };
+
+const PILLARS = [
+  { title: "Tek Bağlantı", desc: "Her şeyi tek yerde topla" },
+  { title: "Profesyonel Görünüm", desc: "Markanı doğru yansıt" },
+  { title: "Anlık İçgörü", desc: "Kim baktı, ne tıkladı gör" },
+  { title: "Zaman Kazan", desc: "Bağlantı karmaşasına son" },
+];
 
 export default function Hakkimizda() {
   return (
@@ -32,47 +43,55 @@ export default function Hakkimizda() {
         </div>
       </nav>
 
-      <section className="corp-section" style={{ paddingTop: 80, maxWidth: 720 }}>
-        <div className="corp-eyebrow">hikayemiz</div>
-        <h1 className="corp-display" style={{ fontSize: 38, marginTop: 12, lineHeight: 1.15 }}>
-          Kendi ihtiyacımızdan doğdu.
+      <section className="corp-section" style={{ paddingTop: 80, maxWidth: 760 }}>
+        <div className="corp-eyebrow">hakkımızda</div>
+        <h1 className="corp-display" style={{ fontSize: 40, marginTop: 12, lineHeight: 1.15 }}>
+          İşin artık tek bir bağlantıda toplanıyor.
         </h1>
 
-        <div style={{ marginTop: 32, fontSize: 16, lineHeight: 1.85, color: "var(--c-body)" }}>
+        <div className="corp-grid-3" style={{ marginTop: 36 }}>
+          {PILLARS.map((p) => (
+            <div className="corp-card" key={p.title} style={{ padding: "18px 20px" }}>
+              <div className="corp-display" style={{ fontSize: 15 }}>
+                {p.title}
+              </div>
+              <p style={{ fontSize: 12.5, color: "var(--c-body)", marginTop: 6 }}>{p.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 40, fontSize: 16, lineHeight: 1.85, color: "var(--c-body)" }}>
           <p>
-            Ben Enis — Bibutikshop adıyla el yapımı ve hediyelik ürünler (örgü
-            aksesuarlar, anahtarlıklar ve daha fazlası) satan bir esnafım.
-            Ürünlerimi Instagram'da, Trendyol'da, Hepsiburada'da ve kendi web
-            sitemde satıyorum.
+            Hayatımızın her alanı dijitalleşirken, iş yapma biçimimiz de
+            değişiyor. Bugün bir işletme artık tek bir yerde değil —
+            Instagram'da, WhatsApp'ta, bir pazaryerinde, kendi web sitesinde
+            aynı anda var oluyor. Bu çoklu varlık, müşterilere ulaşmayı
+            kolaylaştırdığı kadar, doğru bilgiyi doğru zamanda doğru kişiye
+            ulaştırmayı da zorlaştırıyor.
           </p>
 
           <p style={{ marginTop: 20 }}>
-            Sorun şuydu: Instagram bio'ma tek bir link koyabiliyordum. Ama benim
-            paylaşacak birden fazla şeyim vardı — mağazam, WhatsApp'ım,
-            Trendyol sayfam, iletişim bilgilerim. Her seferinde "hangi linki
-            koysam" diye düşünüyor, müşterilerimi doğru yere yönlendirmekte
-            zorlanıyordum.
+            <strong>MineBio'yu tam da bu ihtiyaçtan yola çıkarak kurduk:</strong>{" "}
+            işletmenizin — ya da sizin — tüm dijital varlığınızı, tek, sade ve
+            profesyonel bir sayfada buluşturmak için.
           </p>
 
           <p style={{ marginTop: 20 }}>
-            Piyasadaki çözümlere baktım — ya çok pahalıydı, ya gereğinden
-            karmaşıktı, ya da benim gibi küçük bir işletme sahibinin gerçekte
-            neye ihtiyacı olduğunu anlamıyordu. Ben de kendi ihtiyacım için bir
-            şey yapmaya karar verdim: <strong>MineBio</strong>.
+            Sosyal medya hesaplarınız, mağazanız, iletişim bilgileriniz,
+            randevu bağlantınız — hepsi artık paylaşacağınız tek bir linkte.
+            Kartvizitinize, e-posta imzanıza, Instagram bio'nuza koyacağınız bu
+            link, ziyaretçilerinizi doğru yere saniyeler içinde yönlendiriyor.
+            Kimin sayfanıza baktığını, hangi linke tıkladığını görün —
+            işinizi büyütürken verilerle karar verin.
           </p>
 
           <p style={{ marginTop: 20 }}>
-            Amaç basitti — sosyal medyamı, mağazamı ve iletişim bilgilerimi tek,
-            sade ve profesyonel bir sayfada toplamak. Zamanla bunun sadece benim
-            değil, benim gibi çalışan onlarca esnafın, serbest çalışanın ve
-            küçük işletme sahibinin de ihtiyacı olduğunu gördüm.
-          </p>
-
-          <p style={{ marginTop: 20 }}>
-            Bugün MineBio, hem Türkiye'de hem yurt dışında kullanılan, gerçek
-            bir ürün. Küçük başladı, hâlâ küçük bir ekiple (aslında sadece
-            benimle) ilerliyor — ama her özelliği, gerçek bir işletme sahibinin
-            gerçek bir ihtiyacından doğuyor.
+            MineBio, gerçek bir e-ticaret işletmesinin günlük ihtiyaçlarından
+            doğdu — bu yüzden her özelliği, gerçek bir işletme sahibinin
+            gerçekten kullandığı bir şey. Bugün MineBio, hem Türkiye'de hem
+            yurt dışında, esnaftan serbest çalışana, küçük işletmelerden
+            içerik üreticilerine kadar geniş bir kullanıcı kitlesine hizmet
+            veriyor.
           </p>
 
           <h2 style={{ fontSize: 22, marginTop: 44 }}>Neye önem veriyoruz</h2>
