@@ -6,6 +6,7 @@ export default function sitemap() {
     "",
     "/en",
     "/fiyatlandirma",
+    "/hakkimizda",
     "/login",
     "/gizlilik-politikasi",
     "/cerez-politikasi",
