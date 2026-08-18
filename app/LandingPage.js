@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const CONTENT = {
   tr: {
-    nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", login: "Giriş yap", start: "Ücretsiz başla" },
+    nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", login: "Giriş yap", start: "Ücretsiz başla" },
     langSwitch: { href: "/en", label: "EN" },
     industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Serbest çalışanlar", "Ajanslar", "Perakende"],
     marquee: [
@@ -74,7 +74,7 @@ const CONTENT = {
     },
   },
   en: {
-    nav: { features: "Features", pricing: "Pricing", faq: "FAQ", login: "Log in", start: "Start free" },
+    nav: { features: "Features", pricing: "Pricing", faq: "FAQ", about: "About", login: "Log in", start: "Start free" },
     langSwitch: { href: "/", label: "TR" },
     industries: ["E-commerce", "Consulting", "Service businesses", "Freelancers", "Agencies", "Retail"],
     marquee: [
@@ -173,6 +173,7 @@ export default function LandingPage({ lang = "tr" }) {
             <a href="#ozellikler">{t.nav.features}</a>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
             <a href="#sss">{t.nav.faq}</a>
+            <Link href="/hakkimizda">{t.nav.about}</Link>
             <Link href="/login">{t.nav.login}</Link>
             <Link href={t.langSwitch.href} className="mono" style={{ fontSize: 12.5, color: "var(--c-body)" }}>
               {t.langSwitch.label}
@@ -329,6 +330,7 @@ export default function LandingPage({ lang = "tr" }) {
             <div className="corp-footer-col-title">{t.footer.productTitle}</div>
             <a href="#ozellikler">{t.nav.features}</a>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
+            <Link href="/hakkimizda">{t.nav.about}</Link>
             <Link href="/login">{t.nav.login}</Link>
           </div>
 
