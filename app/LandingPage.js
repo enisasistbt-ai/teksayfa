@@ -164,15 +164,7 @@ export default function LandingPage({ lang = "tr" }) {
       <nav className="corp-nav">
         <div className="corp-nav-inner">
           <Link href={homeHref} className="row" style={{ gap: 9, flexShrink: 0, textDecoration: "none" }}>
-            <span
-              style={{
-                width: 22,
-                height: 22,
-                borderRadius: 6,
-                background: "linear-gradient(145deg, var(--c-accent), #6a8bff)",
-                display: "inline-block",
-              }}
-            />
+            <img src="/logo-mark.png" alt="MineBio" style={{ width: 24, height: 24 }} />
             <span className="corp-display" style={{ fontSize: 16 }}>
               MineBio
             </span>
@@ -323,15 +315,7 @@ export default function LandingPage({ lang = "tr" }) {
         <div className="corp-footer-grid">
           <div style={{ flex: "1 1 220px", maxWidth: 260 }}>
             <div className="row" style={{ gap: 8 }}>
-              <span
-                style={{
-                  width: 18,
-                  height: 18,
-                  borderRadius: 5,
-                  background: "linear-gradient(145deg, var(--c-accent), #6a8bff)",
-                  display: "inline-block",
-                }}
-              />
+              <img src="/logo-mark.png" alt="MineBio" style={{ width: 20, height: 20 }} />
               <span className="corp-display" style={{ fontSize: 14 }}>
                 MineBio
               </span>
