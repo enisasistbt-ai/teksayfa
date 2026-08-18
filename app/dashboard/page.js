@@ -179,6 +179,9 @@ export default function Dashboard() {
         if (typeof window !== "undefined" && window.fbq) {
           window.fbq("track", "CompleteRegistration");
         }
+        if (typeof window !== "undefined" && window.ttq) {
+          window.ttq.track("CompleteRegistration");
+        }
       }
       setLoading(false);
     }
