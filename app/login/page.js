@@ -55,6 +55,7 @@ export default function Login() {
 
   return (
     <main className="container" style={{ paddingTop: 90 }}>
+      <img src="/logo-mark.png" alt="MineBio" style={{ width: 32, height: 32, marginBottom: 4 }} />
       <div className="eyebrow">giriş yap</div>
       <h1 className="display" style={{ fontSize: 28, marginTop: 8 }}>
         E-postana bağlantı gönderelim
