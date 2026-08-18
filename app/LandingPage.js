@@ -158,6 +158,7 @@ export default function LandingPage({ lang = "tr" }) {
 
   const example = t.examples[exampleIndex];
   const homeHref = lang === "en" ? "/en" : "/";
+  const aboutHref = lang === "en" ? "/en/about" : "/hakkimizda";
 
   return (
     <div className="corp-landing">
@@ -173,7 +174,7 @@ export default function LandingPage({ lang = "tr" }) {
             <a href="#ozellikler">{t.nav.features}</a>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
             <a href="#sss">{t.nav.faq}</a>
-            <Link href="/hakkimizda">{t.nav.about}</Link>
+            <Link href={aboutHref}>{t.nav.about}</Link>
             <Link href="/login">{t.nav.login}</Link>
             <Link href={t.langSwitch.href} className="mono" style={{ fontSize: 12.5, color: "var(--c-body)" }}>
               {t.langSwitch.label}
@@ -330,7 +331,7 @@ export default function LandingPage({ lang = "tr" }) {
             <div className="corp-footer-col-title">{t.footer.productTitle}</div>
             <a href="#ozellikler">{t.nav.features}</a>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
-            <Link href="/hakkimizda">{t.nav.about}</Link>
+            <Link href={aboutHref}>{t.nav.about}</Link>
             <Link href="/login">{t.nav.login}</Link>
           </div>
 
