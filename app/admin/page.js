@@ -187,7 +187,7 @@ export default function Admin() {
     <div>
       <div className="admin-topbar">
         <div className="admin-brand">
-          <div className="admin-brand-mark" />
+          <img src="/logo-mark.png" alt="MineBio" className="admin-brand-mark" />
           <span className="display" style={{ fontSize: 16 }}>
             MineBio <span style={{ color: "var(--muted)", fontWeight: 400 }}>· Yönetim</span>
           </span>
