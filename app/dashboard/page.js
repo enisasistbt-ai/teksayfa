@@ -601,6 +601,27 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, username, displayName, avatarUrl, theme, isPremium]);
 
+  useEffect(() => {
+    // Reklam sadece ücretsiz plandaki kullanıcının kendi panelinde görünsün
+    if (loading || isPremium) return;
+    if (document.querySelector('script[src*="adsbygoogle.js"]')) return;
+    const script = document.createElement("script");
+    script.async = true;
+    script.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5441545128970618";
+    script.crossOrigin = "anonymous";
+    document.head.appendChild(script);
+  }, [loading, isPremium]);
+
+  useEffect(() => {
+    if (loading || isPremium) return;
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      // reklam yüklenemedi, sessizce geç
+    }
+  }, [loading, isPremium]);
+
   function downloadQrCode() {
     const canvas = qrCanvasRef.current;
     if (!canvas) return;
@@ -714,6 +735,19 @@ export default function Dashboard() {
             </Link>
             .
           </p>
+        </div>
+      )}
+
+      {!loading && !isPremium && (
+        <div style={{ marginTop: 16 }}>
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block" }}
+            data-ad-client="ca-pub-5441545128970618"
+            data-ad-slot="9147031116"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
         </div>
       )}
 
