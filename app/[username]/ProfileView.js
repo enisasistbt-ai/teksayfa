@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { translateLinkLabel, extractWhatsappPhone } from "../../lib/platforms";
 import { shareOrCopy } from "../../lib/share";
 import SaveContactButton from "./SaveContactButton";
@@ -33,6 +33,19 @@ export default function ProfileView({ profile, pageUrl }) {
   const [lang, setLang] = useState("tr");
   const [shareCopied, setShareCopied] = useState(false);
   const t = STRINGS[lang];
+
+  useEffect(() => {
+    // Reklamlar sadece ücretsiz plandaki kullanıcıların sayfalarında görünsün —
+    // Premium'un "reklamsız" avantajı burada korunuyor.
+    if (profile.is_premium) return;
+    if (document.querySelector('script[src*="adsbygoogle.js"]')) return;
+    const script = document.createElement("script");
+    script.async = true;
+    script.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5441545128970618";
+    script.crossOrigin = "anonymous";
+    document.head.appendChild(script);
+  }, [profile.is_premium]);
 
   async function handleShare() {
     await shareOrCopy(
