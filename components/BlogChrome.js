@@ -115,6 +115,24 @@ export function BlogFooter({ lang = "tr" }) {
   );
 }
 
+export function BlogCover({ src, alt }) {
+  if (!src) return null;
+  return (
+    <div
+      style={{
+        width: "100%",
+        aspectRatio: "16 / 9",
+        borderRadius: 14,
+        overflow: "hidden",
+        marginTop: 18,
+        background: "var(--c-bg-alt)",
+      }}
+    >
+      <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+    </div>
+  );
+}
+
 export function renderBlocks(content) {
   return content.map((block, i) => {
     if (block.h2) {
