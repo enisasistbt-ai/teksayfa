@@ -22,6 +22,27 @@ export default function Login() {
 
   useEffect(() => {
     setInAppBrowser(detectInAppBrowser());
+    // Uygulama içi tarayıcı (TikTok/Instagram) arka plana alınca sayfayı
+    // sıfırdan yeniden yükleyebiliyor. Kod gönderildiyse bunu sessionStorage'a
+    // yazıp, kullanıcı e-posta uygulamasından geri döndüğünde kaldığı yerden
+    // (kod girme ekranı) devam etmesini sağlıyoruz.
+    try {
+      const savedEmail = window.sessionStorage.getItem("mb_login_email");
+      const savedSent = window.sessionStorage.getItem("mb_login_sent");
+      if (savedEmail && savedSent === "1") {
+        setEmail(savedEmail);
+        setSent(true);
+      }
+    } catch (e) {
+      // sessionStorage yoksa (gizli sekme vb.) sessizce devam et
+    }
+    // Bu arada oturum zaten açılmışsa (ör. başka bir sekmede tamamlandıysa)
+    // login formunu tekrar göstermek yerine doğrudan dashboard'a geç.
+    supabase.auth.getSession().then(({ data }) => {
+      if (data?.session) {
+        window.location.href = "/dashboard";
+      }
+    });
   }, []);
 
   async function handleLogin(e) {
@@ -46,6 +67,12 @@ export default function Login() {
       setError("Bir şeyler ters gitti, tekrar dene.");
       return;
     }
+    try {
+      window.sessionStorage.setItem("mb_login_email", email);
+      window.sessionStorage.setItem("mb_login_sent", "1");
+    } catch (e) {
+      // sessionStorage yazılamazsa akışı bozma
+    }
     setSent(true);
   }
 
@@ -62,6 +89,12 @@ export default function Login() {
     if (error) {
       setError("Kod hatalı ya da süresi dolmuş, tekrar dene.");
       return;
+    }
+    try {
+      window.sessionStorage.removeItem("mb_login_email");
+      window.sessionStorage.removeItem("mb_login_sent");
+    } catch (e) {
+      // yoksay
     }
     window.location.href = "/dashboard";
   }
@@ -175,6 +208,24 @@ export default function Login() {
           )}
           <button className="btn" style={{ marginTop: 18, width: "100%" }} disabled={verifying}>
             {verifying ? "Kontrol ediliyor..." : "Giriş yap"}
+          </button>
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ width: "auto", margin: "14px auto 0", display: "block", fontSize: 12.5 }}
+            onClick={() => {
+              try {
+                window.sessionStorage.removeItem("mb_login_email");
+                window.sessionStorage.removeItem("mb_login_sent");
+              } catch (e) {
+                // yoksay
+              }
+              setSent(false);
+              setCode("");
+              setError("");
+            }}
+          >
+            Kod gelmedi mi? Tekrar dene
           </button>
         </form>
       ) : (
