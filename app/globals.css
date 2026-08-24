@@ -676,6 +676,19 @@ textarea {
   color: var(--c-ink);
 }
 
+/* Çok dar ekranlarda uzun metni kısaltmak için (ör. reklam sayfası giriş linki) */
+.corp-short-text {
+  display: none;
+}
+@media (max-width: 420px) {
+  .corp-full-text {
+    display: none;
+  }
+  .corp-short-text {
+    display: inline;
+  }
+}
+
 .corp-nav-burger {
   display: none;
   width: 40px;
