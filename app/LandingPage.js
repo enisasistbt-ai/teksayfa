@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { supabase } from "../lib/supabaseClient";
 
 const CONTENT = {
   tr: {
@@ -25,6 +27,13 @@ const CONTENT = {
       desc: "İster bir şirketi temsil et, ister kendi işini yönet: MineBio sosyal medyanı, mağazanı ve iletişim bilgilerini tek, profesyonel bir sayfada toplar — kimin baktığını da sana gösterir.",
       badgeViews: "128 görüntülenme",
       badgeQr: "QR koduna hazır",
+      claimLabel: "Kendi adını hemen dene",
+      claimPlaceholder: "kullanici-adin",
+      claimChecking: "kontrol ediliyor...",
+      claimAvailable: "Müsait! 🎉",
+      claimTaken: "Bu isim alınmış, başka bir tane dene",
+      claimTooShort: "En az 3 karakter yaz",
+      claimCta: "Bu adı al",
     },
     features: {
       eyebrow: "özellikler",
@@ -96,6 +105,13 @@ const CONTENT = {
       desc: "Whether you run a company or your own business: MineBio brings your social media, store, and contact info together on one professional page — and shows you who's looking.",
       badgeViews: "128 views",
       badgeQr: "Ready as QR code",
+      claimLabel: "Try your name right now",
+      claimPlaceholder: "your-name",
+      claimChecking: "checking...",
+      claimAvailable: "Available! 🎉",
+      claimTaken: "That one's taken, try another",
+      claimTooShort: "Type at least 3 characters",
+      claimCta: "Claim it",
     },
     features: {
       eyebrow: "features",
@@ -177,10 +193,44 @@ function Reveal({ children, as: Tag = "div", ...rest }) {
 
 export default function LandingPage({ lang = "tr" }) {
   const t = CONTENT[lang];
+  const router = useRouter();
   const [openFaq, setOpenFaq] = useState(null);
   const [exampleIndex, setExampleIndex] = useState(0);
   const [activeLink, setActiveLink] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [claimInput, setClaimInput] = useState("");
+  const [claimStatus, setClaimStatus] = useState(null); // null | "checking" | "available" | "taken" | "short"
+
+  useEffect(() => {
+    const clean = claimInput.trim().toLowerCase().replace(/\s+/g, "-");
+    if (!clean) {
+      setClaimStatus(null);
+      return;
+    }
+    if (clean.length < 3) {
+      setClaimStatus("short");
+      return;
+    }
+    setClaimStatus("checking");
+    const timer = setTimeout(async () => {
+      const { data } = await supabase
+        .from("public_profiles")
+        .select("username")
+        .eq("username", clean)
+        .maybeSingle();
+      setClaimStatus(data ? "taken" : "available");
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [claimInput]);
+
+  function handleClaim() {
+    const clean = claimInput.trim().toLowerCase().replace(/\s+/g, "-");
+    if (claimStatus !== "available" || !clean) return;
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("mb_desired_username", clean);
+    }
+    router.push("/login");
+  }
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -276,6 +326,33 @@ export default function LandingPage({ lang = "tr" }) {
                   {ind}
                 </span>
               ))}
+            </div>
+
+            <div className="corp-claim-box">
+              <div className="corp-claim-label">{t.hero.claimLabel}</div>
+              <div className="corp-claim-row">
+                <span className="mono corp-claim-prefix">minebio.net/</span>
+                <input
+                  className="corp-claim-input"
+                  value={claimInput}
+                  onChange={(e) => setClaimInput(e.target.value)}
+                  placeholder={t.hero.claimPlaceholder}
+                  onKeyDown={(e) => e.key === "Enter" && handleClaim()}
+                />
+                {claimStatus === "available" && (
+                  <button type="button" className="corp-btn" style={{ padding: "9px 16px", fontSize: 13 }} onClick={handleClaim}>
+                    {t.hero.claimCta}
+                  </button>
+                )}
+              </div>
+              {claimStatus && (
+                <div className={`corp-claim-status corp-claim-status-${claimStatus}`}>
+                  {claimStatus === "checking" && t.hero.claimChecking}
+                  {claimStatus === "available" && `✓ ${t.hero.claimAvailable}`}
+                  {claimStatus === "taken" && `✗ ${t.hero.claimTaken}`}
+                  {claimStatus === "short" && t.hero.claimTooShort}
+                </div>
+              )}
             </div>
           </div>
 

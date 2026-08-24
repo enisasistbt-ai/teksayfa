@@ -1005,6 +1005,73 @@ textarea {
   padding: 7px 16px;
 }
 
+.corp-claim-box {
+  margin-top: 28px;
+  background: #fff;
+  border: 1px solid var(--c-border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  max-width: 440px;
+  box-shadow: 0 16px 34px -22px rgba(28, 43, 35, 0.3);
+}
+
+.corp-claim-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--c-body);
+  margin-bottom: 10px;
+}
+
+.corp-claim-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.corp-claim-prefix {
+  font-size: 13px;
+  color: var(--c-body);
+  flex-shrink: 0;
+}
+
+.corp-claim-input {
+  flex: 1 1 140px;
+  min-width: 110px;
+  border: 1px solid var(--c-border);
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 13.5px;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--c-ink);
+  background: var(--c-bg-alt);
+}
+
+.corp-claim-input:focus {
+  outline: none;
+  border-color: var(--c-accent);
+}
+
+.corp-claim-status {
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.corp-claim-status-available {
+  color: #3f7d52;
+}
+
+.corp-claim-status-taken {
+  color: var(--c-clay);
+}
+
+.corp-claim-status-checking,
+.corp-claim-status-short {
+  color: var(--c-body);
+  font-weight: 500;
+}
+
 .corp-grid-3 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
