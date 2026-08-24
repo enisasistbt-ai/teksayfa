@@ -164,6 +164,16 @@ const CONTENT = {
   },
 };
 
+// Örnek profil avatarları — index sırası her iki dilde de aynı kişiyi temsil eder
+// (0: Merve/Maya, 1: Deniz, 2: Can/Chris, 3: Ada). Görsel dosyası yoksa veya
+// yüklenemezse otomatik olarak baş harf rozetine düşer, build'i etkilemez.
+const EXAMPLE_AVATARS = [
+  "/ornekler/profil-1.jpg",
+  "/ornekler/profil-2.jpg",
+  "/ornekler/profil-3.jpg",
+  "/ornekler/profil-4.jpg",
+];
+
 function Reveal({ children, as: Tag = "div", ...rest }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -366,7 +376,18 @@ export default function LandingPage({ lang = "tr" }) {
             <div className="corp-phone">
               <div className="corp-phone-notch" />
               <div className="corp-phone-screen" key={example.handle}>
-                <div className="corp-mock-avatar">{example.initial}</div>
+                <div className="corp-mock-avatar">
+                  <img
+                    key={exampleIndex}
+                    src={EXAMPLE_AVATARS[exampleIndex]}
+                    alt={example.name}
+                    className="corp-mock-avatar-img"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                  <span className="corp-mock-avatar-fallback">{example.initial}</span>
+                </div>
                 <div className="corp-display" style={{ fontSize: 16 }}>
                   {example.name}
                 </div>

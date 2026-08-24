@@ -907,6 +907,7 @@ textarea {
 }
 
 .corp-mock-avatar {
+  position: relative;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -915,10 +916,24 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   color: var(--c-ink);
   font-family: "Fraunces", serif;
   font-weight: 700;
   font-size: 21px;
+}
+
+.corp-mock-avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.corp-mock-avatar-fallback {
+  line-height: 1;
 }
 
 .corp-mock-link {
