@@ -103,7 +103,12 @@ export default function Dashboard() {
         .maybeSingle();
 
       if (profile) {
-        setUsername(profile.username || "");
+        let suggestedUsername = "";
+        if (!profile.username && typeof window !== "undefined") {
+          suggestedUsername = window.localStorage.getItem("mb_desired_username") || "";
+          window.localStorage.removeItem("mb_desired_username");
+        }
+        setUsername(profile.username || suggestedUsername);
         setDisplayName(profile.display_name || "");
         setBio(profile.bio || "");
         setBioEn(profile.bio_en || "");
