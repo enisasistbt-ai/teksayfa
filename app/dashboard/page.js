@@ -19,6 +19,26 @@ function formatDate(iso) {
   }
 }
 
+// Yeni bir hesap ilk kez oluşturulduğunda (dashboard'a ilk giriş) GA4, Meta ve
+// TikTok'a kayıt (conversion) sinyali gönderir. Reklam engelleyici / pixel
+// yüklenmemişse sessizce hiçbir şey yapmaz, sayfayı bozmaz.
+function fireSignupConversion() {
+  try {
+    if (typeof window === "undefined") return;
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "sign_up", { method: "email_otp" });
+    }
+    if (typeof window.fbq === "function") {
+      window.fbq("track", "CompleteRegistration");
+    }
+    if (typeof window.ttq !== "undefined" && window.ttq && typeof window.ttq.track === "function") {
+      window.ttq.track("CompleteRegistration");
+    }
+  } catch (e) {
+    // analytics hatası akışı bozmasın
+  }
+}
+
 function daysUntil(iso) {
   if (!iso) return null;
   const ms = new Date(iso).getTime() - Date.now();
@@ -128,6 +148,7 @@ export default function Dashboard() {
             .from("profiles")
             .update({ trial_ends_at: effectiveTrialEnd })
             .eq("id", session.user.id);
+          fireSignupConversion();
         }
         setTrialEndsAt(effectiveTrialEnd);
         setIsPremium(
@@ -181,12 +202,7 @@ export default function Dashboard() {
           .upsert({ id: session.user.id, trial_ends_at: newTrialEnd });
         setTrialEndsAt(newTrialEnd);
         setIsPremium(true);
-        if (typeof window !== "undefined" && window.fbq) {
-          window.fbq("track", "CompleteRegistration");
-        }
-        if (typeof window !== "undefined" && window.ttq) {
-          window.ttq.track("CompleteRegistration");
-        }
+        fireSignupConversion();
       }
       setLoading(false);
     }
