@@ -7,7 +7,7 @@ import { supabase } from "../lib/supabaseClient";
 
 const CONTENT = {
   tr: {
-    nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", login: "Giriş yap", start: "Ücretsiz başla" },
+    nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", blog: "Blog", login: "Giriş yap", start: "Ücretsiz başla" },
     langSwitch: { href: "/en", label: "EN" },
     industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Serbest çalışanlar", "Ajanslar", "Perakende"],
     marquee: [
@@ -85,7 +85,7 @@ const CONTENT = {
     },
   },
   en: {
-    nav: { features: "Features", pricing: "Pricing", faq: "FAQ", about: "About", login: "Log in", start: "Start free" },
+    nav: { features: "Features", pricing: "Pricing", faq: "FAQ", about: "About", blog: "Blog", login: "Log in", start: "Start free" },
     langSwitch: { href: "/", label: "TR" },
     industries: ["E-commerce", "Consulting", "Service businesses", "Freelancers", "Agencies", "Retail"],
     marquee: [
@@ -259,6 +259,7 @@ export default function LandingPage({ lang = "tr" }) {
   const example = t.examples[exampleIndex];
   const homeHref = lang === "en" ? "/en" : "/";
   const aboutHref = lang === "en" ? "/en/about" : "/hakkimizda";
+  const blogHref = lang === "en" ? "/en/blog" : "/blog";
 
   return (
     <div className="corp-landing">
@@ -275,6 +276,7 @@ export default function LandingPage({ lang = "tr" }) {
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
             <a href="#sss">{t.nav.faq}</a>
             <Link href={aboutHref}>{t.nav.about}</Link>
+            <Link href={blogHref}>{t.nav.blog}</Link>
             <Link href="/login">{t.nav.login}</Link>
             <Link
               href={t.langSwitch.href}
@@ -302,6 +304,7 @@ export default function LandingPage({ lang = "tr" }) {
           <Link href="/fiyatlandirma" onClick={() => setMenuOpen(false)}>{t.nav.pricing}</Link>
           <a href="#sss" onClick={() => setMenuOpen(false)}>{t.nav.faq}</a>
           <Link href={aboutHref} onClick={() => setMenuOpen(false)}>{t.nav.about}</Link>
+          <Link href={blogHref} onClick={() => setMenuOpen(false)}>{t.nav.blog}</Link>
           <Link href="/login" onClick={() => setMenuOpen(false)}>{t.nav.login}</Link>
           <Link href={t.langSwitch.href} onClick={() => setMenuOpen(false)}>{t.langSwitch.label === "EN" ? "English" : "Türkçe"}</Link>
         </div>
@@ -511,6 +514,7 @@ export default function LandingPage({ lang = "tr" }) {
             <a href="#ozellikler">{t.nav.features}</a>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
             <Link href={aboutHref}>{t.nav.about}</Link>
+            <Link href={blogHref}>{t.nav.blog}</Link>
             <Link href="/login">{t.nav.login}</Link>
           </div>
 

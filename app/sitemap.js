@@ -1,3 +1,5 @@
+import { posts } from "../lib/blogPosts";
+
 export default function sitemap() {
   const baseUrl = "https://www.minebio.net";
   const now = new Date();
@@ -9,6 +11,8 @@ export default function sitemap() {
     "/hakkimizda",
     "/en/about",
     "/login",
+    "/blog",
+    "/en/blog",
     "/gizlilik-politikasi",
     "/cerez-politikasi",
     "/kullanim-kosullari",
@@ -18,10 +22,27 @@ export default function sitemap() {
     "/teslimat-ve-iade-kosullari",
   ];
 
-  return routes.map((route) => ({
+  const staticEntries = routes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: now,
     changeFrequency: route === "" || route === "/en" ? "weekly" : "monthly",
     priority: route === "" || route === "/en" ? 1 : route === "/fiyatlandirma" ? 0.8 : 0.3,
   }));
+
+  const blogEntries = [
+    ...posts.tr.map((p) => ({
+      url: `${baseUrl}/blog/${p.slug}`,
+      lastModified: new Date(p.date),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    })),
+    ...posts.en.map((p) => ({
+      url: `${baseUrl}/en/blog/${p.slug}`,
+      lastModified: new Date(p.date),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    })),
+  ];
+
+  return [...staticEntries, ...blogEntries];
 }
