@@ -7,7 +7,7 @@ import { supabase } from "../../lib/supabaseClient";
 
 const TRUST_ITEMS = [
   { icon: "✓", text: "Kredi kartı gerekmez" },
-  { icon: "◐", text: "14 gün ücretsiz dene" },
+  { icon: "◐", text: "7 gün ücretsiz dene" },
   { icon: "◆", text: "İstediğin an iptal et" },
   { icon: "▦", text: "2 dakikada yayında" },
 ];
@@ -67,8 +67,9 @@ export default function BaslaClient() {
               MineBio
             </span>
           </div>
-          <Link href="/login" style={{ fontSize: 13.5 }}>
-            Zaten hesabın var mı? Giriş yap
+          <Link href="/login" style={{ fontSize: 13.5, whiteSpace: "nowrap" }}>
+            <span className="corp-full-text">Zaten hesabın var mı? Giriş yap</span>
+            <span className="corp-short-text">Giriş yap</span>
           </Link>
         </div>
       </nav>
@@ -143,7 +144,7 @@ export default function BaslaClient() {
         </div>
 
         {/* Tek, sade örnek önizleme — dönen carousel yok, odak dağılmasın */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 40, padding: "0 12px" }}>
           <div className="corp-phone">
             <div className="corp-phone-notch" />
             <div className="corp-phone-screen">
