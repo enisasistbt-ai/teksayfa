@@ -7,7 +7,7 @@ import { supabase } from "../../../lib/supabaseClient";
 
 const TRUST_ITEMS = [
   { icon: "✓", text: "No credit card required" },
-  { icon: "◐", text: "14-day free trial" },
+  { icon: "◐", text: "7-day free trial" },
   { icon: "◆", text: "Cancel anytime" },
   { icon: "▦", text: "Live in 2 minutes" },
 ];
@@ -112,8 +112,9 @@ export default function StartClientEn() {
               MineBio
             </span>
           </div>
-          <Link href="/login" style={{ fontSize: 13.5 }}>
-            Already have an account? Log in
+          <Link href="/login" style={{ fontSize: 13.5, whiteSpace: "nowrap" }}>
+            <span className="corp-full-text">Already have an account? Log in</span>
+            <span className="corp-short-text">Log in</span>
           </Link>
         </div>
       </nav>
@@ -194,7 +195,7 @@ export default function StartClientEn() {
         </div>
 
         {/* Single static preview — no rotating carousel, keeps focus on the CTA */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 40, padding: "0 12px" }}>
           <div className="corp-phone">
             <div className="corp-phone-notch" />
             <div className="corp-phone-screen">
