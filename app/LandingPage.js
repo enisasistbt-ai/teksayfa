@@ -19,6 +19,8 @@ const CONTENT = {
       { initial: "D", name: "Deniz Kaya", handle: "deniz-kaya", links: ["Instagram mağazam", "WhatsApp'tan sipariş ver", "Trendyol mağazam"] },
       { initial: "C", name: "Can Yılmaz", handle: "can-yilmaz", links: ["Web sitem", "CV'm", "E-posta gönder"] },
       { initial: "A", name: "Ada Demir", handle: "ada-demir", links: ["Hizmetlerimi gör", "Randevu al", "Yorumlarımı oku"] },
+      { initial: "K", name: "Kerem Aksoy", handle: "kerem-aksoy", links: ["Menümüzü gör", "Konum", "WhatsApp'tan rezervasyon"] },
+      { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Randevu al", "Hizmetlerimiz", "Bizi Instagram'da takip et"] },
     ],
     hero: {
       eyebrow: "profesyonel bağlantı sayfası",
@@ -97,6 +99,8 @@ const CONTENT = {
       { initial: "D", name: "Deniz Kaya", handle: "deniz-kaya", links: ["My Instagram shop", "Order via WhatsApp", "My Etsy shop"] },
       { initial: "C", name: "Chris Lane", handle: "chris-lane", links: ["My website", "My resume", "Send an email"] },
       { initial: "A", name: "Ada Demir", handle: "ada-demir", links: ["See my services", "Book a call", "Read my reviews"] },
+      { initial: "K", name: "Kerem Aksoy", handle: "kerem-aksoy", links: ["See our menu", "Location", "Reserve via WhatsApp"] },
+      { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Book an appointment", "Our services", "Follow us on Instagram"] },
     ],
     hero: {
       eyebrow: "your professional link page",
@@ -165,13 +169,16 @@ const CONTENT = {
 };
 
 // Örnek profil avatarları — index sırası her iki dilde de aynı kişiyi temsil eder
-// (0: Merve/Maya, 1: Deniz, 2: Can/Chris, 3: Ada). Görsel dosyası yoksa veya
-// yüklenemezse otomatik olarak baş harf rozetine düşer, build'i etkilemez.
+// (0: Merve/Maya, 1: Deniz, 2: Can/Chris, 3: Ada, 4: Kerem, 5: Selin). Görsel
+// dosyası yoksa veya yüklenemezse otomatik olarak baş harf rozetine düşer,
+// build'i etkilemez.
 const EXAMPLE_AVATARS = [
   "/ornekler/profil-1.jpg",
   "/ornekler/profil-2.jpg",
   "/ornekler/profil-3.jpg",
   "/ornekler/profil-4.jpg",
+  "/ornekler/profil-5.jpg",
+  "/ornekler/profil-6.jpg",
 ];
 
 function Reveal({ children, as: Tag = "div", ...rest }) {

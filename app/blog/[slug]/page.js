@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { posts, getPost } from "../../../lib/blogPosts";
-import { BlogNav, BlogFooter, renderBlocks } from "../../../components/BlogChrome";
+import { BlogNav, BlogFooter, BlogCover, renderBlocks } from "../../../components/BlogChrome";
 
 export function generateStaticParams() {
   return posts.tr.map((p) => ({ slug: p.slug }));
@@ -45,6 +45,8 @@ export default function BlogPost({ params }) {
         <h1 className="corp-display" style={{ fontSize: 32, marginTop: 10, lineHeight: 1.2 }}>
           {post.title}
         </h1>
+
+        <BlogCover src={post.cover} alt={post.title} />
 
         <div>{renderBlocks(post.content)}</div>
 

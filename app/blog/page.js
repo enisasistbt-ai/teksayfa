@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { posts } from "../../lib/blogPosts";
-import { BlogNav, BlogFooter } from "../../components/BlogChrome";
+import { BlogNav, BlogFooter, BlogCover } from "../../components/BlogChrome";
 
 export const metadata = {
   title: "Blog — MineBio",
@@ -38,7 +38,8 @@ export default function BlogIndex() {
               className="corp-card"
               style={{ padding: "20px 22px", textDecoration: "none", color: "inherit", marginBottom: 14, display: "block" }}
             >
-              <div style={{ fontSize: 12, color: "var(--c-accent-dim)", fontWeight: 600 }}>
+              <BlogCover src={post.cover} alt={post.title} />
+              <div style={{ fontSize: 12, color: "var(--c-accent-dim)", fontWeight: 600, marginTop: post.cover ? 14 : 0 }}>
                 {new Date(post.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
                 {" · "}
                 {post.readTime}
