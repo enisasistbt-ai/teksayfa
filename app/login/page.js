@@ -145,30 +145,6 @@ export default function Login() {
               'ni okudum, kabul ediyorum.
             </span>
           </label>
-
-          {!inAppBrowser && (
-            <>
-              <button
-                type="button"
-                className="btn-ghost"
-                style={{ width: "100%", marginTop: 16, opacity: agreed ? 1 : 0.5 }}
-                onClick={handleGoogleLogin}
-              >
-                Google ile devam et
-              </button>
-              <div
-                className="mono"
-                style={{
-                  textAlign: "center",
-                  color: "var(--muted)",
-                  fontSize: 12,
-                  margin: "18px 0",
-                }}
-              >
-                veya
-              </div>
-            </>
-          )}
         </>
       )}
 
@@ -228,6 +204,37 @@ export default function Login() {
             {loading ? "Gönderiliyor..." : "Kod gönder"}
           </button>
         </form>
+      )}
+
+      {!sent && !inAppBrowser && (
+        <>
+          <div
+            className="mono"
+            style={{
+              textAlign: "center",
+              color: "var(--muted)",
+              fontSize: 11.5,
+              margin: "22px 0 14px",
+            }}
+          >
+            veya
+          </div>
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{
+              width: "auto",
+              display: "block",
+              margin: "0 auto",
+              padding: "8px 18px",
+              fontSize: 12.5,
+              opacity: agreed ? 0.85 : 0.4,
+            }}
+            onClick={handleGoogleLogin}
+          >
+            Google ile devam et
+          </button>
+        </>
       )}
     </main>
   );
