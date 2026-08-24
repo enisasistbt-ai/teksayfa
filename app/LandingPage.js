@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const CONTENT = {
@@ -23,6 +23,8 @@ const CONTENT = {
       titleLine1: "Kendini, işini, markanı —",
       titleLine2: "tek bağlantıda anlat.",
       desc: "İster bir şirketi temsil et, ister kendi işini yönet: MineBio sosyal medyanı, mağazanı ve iletişim bilgilerini tek, profesyonel bir sayfada toplar — kimin baktığını da sana gösterir.",
+      badgeViews: "128 görüntülenme",
+      badgeQr: "QR koduna hazır",
     },
     features: {
       eyebrow: "özellikler",
@@ -92,6 +94,8 @@ const CONTENT = {
       titleLine1: "Your work, your brand —",
       titleLine2: "in one link.",
       desc: "Whether you run a company or your own business: MineBio brings your social media, store, and contact info together on one professional page — and shows you who's looking.",
+      badgeViews: "128 views",
+      badgeQr: "Ready as QR code",
     },
     features: {
       eyebrow: "features",
@@ -144,17 +148,53 @@ const CONTENT = {
   },
 };
 
+function Reveal({ children, as: Tag = "div", ...rest }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <Tag ref={ref} className={`corp-reveal${visible ? " is-visible" : ""}`} {...rest}>
+      {children}
+    </Tag>
+  );
+}
+
 export default function LandingPage({ lang = "tr" }) {
   const t = CONTENT[lang];
   const [openFaq, setOpenFaq] = useState(null);
   const [exampleIndex, setExampleIndex] = useState(0);
+  const [activeLink, setActiveLink] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setExampleIndex((i) => (i + 1) % t.examples.length);
-    }, 3200);
+    }, 5200);
     return () => clearInterval(timer);
   }, [t.examples.length]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveLink((i) => (i + 1) % 3);
+    }, 1700);
+    return () => clearInterval(timer);
+  }, []);
 
   const example = t.examples[exampleIndex];
   const homeHref = lang === "en" ? "/en" : "/";
@@ -176,22 +216,44 @@ export default function LandingPage({ lang = "tr" }) {
             <a href="#sss">{t.nav.faq}</a>
             <Link href={aboutHref}>{t.nav.about}</Link>
             <Link href="/login">{t.nav.login}</Link>
-            <Link href={t.langSwitch.href} className="mono" style={{ fontSize: 12.5, color: "var(--c-body)" }}>
+            <Link
+              href={t.langSwitch.href}
+              className="mono corp-lang-link"
+              style={{ fontSize: 12.5, color: "var(--c-body)" }}
+            >
               {t.langSwitch.label}
             </Link>
             <Link href="/login" className="corp-btn" style={{ padding: "9px 18px", fontSize: 13.5 }}>
               {t.nav.start}
             </Link>
+            <button
+              type="button"
+              className="corp-nav-burger"
+              aria-label="Menü"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              <span />
+            </button>
           </div>
+        </div>
+        <div className={`corp-nav-mobile-panel${menuOpen ? " is-open" : ""}`}>
+          <a href="#ozellikler" onClick={() => setMenuOpen(false)}>{t.nav.features}</a>
+          <Link href="/fiyatlandirma" onClick={() => setMenuOpen(false)}>{t.nav.pricing}</Link>
+          <a href="#sss" onClick={() => setMenuOpen(false)}>{t.nav.faq}</a>
+          <Link href={aboutHref} onClick={() => setMenuOpen(false)}>{t.nav.about}</Link>
+          <Link href="/login" onClick={() => setMenuOpen(false)}>{t.nav.login}</Link>
+          <Link href={t.langSwitch.href} onClick={() => setMenuOpen(false)}>{t.langSwitch.label === "EN" ? "English" : "Türkçe"}</Link>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="corp-section" style={{ paddingTop: 96 }}>
+      <section className="corp-section corp-hero" style={{ paddingTop: 72 }}>
+        <div className="corp-hero-glow" aria-hidden="true" />
         <div className="corp-hero-row">
           <div className="corp-hero-copy">
             <div className="corp-eyebrow">{t.hero.eyebrow}</div>
-            <h1 className="corp-display" style={{ fontSize: 46, marginTop: 14, lineHeight: 1.12 }}>
+            <h1 className="corp-display" style={{ fontSize: "clamp(32px, 5vw, 46px)", marginTop: 14, lineHeight: 1.12 }}>
               {t.hero.titleLine1}
               <br />
               {t.hero.titleLine2}
@@ -199,7 +261,7 @@ export default function LandingPage({ lang = "tr" }) {
             <p style={{ color: "var(--c-body)", marginTop: 18, fontSize: 16, lineHeight: 1.7, maxWidth: 460 }}>
               {t.hero.desc}
             </p>
-            <div className="row" style={{ marginTop: 30, gap: 12 }}>
+            <div className="row" style={{ marginTop: 30, gap: 12, flexWrap: "wrap" }}>
               <Link href="/login" className="corp-btn">
                 {t.nav.start}
               </Link>
@@ -218,19 +280,28 @@ export default function LandingPage({ lang = "tr" }) {
           </div>
 
           <div className="corp-hero-visual">
-            <div className="corp-mock corp-mock-fade" key={example.handle}>
-              <div className="corp-mock-avatar">{example.initial}</div>
-              <div className="corp-display" style={{ fontSize: 16 }}>
-                {example.name}
+            <div className="corp-float-badge badge-views">
+              <span>👁️</span> {t.hero.badgeViews}
+            </div>
+            <div className="corp-float-badge badge-qr">
+              <span>▦</span> {t.hero.badgeQr}
+            </div>
+            <div className="corp-phone">
+              <div className="corp-phone-notch" />
+              <div className="corp-phone-screen" key={example.handle}>
+                <div className="corp-mock-avatar">{example.initial}</div>
+                <div className="corp-display" style={{ fontSize: 16 }}>
+                  {example.name}
+                </div>
+                <div style={{ fontSize: 12.5, color: "var(--c-body)", marginTop: 2 }}>
+                  minebio.net/{example.handle}
+                </div>
+                {example.links.map((l, i) => (
+                  <div className={`corp-mock-link${activeLink === i ? " is-active" : ""}`} key={l}>
+                    {l}
+                  </div>
+                ))}
               </div>
-              <div style={{ fontSize: 12.5, color: "var(--c-body)", marginTop: 2 }}>
-                minebio.net/{example.handle}
-              </div>
-              {example.links.map((l) => (
-                <a className="corp-mock-link" key={l}>
-                  {l}
-                </a>
-              ))}
             </div>
           </div>
         </div>
@@ -247,55 +318,63 @@ export default function LandingPage({ lang = "tr" }) {
 
       {/* Özellikler */}
       <section className="corp-section corp-section-alt" id="ozellikler">
-        <div className="corp-eyebrow">{t.features.eyebrow}</div>
-        <h2 className="corp-display" style={{ fontSize: 30, marginTop: 10, maxWidth: 560 }}>
-          {t.features.title}
-        </h2>
+        <Reveal>
+          <div className="corp-eyebrow">{t.features.eyebrow}</div>
+          <h2 className="corp-display" style={{ fontSize: "clamp(24px, 4vw, 30px)", marginTop: 10, maxWidth: 560 }}>
+            {t.features.title}
+          </h2>
+        </Reveal>
         <div className="corp-grid-3">
-          {t.features.items.map((f) => (
-            <div className="corp-card" key={f.title}>
-              <div className="corp-card-icon">{f.icon}</div>
-              <div className="corp-display" style={{ fontSize: 16 }}>
-                {f.title}
+          {t.features.items.map((f, i) => (
+            <Reveal key={f.title} style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
+              <div className="corp-card">
+                <div className="corp-card-icon">{f.icon}</div>
+                <div className="corp-display" style={{ fontSize: 16 }}>
+                  {f.title}
+                </div>
+                <p style={{ fontSize: 13.5, color: "var(--c-body)", marginTop: 8, lineHeight: 1.6 }}>
+                  {f.desc}
+                </p>
               </div>
-              <p style={{ fontSize: 13.5, color: "var(--c-body)", marginTop: 8, lineHeight: 1.6 }}>
-                {f.desc}
-              </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* Nasıl çalışır */}
       <section className="corp-section">
-        <div className="corp-eyebrow">{t.steps.eyebrow}</div>
-        <h2 className="corp-display" style={{ fontSize: 30, marginTop: 10 }}>
-          {t.steps.title}
-        </h2>
+        <Reveal>
+          <div className="corp-eyebrow">{t.steps.eyebrow}</div>
+          <h2 className="corp-display" style={{ fontSize: "clamp(24px, 4vw, 30px)", marginTop: 10 }}>
+            {t.steps.title}
+          </h2>
+        </Reveal>
         <div className="corp-steps">
           {t.steps.items.map((s, i) => (
-            <div key={s.title}>
+            <Reveal key={s.title} style={{ transitionDelay: `${i * 100}ms` }}>
               <div className="corp-step-num">{String(i + 1).padStart(2, "0")}</div>
               <div className="corp-display" style={{ fontSize: 16, marginTop: 10 }}>
                 {s.title}
               </div>
               <p style={{ fontSize: 13.5, color: "var(--c-body)", marginTop: 6 }}>{s.desc}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* SSS */}
       <section className="corp-section corp-section-alt" id="sss" style={{ maxWidth: 720 }}>
-        <div className="corp-eyebrow">{t.faq.eyebrow}</div>
-        <h2 className="corp-display" style={{ fontSize: 30, marginTop: 10, marginBottom: 24 }}>
-          {t.faq.title}
-        </h2>
+        <Reveal>
+          <div className="corp-eyebrow">{t.faq.eyebrow}</div>
+          <h2 className="corp-display" style={{ fontSize: "clamp(24px, 4vw, 30px)", marginTop: 10, marginBottom: 24 }}>
+            {t.faq.title}
+          </h2>
+        </Reveal>
         {t.faq.items.map((item, i) => (
           <div className="corp-faq-item" key={item.q}>
             <button className="corp-faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
               {item.q}
-              <span style={{ color: "var(--c-accent)", fontSize: 18 }}>{openFaq === i ? "–" : "+"}</span>
+              <span style={{ color: "var(--c-accent-dim)", fontSize: 18 }}>{openFaq === i ? "–" : "+"}</span>
             </button>
             {openFaq === i && <p className="corp-faq-a">{item.a}</p>}
           </div>
@@ -304,13 +383,15 @@ export default function LandingPage({ lang = "tr" }) {
 
       {/* Kapanış CTA */}
       <section className="corp-section" style={{ textAlign: "center" }}>
-        <h2 className="corp-display" style={{ fontSize: 30 }}>
-          {t.closing.title}
-        </h2>
-        <p style={{ color: "var(--c-body)", fontSize: 15, marginTop: 10 }}>{t.closing.desc}</p>
-        <Link href="/login" className="corp-btn" style={{ marginTop: 22 }}>
-          {t.nav.start}
-        </Link>
+        <Reveal>
+          <h2 className="corp-display" style={{ fontSize: "clamp(24px, 4vw, 30px)" }}>
+            {t.closing.title}
+          </h2>
+          <p style={{ color: "var(--c-body)", fontSize: 15, marginTop: 10 }}>{t.closing.desc}</p>
+          <Link href="/login" className="corp-btn" style={{ marginTop: 22 }}>
+            {t.nav.start}
+          </Link>
+        </Reveal>
       </section>
 
       <footer className="corp-footer">
@@ -345,8 +426,8 @@ export default function LandingPage({ lang = "tr" }) {
           </div>
         </div>
 
-        <div className="row" style={{ maxWidth: 1080, margin: "28px auto 0", gap: 14, alignItems: "center" }}>
-          <span style={{ fontSize: 11.5, color: "#9aa3b2" }}>{t.footer.payment}</span>
+        <div className="row" style={{ maxWidth: 1100, margin: "28px auto 0", gap: 14, alignItems: "center" }}>
+          <span style={{ fontSize: 11.5, color: "#9a9482" }}>{t.footer.payment}</span>
           <img
             src="/odeme-logolari.png"
             alt="iyzico, Mastercard, Visa, American Express, Troy"
