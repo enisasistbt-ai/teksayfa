@@ -8,6 +8,7 @@ import { THEMES, DEFAULT_THEME, FREE_LINK_LIMIT } from "../../lib/themes";
 import { PLATFORMS, PLATFORM_GROUPS, normalizeUrl } from "../../lib/platforms";
 import { TRIAL_DAYS, isEffectivelyPremium, trialDaysLeft, isOnActiveTrial } from "../../lib/premium";
 import { shareOrCopy } from "../../lib/share";
+import { sanitizeUsername } from "../../lib/username";
 import QRCode from "qrcode";
 
 function formatDate(iso) {
@@ -128,7 +129,7 @@ export default function Dashboard() {
           suggestedUsername = window.localStorage.getItem("mb_desired_username") || "";
           window.localStorage.removeItem("mb_desired_username");
         }
-        setUsername(profile.username || suggestedUsername);
+        setUsername(sanitizeUsername(profile.username || suggestedUsername));
         setDisplayName(profile.display_name || "");
         setBio(profile.bio || "");
         setBioEn(profile.bio_en || "");
@@ -482,7 +483,7 @@ export default function Dashboard() {
     setSaving(true);
     setSaved(false);
 
-    const cleanUsername = username.trim().toLowerCase().replace(/\s+/g, "-");
+    const cleanUsername = sanitizeUsername(username);
     let cleanLinks = buildLinksArray();
     if (!isPremium && cleanLinks.length > FREE_LINK_LIMIT) {
       cleanLinks = cleanLinks.slice(0, FREE_LINK_LIMIT);
@@ -1003,10 +1004,13 @@ export default function Dashboard() {
           id="username"
           className="field mono"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(sanitizeUsername(e.target.value))}
           placeholder="aysenin-el-isleri"
           required
         />
+        <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: -14, marginBottom: 4 }}>
+          Sadece küçük harf, rakam ve tire (-) kullanılabilir. Türkçe karakter ve boşluk otomatik düzeltilir.
+        </p>
 
         <label className="label" htmlFor="displayName">
           Görünecek isim
