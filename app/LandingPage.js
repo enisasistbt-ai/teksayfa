@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
+import { sanitizeUsername } from "../lib/username";
 
 const CONTENT = {
   tr: {
@@ -219,7 +220,7 @@ export default function LandingPage({ lang = "tr" }) {
   const [claimStatus, setClaimStatus] = useState(null); // null | "checking" | "available" | "taken" | "short"
 
   useEffect(() => {
-    const clean = claimInput.trim().toLowerCase().replace(/\s+/g, "-");
+    const clean = sanitizeUsername(claimInput);
     if (!clean) {
       setClaimStatus(null);
       return;
@@ -241,7 +242,7 @@ export default function LandingPage({ lang = "tr" }) {
   }, [claimInput]);
 
   function handleClaim() {
-    const clean = claimInput.trim().toLowerCase().replace(/\s+/g, "-");
+    const clean = sanitizeUsername(claimInput);
     if (claimStatus !== "available" || !clean) return;
     if (typeof window !== "undefined") {
       window.localStorage.setItem("mb_desired_username", clean);
