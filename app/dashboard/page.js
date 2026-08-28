@@ -76,6 +76,8 @@ export default function Dashboard() {
   const [saved, setSaved] = useState(false);
   const [userId, setUserId] = useState(null);
   const [username, setUsername] = useState("");
+  const [savedUsername, setSavedUsername] = useState("");
+  const [usernameHistory, setUsernameHistory] = useState([]);
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [bioEn, setBioEn] = useState("");
@@ -130,6 +132,8 @@ export default function Dashboard() {
           window.localStorage.removeItem("mb_desired_username");
         }
         setUsername(sanitizeUsername(profile.username || suggestedUsername));
+        setSavedUsername(profile.username || "");
+        setUsernameHistory(Array.isArray(profile.username_history) ? profile.username_history : []);
         setDisplayName(profile.display_name || "");
         setBio(profile.bio || "");
         setBioEn(profile.bio_en || "");
@@ -209,6 +213,36 @@ export default function Dashboard() {
     }
     load();
   }, [router]);
+
+  // Kullanıcı adı değiştirme hakkı: ilk kez belirleme herkes için serbest.
+  // Sonrasında ücretsiz kullanıcı bir daha değiştiremez; premium kullanıcı
+  // (deneme dahil) yılda en fazla 3 kez değiştirebilir.
+  const USERNAME_CHANGE_LIMIT_PREMIUM = 3;
+  function getUsernameChangeStatus() {
+    if (!savedUsername) {
+      return { allowed: true, isFirstTime: true };
+    }
+    const oneYearAgo = Date.now() - 365 * 24 * 60 * 60 * 1000;
+    const recentChanges = usernameHistory.filter(
+      (iso) => new Date(iso).getTime() > oneYearAgo
+    );
+    if (!isPremium) {
+      return {
+        allowed: false,
+        remaining: 0,
+        message: "Kullanıcı adını sadece bir kez belirleyebilirsin. Değiştirmek için Premium'a geç.",
+      };
+    }
+    const remaining = USERNAME_CHANGE_LIMIT_PREMIUM - recentChanges.length;
+    if (remaining <= 0) {
+      return {
+        allowed: false,
+        remaining: 0,
+        message: "Bu yıl kullanıcı adı değiştirme hakkını kullandın (yılda 3 hak). Gelecek yıl tekrar hakkın olacak.",
+      };
+    }
+    return { allowed: true, remaining };
+  }
 
   async function loadStats(uname) {
     if (!uname) return;
@@ -484,6 +518,19 @@ export default function Dashboard() {
     setSaved(false);
 
     const cleanUsername = sanitizeUsername(username);
+
+    const isActualChange = savedUsername && cleanUsername !== savedUsername;
+    let newHistory = usernameHistory;
+    if (isActualChange) {
+      const status = getUsernameChangeStatus();
+      if (!status.allowed) {
+        setSaving(false);
+        setError(status.message);
+        return;
+      }
+      newHistory = [...usernameHistory, new Date().toISOString()];
+    }
+
     let cleanLinks = buildLinksArray();
     if (!isPremium && cleanLinks.length > FREE_LINK_LIMIT) {
       cleanLinks = cleanLinks.slice(0, FREE_LINK_LIMIT);
@@ -492,6 +539,7 @@ export default function Dashboard() {
     const { error } = await supabase.from("profiles").upsert({
       id: userId,
       username: cleanUsername,
+      username_history: newHistory,
       display_name: displayName.trim(),
       bio: bio.trim(),
       away_mode: isPremium && awayMode,
@@ -514,6 +562,8 @@ export default function Dashboard() {
       return;
     }
     setUsername(cleanUsername);
+    setSavedUsername(cleanUsername);
+    setUsernameHistory(newHistory);
     setSaved(true);
     if (isPremium) {
       loadStats(cleanUsername);
@@ -1006,11 +1056,31 @@ export default function Dashboard() {
           value={username}
           onChange={(e) => setUsername(sanitizeUsername(e.target.value))}
           placeholder="aysenin-el-isleri"
+          disabled={savedUsername && !getUsernameChangeStatus().allowed}
           required
         />
-        <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: -14, marginBottom: 4 }}>
-          Sadece küçük harf, rakam ve tire (-) kullanılabilir. Türkçe karakter ve boşluk otomatik düzeltilir.
-        </p>
+        {(() => {
+          const status = getUsernameChangeStatus();
+          if (status.isFirstTime) {
+            return (
+              <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: -14, marginBottom: 4 }}>
+                Sadece küçük harf, rakam ve tire (-) kullanılabilir. Türkçe karakter ve boşluk otomatik düzeltilir.
+              </p>
+            );
+          }
+          if (!status.allowed) {
+            return (
+              <p style={{ fontSize: 11.5, color: "var(--danger)", marginTop: -14, marginBottom: 4 }}>
+                {status.message}
+              </p>
+            );
+          }
+          return (
+            <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: -14, marginBottom: 4 }}>
+              Bu yıl {status.remaining} kullanıcı adı değiştirme hakkın kaldı.
+            </p>
+          );
+        })()}
 
         <label className="label" htmlFor="displayName">
           Görünecek isim
