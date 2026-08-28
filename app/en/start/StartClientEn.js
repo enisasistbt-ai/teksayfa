@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabaseClient";
+import { sanitizeUsername } from "../../../lib/username";
 
 const TRUST_ITEMS = [
   { icon: "✓", text: "No credit card required" },
@@ -69,7 +70,7 @@ export default function StartClientEn() {
   }, [claimInput]);
 
   useEffect(() => {
-    const clean = claimInput.trim().toLowerCase().replace(/\s+/g, "-");
+    const clean = sanitizeUsername(claimInput);
     if (!clean) {
       setClaimStatus(null);
       return;
@@ -91,7 +92,7 @@ export default function StartClientEn() {
   }, [claimInput]);
 
   function handleClaim() {
-    const clean = claimInput.trim().toLowerCase().replace(/\s+/g, "-");
+    const clean = sanitizeUsername(claimInput);
     if (claimStatus !== "available" || !clean) return;
     try {
       window.localStorage.setItem("mb_desired_username", clean);
