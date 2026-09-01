@@ -860,6 +860,52 @@ textarea {
   overflow: hidden;
 }
 
+.corp-hero-dark {
+  --c-ink: #fbf8f1;
+  --c-body: #b9c9c0;
+  --c-bg: #10231f;
+  --c-border: rgba(251, 248, 241, 0.16);
+  background: linear-gradient(165deg, #10231f 0%, #17332c 62%, #1e3f36 100%);
+  color: var(--c-ink);
+  border-radius: 0 0 28px 28px;
+}
+
+.corp-hero-dark .corp-industry-tag {
+  background: rgba(251, 248, 241, 0.06);
+  border-color: rgba(251, 248, 241, 0.2);
+  color: var(--c-body);
+}
+
+.corp-hero-dark .corp-btn-outline {
+  border-color: rgba(251, 248, 241, 0.35);
+  color: var(--c-ink);
+}
+
+.corp-hero-dark .corp-btn-outline:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.corp-hero-dark .corp-claim-box {
+  box-shadow: 0 30px 70px -24px rgba(0, 0, 0, 0.55);
+}
+
+/* Beyaz/krem kartların (arama kutusu, telefon mockup'ı, rozetler) kendi iç
+   renkleri koyu hero arka planından etkilenmesin diye orijinal açık renk
+   paletine geri döndürülüyor. */
+.corp-hero-dark .corp-claim-box,
+.corp-hero-dark .corp-hero-visual {
+  --c-ink: #1c2b23;
+  --c-body: #5b6b60;
+  --c-bg: #fbf8f1;
+  --c-bg-alt: #f1ead9;
+  --c-border: #e3ddc9;
+}
+
+.corp-hero-dark .corp-eyebrow {
+  color: var(--c-accent);
+}
+
 .corp-hero-glow {
   position: absolute;
   top: -180px;
@@ -895,7 +941,7 @@ textarea {
 /* --- Telefon mockup: sadece görsel değil, hafif "canlı" bir demo --- */
 .corp-phone {
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   background: var(--c-ink);
   border-radius: 34px;
   padding: 14px;
