@@ -1340,6 +1340,7 @@ textarea {
   min-width: 280px;
   display: flex;
   justify-content: center;
+  position: relative;
 }
 
 .corp-showcase-card {

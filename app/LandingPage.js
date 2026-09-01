@@ -415,6 +415,7 @@ export default function LandingPage({ lang = "tr" }) {
             <div className="corp-showcase-visual">
             <div className="corp-showcase-photo">
               <img src="/vitrin/qr-bg.jpg" alt="" />
+            </div>
               <div className="corp-showcase-float pos-br">
                 <div className="corp-qr-frame" style={{ width: 110, height: 110 }}>
                   <div className="corp-qr-grid">
@@ -425,7 +426,6 @@ export default function LandingPage({ lang = "tr" }) {
                   </div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
         </Reveal>
@@ -442,15 +442,16 @@ export default function LandingPage({ lang = "tr" }) {
             <div className="corp-showcase-visual">
               <div className="corp-showcase-photo">
                 <img src="/vitrin/stats-bg.jpg" alt="" />
+              </div>
                 <div className="corp-showcase-float pos-bl">
                   <div className="corp-stat-row" style={{ marginBottom: 10 }}>
                     <div>
                       <div className="corp-stat-num" style={{ fontSize: 22 }}>128</div>
-                      <div className="corp-stat-label">{t.hero.badgeViews}</div>
+                      <div className="corp-stat-label">{lang === "en" ? "views" : "görüntülenme"}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div className="corp-stat-num" style={{ fontSize: 22 }}>34</div>
-                      <div className="corp-stat-label">tıklama</div>
+                      <div className="corp-stat-label">{lang === "en" ? "clicks" : "tıklama"}</div>
                     </div>
                   </div>
                   <div className="corp-mini-chart" style={{ height: 46 }}>
@@ -459,7 +460,6 @@ export default function LandingPage({ lang = "tr" }) {
                     ))}
                   </div>
                 </div>
-              </div>
             </div>
           </div>
         </Reveal>
@@ -476,11 +476,18 @@ export default function LandingPage({ lang = "tr" }) {
             <div className="corp-showcase-visual">
               <div className="corp-showcase-photo">
                 <img src="/vitrin/whatsapp-bg.jpg" alt="" />
+              </div>
                 <div className="corp-showcase-float pos-tr" style={{ maxWidth: 210 }}>
-                  {[
-                    { i: "A", n: "Ayşe K.", s: "2 dk önce", badge: "yeni" },
-                    { i: "M", n: "Mert D.", s: "1 saat önce" },
-                  ].map((c) => (
+                  {(lang === "en"
+                    ? [
+                        { i: "A", n: "Amy K.", s: "2 min ago", badge: "new" },
+                        { i: "M", n: "Mark D.", s: "1 hour ago" },
+                      ]
+                    : [
+                        { i: "A", n: "Ayşe K.", s: "2 dk önce", badge: "yeni" },
+                        { i: "M", n: "Mert D.", s: "1 saat önce" },
+                      ]
+                  ).map((c) => (
                     <div className="corp-contact-row" key={c.n} style={{ padding: "8px 0" }}>
                       <div className="corp-contact-avatar" style={{ width: 32, height: 32, fontSize: 11.5 }}>{c.i}</div>
                       <div>
@@ -491,7 +498,6 @@ export default function LandingPage({ lang = "tr" }) {
                     </div>
                   ))}
                 </div>
-              </div>
             </div>
           </div>
         </Reveal>
