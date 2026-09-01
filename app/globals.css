@@ -1179,6 +1179,164 @@ textarea {
   margin-bottom: 16px;
 }
 
+/* --- Özellik vitrinleri: her biri kendi görseliyle, dönüşümlü yerleşim --- */
+.corp-showcase {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  flex-wrap: wrap;
+  margin-top: 76px;
+}
+
+.corp-showcase:first-of-type {
+  margin-top: 44px;
+}
+
+.corp-showcase.is-reverse {
+  flex-direction: row-reverse;
+}
+
+.corp-showcase-copy {
+  flex: 1 1 320px;
+  min-width: 260px;
+}
+
+.corp-showcase-visual {
+  flex: 1 1 380px;
+  min-width: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+.corp-showcase-card {
+  width: 100%;
+  max-width: 380px;
+  background: #fff;
+  border: 1px solid var(--c-border);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 30px 60px -34px rgba(28, 43, 35, 0.35);
+}
+
+/* QR mockup */
+.corp-qr-frame {
+  width: 168px;
+  height: 168px;
+  margin: 0 auto;
+  border-radius: 18px;
+  background: var(--c-ink);
+  padding: 12px;
+}
+.corp-qr-grid {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: #fff;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 4px;
+  padding: 10px;
+  position: relative;
+}
+.corp-qr-grid span {
+  background: var(--c-ink);
+  border-radius: 2px;
+}
+.corp-qr-grid span:nth-child(4n) { background: transparent; }
+.corp-qr-grid span:nth-child(7n) { background: transparent; }
+.corp-qr-avatar {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--c-accent), var(--c-accent-dim));
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Mini istatistik grafiği */
+.corp-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+}
+.corp-stat-num {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--c-ink);
+}
+.corp-stat-label {
+  font-size: 12px;
+  color: var(--c-body);
+}
+.corp-mini-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 90px;
+}
+.corp-mini-chart-bar {
+  flex: 1;
+  background: linear-gradient(180deg, var(--c-accent), var(--c-accent-dim));
+  border-radius: 5px 5px 0 0;
+  opacity: 0.85;
+}
+.corp-mini-chart-bar:last-child {
+  opacity: 1;
+}
+
+/* WhatsApp kişi listesi mockup */
+.corp-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--c-border);
+}
+.corp-contact-row:last-child { border-bottom: none; }
+.corp-contact-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--c-bg-alt);
+  color: var(--c-ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+.corp-contact-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+.corp-contact-sub {
+  font-size: 11.5px;
+  color: var(--c-body);
+  margin-top: 1px;
+}
+.corp-contact-badge {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #3f7d52;
+  background: rgba(63,125,82,0.12);
+  padding: 3px 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .corp-showcase,
+  .corp-showcase.is-reverse {
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 52px;
+  }
+}
+
 .corp-steps {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

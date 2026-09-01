@@ -408,7 +408,7 @@ export default function LandingPage({ lang = "tr" }) {
         </div>
       </section>
 
-      {/* Özellikler */}
+      {/* Özellikler — her biri kendi görseliyle, dönüşümlü vitrin */}
       <section className="corp-section corp-section-alt" id="ozellikler">
         <Reveal>
           <div className="corp-eyebrow">{t.features.eyebrow}</div>
@@ -416,21 +416,91 @@ export default function LandingPage({ lang = "tr" }) {
             {t.features.title}
           </h2>
         </Reveal>
-        <div className="corp-grid-3">
-          {t.features.items.map((f, i) => (
-            <Reveal key={f.title} style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
-              <div className="corp-card">
-                <div className="corp-card-icon">{f.icon}</div>
-                <div className="corp-display" style={{ fontSize: 16 }}>
-                  {f.title}
+
+        {/* 1. QR kod */}
+        <Reveal>
+          <div className="corp-showcase">
+            <div className="corp-showcase-copy">
+              <div className="corp-display" style={{ fontSize: 22 }}>{t.features.items[0].title}</div>
+              <p style={{ fontSize: 15, color: "var(--c-body)", marginTop: 10, lineHeight: 1.6, maxWidth: 380 }}>
+                {t.features.items[0].desc}
+              </p>
+            </div>
+            <div className="corp-showcase-visual">
+              <div className="corp-showcase-card" style={{ textAlign: "center" }}>
+                <div className="corp-qr-frame">
+                  <div className="corp-qr-grid">
+                    {Array.from({ length: 36 }).map((_, i) => (
+                      <span key={i} />
+                    ))}
+                    <div className="corp-qr-avatar" />
+                  </div>
                 </div>
-                <p style={{ fontSize: 13.5, color: "var(--c-body)", marginTop: 8, lineHeight: 1.6 }}>
-                  {f.desc}
-                </p>
               </div>
-            </Reveal>
-          ))}
-        </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* 2. İstatistikler */}
+        <Reveal>
+          <div className="corp-showcase is-reverse">
+            <div className="corp-showcase-copy">
+              <div className="corp-display" style={{ fontSize: 22 }}>{t.features.items[1].title}</div>
+              <p style={{ fontSize: 15, color: "var(--c-body)", marginTop: 10, lineHeight: 1.6, maxWidth: 380 }}>
+                {t.features.items[1].desc}
+              </p>
+            </div>
+            <div className="corp-showcase-visual">
+              <div className="corp-showcase-card">
+                <div className="corp-stat-row">
+                  <div>
+                    <div className="corp-stat-num">128</div>
+                    <div className="corp-stat-label">{t.hero.badgeViews}</div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div className="corp-stat-num">34</div>
+                    <div className="corp-stat-label">tıklama</div>
+                  </div>
+                </div>
+                <div className="corp-mini-chart">
+                  {[38, 55, 42, 70, 60, 88, 100].map((h, i) => (
+                    <div key={i} className="corp-mini-chart-bar" style={{ height: `${h}%` }} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* 3. WhatsApp takibi */}
+        <Reveal>
+          <div className="corp-showcase">
+            <div className="corp-showcase-copy">
+              <div className="corp-display" style={{ fontSize: 22 }}>{t.features.items[2].title}</div>
+              <p style={{ fontSize: 15, color: "var(--c-body)", marginTop: 10, lineHeight: 1.6, maxWidth: 380 }}>
+                {t.features.items[2].desc}
+              </p>
+            </div>
+            <div className="corp-showcase-visual">
+              <div className="corp-showcase-card">
+                {[
+                  { i: "A", n: "Ayşe K.", s: "2 dk önce", badge: "yeni" },
+                  { i: "M", n: "Mert D.", s: "1 saat önce" },
+                  { i: "S", n: "Selin T.", s: "dün" },
+                ].map((c) => (
+                  <div className="corp-contact-row" key={c.n}>
+                    <div className="corp-contact-avatar">{c.i}</div>
+                    <div>
+                      <div className="corp-contact-name">{c.n}</div>
+                      <div className="corp-contact-sub">{c.s}</div>
+                    </div>
+                    {c.badge && <div className="corp-contact-badge">{c.badge}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* Nasıl çalışır */}
