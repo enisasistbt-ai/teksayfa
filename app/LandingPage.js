@@ -10,7 +10,7 @@ const CONTENT = {
   tr: {
     nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", blog: "Blog", login: "Giriş yap", start: "Ücretsiz başla" },
     langSwitch: { href: "/en", label: "EN" },
-    industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Serbest çalışanlar", "Ajanslar", "Perakende"],
+    industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Ajanslar"],
     marquee: [
       "E-ticaret satıcıları", "Danışmanlar", "Serbest çalışanlar", "Ajanslar",
       "Perakende mağazaları", "Hizmet sektörü", "Girişimciler", "Emlak danışmanları",
@@ -24,10 +24,10 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Randevu al", "Hizmetlerimiz", "Bizi Instagram'da takip et"] },
     ],
     hero: {
-      eyebrow: "profesyonel bağlantı sayfası",
-      titleLine1: "Kendini, işini, markanı —",
-      titleLine2: "tek bağlantıda anlat.",
-      desc: "İster bir şirketi temsil et, ister kendi işini yönet: MineBio sosyal medyanı, mağazanı ve iletişim bilgilerini tek, profesyonel bir sayfada toplar — kimin baktığını da sana gösterir.",
+      eyebrow: "link-in-bio sayfası",
+      titleLine1: "Tüm bağlantıların.",
+      titleLine2: "Tek sayfada.",
+      desc: "Instagram, WhatsApp, mağazan, iletişim bilgilerin — hepsi tek sayfada. Kimin baktığını da gösterir.",
       badgeViews: "128 görüntülenme",
       badgeQr: "QR koduna hazır",
       claimLabel: "Kendi adını hemen dene",
@@ -40,14 +40,11 @@ const CONTENT = {
     },
     features: {
       eyebrow: "özellikler",
-      title: "Sayfanı büyütmek için ihtiyacın olan her şey",
+      title: "Sade, hızlı, işe yarar",
       items: [
-        { icon: "◆", title: "Profesyonel bir izlenim", desc: "Ziyaretçi sayfana girdiği ilk saniyede kim olduğunu net görsün. Kendi renklerin, kendi fotoğrafınla, markalı bir görünüm." },
-        { icon: "▦", title: "Markalı QR kod", desc: "Ortasında fotoğrafın ve isminle, kartvizitte ya da vitrinde basılı paylaşmaya hazır bir QR kod." },
-        { icon: "◐", title: "Neyin işe yaradığını gör", desc: "Hangi linkin tıklandığını, sayfanın kaç kez görüntülendiğini panelinden anlık takip et." },
-        { icon: "✉", title: "İletişim formu", desc: "Ziyaretçiler doğrudan sana mesaj bıraksın, sen panelinden yanıtla." },
-        { icon: "◎", title: "Rehbere kaydet", desc: "Ziyaretçi tek dokunuşla seni telefonuna gerçek bir kişi olarak kaydedebilir." },
-        { icon: "↗", title: "Tek tıkla paylaşım", desc: "Tanıştığın kişileri kaydet, sayfanı WhatsApp'tan tek tıkla gönder." },
+        { icon: "▦", title: "Fotoğraflı QR kod", desc: "Kartvizitte kullanıma hazır, tek dokunuşla rehbere kaydedilebilir." },
+        { icon: "◐", title: "Anlık istatistik", desc: "Kim baktı, hangi linke tıklandı — hemen gör." },
+        { icon: "✉", title: "WhatsApp takibi", desc: "Sana ulaşanlar otomatik listelenir, kaybolmaz." },
       ],
     },
     steps: {
@@ -65,7 +62,6 @@ const CONTENT = {
       items: [
         { q: "Kod bilmem gerekir mi?", a: "Hayır. Panelden bilgilerini gir, sayfan otomatik oluşur ve yayına alınır." },
         { q: "Kaç link ekleyebilirim?", a: "Ücretsiz planda sınırlı sayıda link ekleyebilirsin. Premium'a geçince sınır kalkar, tüm temaların kilidi açılır." },
-        { q: "Sayfamı istediğim zaman düzenleyebilir miyim?", a: "Evet, panelinden her an güncelleyebilirsin — değişiklikler anında yayına yansır." },
         { q: "Yabancı müşterilerim de sayfamı anlayabilir mi?", a: "Evet, sayfanda TR/EN dil seçeneği var; içeriğinin İngilizcesini de ayrıca girebilirsin." },
       ],
     },
@@ -90,7 +86,7 @@ const CONTENT = {
   en: {
     nav: { features: "Features", pricing: "Pricing", faq: "FAQ", about: "About", blog: "Blog", login: "Log in", start: "Start free" },
     langSwitch: { href: "/", label: "TR" },
-    industries: ["E-commerce", "Consulting", "Service businesses", "Freelancers", "Agencies", "Retail"],
+    industries: ["E-commerce", "Consulting", "Service businesses", "Agencies"],
     marquee: [
       "E-commerce sellers", "Consultants", "Freelancers", "Agencies",
       "Retail shops", "Service businesses", "Founders", "Real estate agents",
@@ -104,10 +100,10 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Book an appointment", "Our services", "Follow us on Instagram"] },
     ],
     hero: {
-      eyebrow: "your professional link page",
-      titleLine1: "Your work, your brand —",
-      titleLine2: "in one link.",
-      desc: "Whether you run a company or your own business: MineBio brings your social media, store, and contact info together on one professional page — and shows you who's looking.",
+      eyebrow: "your link-in-bio page",
+      titleLine1: "All your links.",
+      titleLine2: "One page.",
+      desc: "Your Instagram, WhatsApp, shop, and contact info — all on one page. It shows you who's looking, too.",
       badgeViews: "128 views",
       badgeQr: "Ready as QR code",
       claimLabel: "Try your name right now",
@@ -120,14 +116,11 @@ const CONTENT = {
     },
     features: {
       eyebrow: "features",
-      title: "Everything you need to grow your page",
+      title: "Simple, fast, useful",
       items: [
-        { icon: "◆", title: "A professional first impression", desc: "Visitors know who you are the second they land. Your colors, your photo, a branded look." },
-        { icon: "▦", title: "Branded QR code", desc: "A QR code with your photo and name at the center, ready to print on a card or storefront." },
-        { icon: "◐", title: "See what's actually working", desc: "Track link clicks and page views live from your dashboard." },
-        { icon: "✉", title: "Contact form", desc: "Visitors can message you directly — reply right from your dashboard." },
-        { icon: "◎", title: "Save to contacts", desc: "Visitors can save you as a real contact on their phone with one tap." },
-        { icon: "↗", title: "One-tap sharing", desc: "Save people you meet and send your page via WhatsApp in one tap." },
+        { icon: "▦", title: "QR code with your photo", desc: "Ready for your card, saveable to contacts in one tap." },
+        { icon: "◐", title: "Live analytics", desc: "See who looked and what they clicked, instantly." },
+        { icon: "✉", title: "WhatsApp tracking", desc: "Everyone who reaches you gets listed automatically." },
       ],
     },
     steps: {
@@ -145,7 +138,6 @@ const CONTENT = {
       items: [
         { q: "Do I need to know how to code?", a: "No. Enter your info in the dashboard and your page is built and published automatically." },
         { q: "How many links can I add?", a: "The free plan has a link limit. Upgrading to Premium removes the limit and unlocks every theme." },
-        { q: "Can I edit my page anytime?", a: "Yes — update it from your dashboard whenever you like, changes go live instantly." },
         { q: "Will it work for customers who speak other languages?", a: "Yes, your page has a TR/EN toggle, and you can add an English version of your bio too." },
       ],
     },
@@ -319,7 +311,7 @@ export default function LandingPage({ lang = "tr" }) {
       </nav>
 
       {/* Hero */}
-      <section className="corp-section corp-hero" style={{ paddingTop: 72 }}>
+      <section className="corp-section corp-hero corp-hero-dark" style={{ paddingTop: 72 }}>
         <div className="corp-hero-glow" aria-hidden="true" />
         <div className="corp-hero-row">
           <div className="corp-hero-copy">
@@ -415,15 +407,6 @@ export default function LandingPage({ lang = "tr" }) {
           </div>
         </div>
       </section>
-
-      {/* Kayan şerit */}
-      <div className="corp-marquee" aria-hidden="true">
-        <div className="corp-marquee-track">
-          {[...t.marquee, ...t.marquee].map((item, i) => (
-            <span key={i}>{item}</span>
-          ))}
-        </div>
-      </div>
 
       {/* Özellikler */}
       <section className="corp-section corp-section-alt" id="ozellikler">
