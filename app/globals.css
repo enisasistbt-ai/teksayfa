@@ -1451,6 +1451,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  gap: 22px;
   margin-bottom: 18px;
 }
 .corp-stat-num {
