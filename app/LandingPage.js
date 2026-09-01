@@ -24,7 +24,7 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Randevu al", "Hizmetlerimiz", "Bizi Instagram'da takip et"] },
     ],
     hero: {
-      eyebrow: "link-in-bio sayfası",
+      eyebrow: "gerçek işletmeler için",
       titleLine1: "Tüm bağlantıların.",
       titleLine2: "Tek sayfada.",
       desc: "Instagram, WhatsApp, mağazan, iletişim bilgilerin — hepsi tek sayfada. Kimin baktığını da gösterir.",
@@ -100,7 +100,7 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Book an appointment", "Our services", "Follow us on Instagram"] },
     ],
     hero: {
-      eyebrow: "your link-in-bio page",
+      eyebrow: "for real businesses",
       titleLine1: "All your links.",
       titleLine2: "One page.",
       desc: "Your Instagram, WhatsApp, shop, and contact info — all on one page. It shows you who's looking, too.",
@@ -251,7 +251,7 @@ export default function LandingPage({ lang = "tr" }) {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveLink((i) => (i + 1) % 3);
+      setActiveLink((i) => (i + 1) % 2);
     }, 1700);
     return () => clearInterval(timer);
   }, []);
@@ -274,9 +274,6 @@ export default function LandingPage({ lang = "tr" }) {
           <div className="corp-nav-secondary">
             <a href="#ozellikler">{t.nav.features}</a>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
-            <a href="#sss">{t.nav.faq}</a>
-            <Link href={aboutHref}>{t.nav.about}</Link>
-            <Link href={blogHref}>{t.nav.blog}</Link>
             <Link href="/login">{t.nav.login}</Link>
             <Link
               href={t.langSwitch.href}
@@ -302,9 +299,6 @@ export default function LandingPage({ lang = "tr" }) {
         <div className={`corp-nav-mobile-panel${menuOpen ? " is-open" : ""}`}>
           <a href="#ozellikler" onClick={() => setMenuOpen(false)}>{t.nav.features}</a>
           <Link href="/fiyatlandirma" onClick={() => setMenuOpen(false)}>{t.nav.pricing}</Link>
-          <a href="#sss" onClick={() => setMenuOpen(false)}>{t.nav.faq}</a>
-          <Link href={aboutHref} onClick={() => setMenuOpen(false)}>{t.nav.about}</Link>
-          <Link href={blogHref} onClick={() => setMenuOpen(false)}>{t.nav.blog}</Link>
           <Link href="/login" onClick={() => setMenuOpen(false)}>{t.nav.login}</Link>
           <Link href={t.langSwitch.href} onClick={() => setMenuOpen(false)}>{t.langSwitch.label === "EN" ? "English" : "Türkçe"}</Link>
         </div>
@@ -370,40 +364,32 @@ export default function LandingPage({ lang = "tr" }) {
           </div>
 
           <div className="corp-hero-visual">
-            <div className="corp-float-badge badge-views">
-              <span>👁️</span> {t.hero.badgeViews}
-            </div>
-            <div className="corp-float-badge badge-qr">
-              <span>▦</span> {t.hero.badgeQr}
-            </div>
-            <div className="corp-phone">
-              <div className="corp-phone-notch" />
-              <div className="corp-phone-screen" key={example.handle}>
-                <div className="corp-mock-avatar">
-                  <img
-                    key={exampleIndex}
-                    src={EXAMPLE_AVATARS[exampleIndex]}
-                    alt={example.name}
-                    className="corp-mock-avatar-img"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                  <span className="corp-mock-avatar-fallback">{example.initial}</span>
+            <div className="corp-persona-card" key={example.handle}>
+              <img
+                key={exampleIndex}
+                src={EXAMPLE_AVATARS[exampleIndex]}
+                alt={example.name}
+                className="corp-persona-photo"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+              <div className="corp-persona-shade" />
+              <div className="corp-persona-overlay">
+                <div className="corp-persona-name">{example.name}</div>
+                <div className="corp-persona-handle">minebio.net/{example.handle}</div>
+                <div className="corp-persona-pills">
+                  {example.links.slice(0, 2).map((l, i) => (
+                    <div className={`corp-persona-pill${activeLink === i ? " is-active" : ""}`} key={l}>
+                      {l}
+                    </div>
+                  ))}
                 </div>
-                <div className="corp-display" style={{ fontSize: 16 }}>
-                  {example.name}
-                </div>
-                <div style={{ fontSize: 12.5, color: "var(--c-body)", marginTop: 2 }}>
-                  minebio.net/{example.handle}
-                </div>
-                {example.links.map((l, i) => (
-                  <div className={`corp-mock-link${activeLink === i ? " is-active" : ""}`} key={l}>
-                    {l}
-                  </div>
-                ))}
               </div>
             </div>
+            <div className="corp-chip chip-1" aria-hidden="true">💬</div>
+            <div className="corp-chip chip-2" aria-hidden="true">▦</div>
+            <div className="corp-chip chip-3" aria-hidden="true">👁️</div>
           </div>
         </div>
       </section>
