@@ -1352,6 +1352,61 @@ textarea {
   box-shadow: 0 30px 60px -34px rgba(28, 43, 35, 0.35);
 }
 
+/* Fotoğraf arka planlı vitrin — üzerine yüzen mini kart bindirilmiş */
+.corp-showcase-photo {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 4 / 5;
+  min-height: 340px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px -30px rgba(16, 35, 31, 0.45);
+}
+
+.corp-showcase-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.corp-showcase-float {
+  position: absolute;
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.4);
+  max-width: 240px;
+}
+
+.corp-showcase-float.pos-br {
+  right: -22px;
+  bottom: -18px;
+}
+
+.corp-showcase-float.pos-bl {
+  left: -22px;
+  bottom: -18px;
+}
+
+.corp-showcase-float.pos-tr {
+  right: -18px;
+  top: 24px;
+}
+
+@media (max-width: 640px) {
+  .corp-showcase-float.pos-br,
+  .corp-showcase-float.pos-bl,
+  .corp-showcase-float.pos-tr {
+    right: 12px;
+    left: auto;
+    bottom: 12px;
+    top: auto;
+  }
+}
+
 /* QR mockup */
 .corp-qr-frame {
   width: 168px;

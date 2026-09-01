@@ -413,18 +413,21 @@ export default function LandingPage({ lang = "tr" }) {
               </p>
             </div>
             <div className="corp-showcase-visual">
-              <div className="corp-showcase-card" style={{ textAlign: "center" }}>
-                <div className="corp-qr-frame">
+            <div className="corp-showcase-photo">
+              <img src="/vitrin/qr-bg.jpg" alt="" />
+              <div className="corp-showcase-float pos-br">
+                <div className="corp-qr-frame" style={{ width: 110, height: 110 }}>
                   <div className="corp-qr-grid">
                     {Array.from({ length: 36 }).map((_, i) => (
                       <span key={i} />
                     ))}
-                    <div className="corp-qr-avatar" />
+                    <div className="corp-qr-avatar" style={{ width: 34, height: 34 }} />
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
         </Reveal>
 
         {/* 2. İstatistikler */}
@@ -437,21 +440,24 @@ export default function LandingPage({ lang = "tr" }) {
               </p>
             </div>
             <div className="corp-showcase-visual">
-              <div className="corp-showcase-card">
-                <div className="corp-stat-row">
-                  <div>
-                    <div className="corp-stat-num">128</div>
-                    <div className="corp-stat-label">{t.hero.badgeViews}</div>
+              <div className="corp-showcase-photo">
+                <img src="/vitrin/stats-bg.jpg" alt="" />
+                <div className="corp-showcase-float pos-bl">
+                  <div className="corp-stat-row" style={{ marginBottom: 10 }}>
+                    <div>
+                      <div className="corp-stat-num" style={{ fontSize: 22 }}>128</div>
+                      <div className="corp-stat-label">{t.hero.badgeViews}</div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div className="corp-stat-num" style={{ fontSize: 22 }}>34</div>
+                      <div className="corp-stat-label">tıklama</div>
+                    </div>
                   </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div className="corp-stat-num">34</div>
-                    <div className="corp-stat-label">tıklama</div>
+                  <div className="corp-mini-chart" style={{ height: 46 }}>
+                    {[38, 55, 42, 70, 60, 88, 100].map((h, i) => (
+                      <div key={i} className="corp-mini-chart-bar" style={{ height: `${h}%` }} />
+                    ))}
                   </div>
-                </div>
-                <div className="corp-mini-chart">
-                  {[38, 55, 42, 70, 60, 88, 100].map((h, i) => (
-                    <div key={i} className="corp-mini-chart-bar" style={{ height: `${h}%` }} />
-                  ))}
                 </div>
               </div>
             </div>
@@ -468,21 +474,23 @@ export default function LandingPage({ lang = "tr" }) {
               </p>
             </div>
             <div className="corp-showcase-visual">
-              <div className="corp-showcase-card">
-                {[
-                  { i: "A", n: "Ayşe K.", s: "2 dk önce", badge: "yeni" },
-                  { i: "M", n: "Mert D.", s: "1 saat önce" },
-                  { i: "S", n: "Selin T.", s: "dün" },
-                ].map((c) => (
-                  <div className="corp-contact-row" key={c.n}>
-                    <div className="corp-contact-avatar">{c.i}</div>
-                    <div>
-                      <div className="corp-contact-name">{c.n}</div>
-                      <div className="corp-contact-sub">{c.s}</div>
+              <div className="corp-showcase-photo">
+                <img src="/vitrin/whatsapp-bg.jpg" alt="" />
+                <div className="corp-showcase-float pos-tr" style={{ maxWidth: 210 }}>
+                  {[
+                    { i: "A", n: "Ayşe K.", s: "2 dk önce", badge: "yeni" },
+                    { i: "M", n: "Mert D.", s: "1 saat önce" },
+                  ].map((c) => (
+                    <div className="corp-contact-row" key={c.n} style={{ padding: "8px 0" }}>
+                      <div className="corp-contact-avatar" style={{ width: 32, height: 32, fontSize: 11.5 }}>{c.i}</div>
+                      <div>
+                        <div className="corp-contact-name" style={{ fontSize: 12.5 }}>{c.n}</div>
+                        <div className="corp-contact-sub" style={{ fontSize: 10.5 }}>{c.s}</div>
+                      </div>
+                      {c.badge && <div className="corp-contact-badge">{c.badge}</div>}
                     </div>
-                    {c.badge && <div className="corp-contact-badge">{c.badge}</div>}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
