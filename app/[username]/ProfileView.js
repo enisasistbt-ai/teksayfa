@@ -73,12 +73,6 @@ export default function ProfileView({ profile, pageUrl, photoBg = false }) {
 
   return (
     <>
-      {photoBg && (
-        <div className="photo-bg-fixed" style={{ backgroundImage: `url(${profile.avatar_url})` }}>
-          <div className="photo-bg-shade" />
-        </div>
-      )}
-
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
         <div
           style={{

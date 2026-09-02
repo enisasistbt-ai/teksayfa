@@ -54,8 +54,16 @@ export default async function PublicProfile({ params }) {
     "--muted": theme.muted,
     "--amber": theme.accent,
     "--amber-dim": theme.accentDim,
-    background: theme.ink,
     minHeight: "100vh",
+    ...(usePhotoBg
+      ? {
+          backgroundImage: `linear-gradient(to bottom, rgba(16,23,20,0.55) 0%, rgba(16,23,20,0.35) 30%, rgba(16,23,20,0.8) 100%), url(${profile.avatar_url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+          backgroundRepeat: "no-repeat",
+        }
+      : { background: theme.ink }),
   };
 
   const effectiveProfile = { ...profile, is_premium: isEffectivelyPremium(profile) };
