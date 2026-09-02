@@ -10,7 +10,7 @@ const CONTENT = {
   tr: {
     nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", blog: "Blog", login: "Giriş yap", start: "Ücretsiz başla" },
     langSwitch: { href: "/en", label: "EN" },
-    industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Ajanslar"],
+    industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Ajanslar", "İçerik üreticiler"],
     marquee: [
       "E-ticaret satıcıları", "Danışmanlar", "Serbest çalışanlar", "Ajanslar",
       "Perakende mağazaları", "Hizmet sektörü", "Girişimciler", "Emlak danışmanları",
@@ -24,10 +24,10 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Randevu al", "Hizmetlerimiz", "Bizi Instagram'da takip et"] },
     ],
     hero: {
-      eyebrow: "gerçek işletmeler için",
+      eyebrow: "gerçek insanlar için",
       titleLine1: "Tüm bağlantıların.",
       titleLine2: "Tek sayfada.",
-      desc: "Instagram, WhatsApp, mağazan, iletişim bilgilerin — hepsi tek sayfada. Kimin baktığını da gösterir.",
+      desc: "Instagram, WhatsApp, mağazan ya da işin, iletişim bilgilerin — hepsi tek sayfada. Kimin baktığını da gösterir.",
       badgeViews: "128 görüntülenme",
       badgeQr: "QR koduna hazır",
       claimLabel: "Kendi adını hemen dene",
@@ -86,7 +86,7 @@ const CONTENT = {
   en: {
     nav: { features: "Features", pricing: "Pricing", faq: "FAQ", about: "About", blog: "Blog", login: "Log in", start: "Start free" },
     langSwitch: { href: "/", label: "TR" },
-    industries: ["E-commerce", "Consulting", "Service businesses", "Agencies"],
+    industries: ["E-commerce", "Consulting", "Service businesses", "Agencies", "Content creators"],
     marquee: [
       "E-commerce sellers", "Consultants", "Freelancers", "Agencies",
       "Retail shops", "Service businesses", "Founders", "Real estate agents",
@@ -100,10 +100,10 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Book an appointment", "Our services", "Follow us on Instagram"] },
     ],
     hero: {
-      eyebrow: "for real businesses",
+      eyebrow: "for real people",
       titleLine1: "All your links.",
       titleLine2: "One page.",
-      desc: "Your Instagram, WhatsApp, shop, and contact info — all on one page. It shows you who's looking, too.",
+      desc: "Your Instagram, WhatsApp, shop or work, and contact info — all on one page. It shows you who's looking, too.",
       badgeViews: "128 views",
       badgeQr: "Ready as QR code",
       claimLabel: "Try your name right now",
