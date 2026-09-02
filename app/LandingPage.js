@@ -44,7 +44,7 @@ const CONTENT = {
       items: [
         { icon: "▦", title: "Fotoğraflı QR kod", desc: "Kartvizitte kullanıma hazır, tek dokunuşla rehbere kaydedilebilir." },
         { icon: "◐", title: "Anlık istatistik", desc: "Kim baktı, hangi linke tıklandı — hemen gör." },
-        { icon: "✉", title: "WhatsApp takibi", desc: "Sana ulaşanlar otomatik listelenir, kaybolmaz." },
+        { icon: "✉", title: "Kişi defterin", desc: "Tanıştığın kişileri kaydet, tek dokunuşla WhatsApp'tan sayfanı gönder." },
       ],
     },
     steps: {
@@ -120,7 +120,7 @@ const CONTENT = {
       items: [
         { icon: "▦", title: "QR code with your photo", desc: "Ready for your card, saveable to contacts in one tap." },
         { icon: "◐", title: "Live analytics", desc: "See who looked and what they clicked, instantly." },
-        { icon: "✉", title: "WhatsApp tracking", desc: "Everyone who reaches you gets listed automatically." },
+        { icon: "✉", title: "Your contact book", desc: "Save people you meet, send your page on WhatsApp in one tap." },
       ],
     },
     steps: {
@@ -480,12 +480,12 @@ export default function LandingPage({ lang = "tr" }) {
                 <div className="corp-showcase-float pos-tr" style={{ maxWidth: 210 }}>
                   {(lang === "en"
                     ? [
-                        { i: "A", n: "Amy K.", s: "2 min ago", badge: "new" },
-                        { i: "M", n: "Mark D.", s: "1 hour ago" },
+                        { i: "A", n: "Amy K.", s: "Met at the fair" },
+                        { i: "M", n: "Mark D.", s: "Wanted the red bag" },
                       ]
                     : [
-                        { i: "A", n: "Ayşe K.", s: "2 dk önce", badge: "yeni" },
-                        { i: "M", n: "Mert D.", s: "1 saat önce" },
+                        { i: "A", n: "Ayşe K.", s: "Fuarda tanıştık" },
+                        { i: "M", n: "Mert D.", s: "Kırmızı çanta istedi" },
                       ]
                   ).map((c) => (
                     <div className="corp-contact-row" key={c.n} style={{ padding: "8px 0" }}>
