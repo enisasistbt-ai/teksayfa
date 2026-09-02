@@ -45,6 +45,7 @@ export default async function PublicProfile({ params }) {
   const pageUrl = host ? `https://${host}/${profile.username}` : `/${profile.username}`;
 
   const theme = THEMES[profile.theme] || THEMES[DEFAULT_THEME];
+  const usePhotoBg = Boolean(theme.photoBg && profile.avatar_url);
   const themeVars = {
     "--ink": theme.ink,
     "--panel": theme.panel,
@@ -62,7 +63,7 @@ export default async function PublicProfile({ params }) {
   return (
     <div style={themeVars}>
       <main className="container" style={{ paddingTop: 64 }}>
-        <ProfileView profile={effectiveProfile} pageUrl={pageUrl} />
+        <ProfileView profile={effectiveProfile} pageUrl={pageUrl} photoBg={usePhotoBg} />
       </main>
     </div>
   );

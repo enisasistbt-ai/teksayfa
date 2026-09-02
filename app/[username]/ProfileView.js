@@ -29,7 +29,7 @@ const STRINGS = {
   },
 };
 
-export default function ProfileView({ profile, pageUrl }) {
+export default function ProfileView({ profile, pageUrl, photoBg = false }) {
   const [lang, setLang] = useState("tr");
   const [shareCopied, setShareCopied] = useState(false);
   const t = STRINGS[lang];
@@ -73,6 +73,12 @@ export default function ProfileView({ profile, pageUrl }) {
 
   return (
     <>
+      {photoBg && (
+        <div className="photo-bg-fixed" style={{ backgroundImage: `url(${profile.avatar_url})` }}>
+          <div className="photo-bg-shade" />
+        </div>
+      )}
+
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
         <div
           style={{
@@ -118,14 +124,16 @@ export default function ProfileView({ profile, pageUrl }) {
         </div>
       )}
 
-      <div className="tabela">
-        <div className="avatar">
-          {profile.avatar_url ? (
-            <img src={profile.avatar_url} alt={profile.display_name || profile.username} />
-          ) : (
-            initial
-          )}
-        </div>
+      <div className={`tabela${photoBg ? " tabela-photo" : ""}`}>
+        {!photoBg && (
+          <div className="avatar">
+            {profile.avatar_url ? (
+              <img src={profile.avatar_url} alt={profile.display_name || profile.username} />
+            ) : (
+              initial
+            )}
+          </div>
+        )}
         <h1 style={{ textAlign: "center", fontSize: 20 }}>
           {profile.display_name || profile.username}
         </h1>
@@ -149,7 +157,7 @@ export default function ProfileView({ profile, pageUrl }) {
         {(profile.links || []).map((link, i) => (
           <a
             key={i}
-            className="link-btn"
+            className={`link-btn${photoBg ? " link-btn-photo" : ""}`}
             href={`/api/click?url=${encodeURIComponent(
               link.url
             )}&u=${encodeURIComponent(profile.username)}&l=${encodeURIComponent(link.label)}`}
