@@ -20,7 +20,7 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Randevu al", "Hizmetlerimiz", "Bizi Instagram'da takip et"] },
     ],
     hero: {
-      eyebrow: "gerçek insanlar için",
+      eyebrow: "herkes için",
       titleLine1: "Tüm bağlantıların.",
       titleLine2: "Tek sayfada.",
       desc: "Instagram, WhatsApp, mağazan ya da işin, iletişim bilgilerin — hepsi tek sayfada. Kimin baktığını da gösterir.",
@@ -96,7 +96,7 @@ const CONTENT = {
       { initial: "S", name: "Selin Karaca", handle: "selin-karaca", links: ["Book an appointment", "Our services", "Follow us on Instagram"] },
     ],
     hero: {
-      eyebrow: "for real people",
+      eyebrow: "for everyone",
       titleLine1: "All your links.",
       titleLine2: "One page.",
       desc: "Your Instagram, WhatsApp, shop or work, and contact info — all on one page. It shows you who's looking, too.",
