@@ -128,18 +128,21 @@ export default function ProfileView({ profile, pageUrl, photoBg = false }) {
             )}
           </div>
         )}
-        <h1 style={{ textAlign: "center", fontSize: 20 }}>
+        <h1 style={{ textAlign: "center", fontSize: 20, textShadow: photoBg ? "0 1px 4px rgba(0,0,0,0.6)" : "none" }}>
           {profile.display_name || profile.username}
         </h1>
-        <div className="handle mono">minebio.net/{profile.username}</div>
+        <div className="handle mono" style={photoBg ? { textShadow: "0 1px 3px rgba(0,0,0,0.6)", color: "rgba(251,248,241,0.85)" } : undefined}>
+          minebio.net/{profile.username}
+        </div>
         {bioText && (
           <p
             style={{
               textAlign: "center",
               fontSize: 13,
-              color: "var(--paper)",
+              color: photoBg ? "#fbf8f1" : "var(--paper)",
               marginTop: 12,
               lineHeight: 1.5,
+              textShadow: photoBg ? "0 1px 3px rgba(0,0,0,0.6)" : "none",
             }}
           >
             {bioText}

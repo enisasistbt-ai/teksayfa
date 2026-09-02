@@ -57,7 +57,7 @@ export default async function PublicProfile({ params }) {
     minHeight: "100vh",
     ...(usePhotoBg
       ? {
-          backgroundImage: `linear-gradient(to bottom, rgba(16,23,20,0.55) 0%, rgba(16,23,20,0.35) 30%, rgba(16,23,20,0.8) 100%), url(${profile.avatar_url})`,
+          backgroundImage: `linear-gradient(to bottom, rgba(16,23,20,0.62) 0%, rgba(16,23,20,0.58) 45%, rgba(16,23,20,0.74) 100%), url(${profile.avatar_url})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
