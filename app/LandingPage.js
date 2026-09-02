@@ -11,10 +11,6 @@ const CONTENT = {
     nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", blog: "Blog", login: "Giriş yap", start: "Ücretsiz başla" },
     langSwitch: { href: "/en", label: "EN" },
     industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Ajanslar", "İçerik üreticiler"],
-    marquee: [
-      "E-ticaret satıcıları", "Danışmanlar", "Serbest çalışanlar", "Ajanslar",
-      "Perakende mağazaları", "Hizmet sektörü", "Girişimciler", "Emlak danışmanları",
-    ],
     examples: [
       { initial: "M", name: "Merve Aydın", handle: "merve-aydin", links: ["LinkedIn profilim", "Portföyüm", "Randevu al"] },
       { initial: "D", name: "Deniz Kaya", handle: "deniz-kaya", links: ["Instagram mağazam", "WhatsApp'tan sipariş ver", "Trendyol mağazam"] },
@@ -42,7 +38,7 @@ const CONTENT = {
       eyebrow: "özellikler",
       title: "Sade, hızlı, işe yarar",
       items: [
-        { icon: "▦", title: "Fotoğraflı QR kod", desc: "Kartvizitte kullanıma hazır, tek dokunuşla rehbere kaydedilebilir." },
+        { icon: "▦", title: "Fotoğraflı QR kod", desc: "Numaranı elle yazdırma devri bitti — QR'ı okutan seni tek dokunuşla rehberine kaydeder." },
         { icon: "◐", title: "Anlık istatistik", desc: "Kim baktı, hangi linke tıklandı — hemen gör." },
         { icon: "✉", title: "Kişi defterin", desc: "Tanıştığın kişileri kaydet, tek dokunuşla WhatsApp'tan sayfanı gönder." },
       ],
@@ -65,7 +61,11 @@ const CONTENT = {
         { q: "Yabancı müşterilerim de sayfamı anlayabilir mi?", a: "Evet, sayfanda TR/EN dil seçeneği var; içeriğinin İngilizcesini de ayrıca girebilirsin." },
       ],
     },
-    closing: { title: "Sayfan seni bekliyor.", desc: "Kredi kartı gerekmez, 2 dakikada başla." },
+    closing: {
+      title: "Sayfan seni bekliyor.",
+      desc: "Kredi kartı gerekmez, 2 dakikada başla.",
+      badges: ["⚡ Kurulum 2 dakika", "💳 Kredi kartı gerekmez", "✕ İstediğin an iptal et"],
+    },
     footer: {
       tagline: "Bağlantılarını tek sayfada topla, kimin baktığını gör.",
       productTitle: "Ürün",
@@ -87,10 +87,6 @@ const CONTENT = {
     nav: { features: "Features", pricing: "Pricing", faq: "FAQ", about: "About", blog: "Blog", login: "Log in", start: "Start free" },
     langSwitch: { href: "/", label: "TR" },
     industries: ["E-commerce", "Consulting", "Service businesses", "Agencies", "Content creators"],
-    marquee: [
-      "E-commerce sellers", "Consultants", "Freelancers", "Agencies",
-      "Retail shops", "Service businesses", "Founders", "Real estate agents",
-    ],
     examples: [
       { initial: "M", name: "Maya Reyes", handle: "maya-reyes", links: ["My LinkedIn", "My portfolio", "Book a call"] },
       { initial: "D", name: "Deniz Kaya", handle: "deniz-kaya", links: ["My Instagram shop", "Order via WhatsApp", "My Etsy shop"] },
@@ -118,7 +114,7 @@ const CONTENT = {
       eyebrow: "features",
       title: "Simple, fast, useful",
       items: [
-        { icon: "▦", title: "QR code with your photo", desc: "Ready for your card, saveable to contacts in one tap." },
+        { icon: "▦", title: "QR code with your photo", desc: "No more writing your number down — scanning it saves you to their contacts in one tap." },
         { icon: "◐", title: "Live analytics", desc: "See who looked and what they clicked, instantly." },
         { icon: "✉", title: "Your contact book", desc: "Save people you meet, send your page on WhatsApp in one tap." },
       ],
@@ -141,7 +137,11 @@ const CONTENT = {
         { q: "Will it work for customers who speak other languages?", a: "Yes, your page has a TR/EN toggle, and you can add an English version of your bio too." },
       ],
     },
-    closing: { title: "Your page is waiting.", desc: "No credit card needed, start in 2 minutes." },
+    closing: {
+      title: "Your page is waiting.",
+      desc: "No credit card needed, start in 2 minutes.",
+      badges: ["⚡ 2-minute setup", "💳 No credit card", "✕ Cancel anytime"],
+    },
     footer: {
       tagline: "Bring your links together on one page, see who's looking.",
       productTitle: "Product",
@@ -536,9 +536,11 @@ export default function LandingPage({ lang = "tr" }) {
           <div className="corp-faq-item" key={item.q}>
             <button className="corp-faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
               {item.q}
-              <span style={{ color: "var(--c-accent-dim)", fontSize: 18 }}>{openFaq === i ? "–" : "+"}</span>
+              <span className={`corp-faq-icon${openFaq === i ? " is-open" : ""}`}>+</span>
             </button>
-            {openFaq === i && <p className="corp-faq-a">{item.a}</p>}
+            <div className={`corp-faq-a-wrap${openFaq === i ? " is-open" : ""}`}>
+              <p className="corp-faq-a">{item.a}</p>
+            </div>
           </div>
         ))}
       </section>
@@ -553,6 +555,13 @@ export default function LandingPage({ lang = "tr" }) {
           <Link href="/login" className="corp-btn" style={{ marginTop: 22 }}>
             {t.nav.start}
           </Link>
+          <div className="row" style={{ justifyContent: "center", gap: 18, flexWrap: "wrap", marginTop: 22 }}>
+            {t.closing.badges.map((b) => (
+              <span key={b} style={{ fontSize: 13, color: "var(--c-body)" }}>
+                {b}
+              </span>
+            ))}
+          </div>
         </Reveal>
       </section>
 

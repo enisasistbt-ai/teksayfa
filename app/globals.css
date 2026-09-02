@@ -1570,6 +1570,42 @@ textarea {
   line-height: 1.65;
   padding-bottom: 20px;
   max-width: 640px;
+  margin: 0;
+}
+
+.corp-faq-icon {
+  color: var(--c-accent-dim);
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.corp-faq-icon.is-open {
+  transform: rotate(45deg);
+}
+
+.corp-faq-a-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.35s ease, opacity 0.3s ease;
+}
+
+.corp-faq-a-wrap.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.corp-faq-a-wrap > p {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .corp-faq-icon,
+  .corp-faq-a-wrap {
+    transition: none;
+  }
 }
 
 .corp-footer {
