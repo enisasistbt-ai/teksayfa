@@ -167,6 +167,23 @@ textarea {
   border-color: var(--amber);
 }
 
+.link-btn.link-btn-pill {
+  border-radius: 999px;
+  padding: 15px 22px;
+}
+
+.link-btn.link-btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+}
+
+.link-btn.link-btn-outline:hover {
+  background: var(--ink);
+  color: var(--panel);
+  border-color: var(--ink);
+}
+
 .btn {
   background: var(--amber);
   color: var(--ink);
