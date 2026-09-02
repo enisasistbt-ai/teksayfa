@@ -106,15 +106,16 @@ textarea {
 }
 
 .link-btn.link-btn-photo {
-  background: rgba(251, 248, 241, 0.14);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(251, 248, 241, 0.28);
+  background: rgba(16, 23, 20, 0.42);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(251, 248, 241, 0.32);
   color: #fbf8f1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .link-btn.link-btn-photo:hover {
-  background: rgba(251, 248, 241, 0.22);
+  background: rgba(16, 23, 20, 0.55);
 }
 
 .avatar {
