@@ -63,7 +63,7 @@ export default async function PublicProfile({ params }) {
           backgroundAttachment: "fixed",
           backgroundRepeat: "no-repeat",
         }
-      : { background: theme.ink }),
+      : { background: theme.bg || theme.ink }),
   };
 
   const effectiveProfile = { ...profile, is_premium: isEffectivelyPremium(profile) };
@@ -71,7 +71,12 @@ export default async function PublicProfile({ params }) {
   return (
     <div style={themeVars}>
       <main className="container" style={{ paddingTop: 64 }}>
-        <ProfileView profile={effectiveProfile} pageUrl={pageUrl} photoBg={usePhotoBg} />
+        <ProfileView
+          profile={effectiveProfile}
+          pageUrl={pageUrl}
+          photoBg={usePhotoBg}
+          btnStyle={theme.btnStyle || "solid"}
+        />
       </main>
     </div>
   );

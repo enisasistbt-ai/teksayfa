@@ -29,7 +29,7 @@ const STRINGS = {
   },
 };
 
-export default function ProfileView({ profile, pageUrl, photoBg = false }) {
+export default function ProfileView({ profile, pageUrl, photoBg = false, btnStyle = "solid" }) {
   const [lang, setLang] = useState("tr");
   const [shareCopied, setShareCopied] = useState(false);
   const t = STRINGS[lang];
@@ -154,7 +154,7 @@ export default function ProfileView({ profile, pageUrl, photoBg = false }) {
         {(profile.links || []).map((link, i) => (
           <a
             key={i}
-            className={`link-btn${photoBg ? " link-btn-photo" : ""}`}
+            className={`link-btn${photoBg ? " link-btn-photo" : !photoBg && btnStyle !== "solid" ? ` link-btn-${btnStyle}` : ""}`}
             href={`/api/click?url=${encodeURIComponent(
               link.url
             )}&u=${encodeURIComponent(profile.username)}&l=${encodeURIComponent(link.label)}`}
