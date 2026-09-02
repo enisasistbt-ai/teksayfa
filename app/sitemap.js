@@ -13,6 +13,8 @@ export default function sitemap() {
     "/login",
     "/blog",
     "/en/blog",
+    "/sablonlar",
+    "/en/templates",
     "/gizlilik-politikasi",
     "/cerez-politikasi",
     "/kullanim-kosullari",
