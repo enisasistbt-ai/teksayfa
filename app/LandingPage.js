@@ -8,7 +8,7 @@ import { sanitizeUsername } from "../lib/username";
 
 const CONTENT = {
   tr: {
-    nav: { features: "Özellikler", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", blog: "Blog", login: "Giriş yap", start: "Ücretsiz başla" },
+    nav: { features: "Özellikler", templates: "Şablonlar", pricing: "Fiyatlandırma", faq: "S.S.S", about: "Hakkımızda", blog: "Blog", login: "Giriş yap", start: "Ücretsiz başla" },
     langSwitch: { href: "/en", label: "EN" },
     industries: ["E-ticaret", "Danışmanlık", "Hizmet sektörü", "Ajanslar", "İçerik üreticiler"],
     examples: [
@@ -84,7 +84,7 @@ const CONTENT = {
     },
   },
   en: {
-    nav: { features: "Features", pricing: "Pricing", faq: "FAQ", about: "About", blog: "Blog", login: "Log in", start: "Start free" },
+    nav: { features: "Features", templates: "Templates", pricing: "Pricing", faq: "FAQ", about: "About", blog: "Blog", login: "Log in", start: "Start free" },
     langSwitch: { href: "/", label: "TR" },
     industries: ["E-commerce", "Consulting", "Service businesses", "Agencies", "Content creators"],
     examples: [
@@ -260,6 +260,7 @@ export default function LandingPage({ lang = "tr" }) {
   const homeHref = lang === "en" ? "/en" : "/";
   const aboutHref = lang === "en" ? "/en/about" : "/hakkimizda";
   const blogHref = lang === "en" ? "/en/blog" : "/blog";
+  const templatesHref = lang === "en" ? "/en/templates" : "/sablonlar";
 
   return (
     <div className="corp-landing">
@@ -273,6 +274,7 @@ export default function LandingPage({ lang = "tr" }) {
           </Link>
           <div className="corp-nav-secondary">
             <a href="#ozellikler">{t.nav.features}</a>
+            <Link href={templatesHref}>{t.nav.templates}</Link>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
             <Link href="/login">{t.nav.login}</Link>
             <Link
@@ -298,6 +300,7 @@ export default function LandingPage({ lang = "tr" }) {
         </div>
         <div className={`corp-nav-mobile-panel${menuOpen ? " is-open" : ""}`}>
           <a href="#ozellikler" onClick={() => setMenuOpen(false)}>{t.nav.features}</a>
+          <Link href={templatesHref} onClick={() => setMenuOpen(false)}>{t.nav.templates}</Link>
           <Link href="/fiyatlandirma" onClick={() => setMenuOpen(false)}>{t.nav.pricing}</Link>
           <Link href="/login" onClick={() => setMenuOpen(false)}>{t.nav.login}</Link>
           <Link href={t.langSwitch.href} onClick={() => setMenuOpen(false)}>{t.langSwitch.label === "EN" ? "English" : "Türkçe"}</Link>
@@ -582,6 +585,7 @@ export default function LandingPage({ lang = "tr" }) {
           <div className="corp-footer-col">
             <div className="corp-footer-col-title">{t.footer.productTitle}</div>
             <a href="#ozellikler">{t.nav.features}</a>
+            <Link href={templatesHref}>{t.nav.templates}</Link>
             <Link href="/fiyatlandirma">{t.nav.pricing}</Link>
             <Link href={aboutHref}>{t.nav.about}</Link>
             <Link href={blogHref}>{t.nav.blog}</Link>
